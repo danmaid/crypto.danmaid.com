@@ -1,12 +1,40 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>男メイド（暗号通貨）</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .container {
+            display: flex;
+        }
+    </style>
 </head>
+
 <body>
-    
+    <main class="container">
+        <div>
+            <div>bitflyer_BTC_JPY</div>
+            <dm-realtime id="bitflyer_BTC_JPY"></dm-realtime>
+        </div>
+        <div>
+            <div>bitflyer_FX_BTC_JPY</div>
+            <dm-realtime id="bitflyer_FX_BTC_JPY"></dm-realtime>
+        </div>
+    </main>
+    <script src="https://unpkg.com/@reactivex/rxjs/dist/global/Rx.min.js"></script>
+    <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.20.2.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/riot/riot+compiler.min.js"></script>
+    <script type="riot/tag" src="tags/src/dm-realtime.tag"></script>
+    <script type="module">
+        import { bitflyer_BTC_JPY, bitflyer_FX_BTC_JPY } from './modules/src/executions.js';
+        riot.compile(() => {
+            riot.mount('#bitflyer_BTC_JPY', 'dm-realtime', { stream: bitflyer_BTC_JPY });
+            riot.mount('#bitflyer_FX_BTC_JPY', 'dm-realtime', { stream: bitflyer_FX_BTC_JPY });
+        });
+    </script>
 </body>
+
 </html>
