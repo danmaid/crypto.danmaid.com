@@ -125,3 +125,91 @@ export const zaif_BTC_JPY = Rx.Observable.create(observer => {
         return msg;
     })
     .share();
+
+// XEM_JPY
+export const zaif_XEM_JPY = Rx.Observable.create(observer => {
+    const wss = new WebSocket('wss://ws.zaif.jp/stream?currency_pair=xem_jpy')
+    wss.onopen = function () {
+    };
+    wss.onmessage = function (msg) {
+        this.next(msg.data);
+    }.bind(observer);
+})
+    .map(x => JSON.parse(x))
+    .flatMap(msg => msg.trades.sort((a, b) => a.date - b.date))
+    .distinct(msg => msg.tid)
+    .map(msg => {
+        msg.side = 'BUY';
+        msg.size = msg.amount;
+        if (msg.trade_type == "ask") {
+            msg.side = 'SELL';
+        }
+        return msg;
+    })
+    .share();
+
+// XEM_BTC
+export const zaif_XEM_BTC = Rx.Observable.create(observer => {
+    const wss = new WebSocket('wss://ws.zaif.jp/stream?currency_pair=xem_btc')
+    wss.onopen = function () {
+    };
+    wss.onmessage = function (msg) {
+        this.next(msg.data);
+    }.bind(observer);
+})
+    .map(x => JSON.parse(x))
+    .flatMap(msg => msg.trades.sort((a, b) => a.date - b.date))
+    .distinct(msg => msg.tid)
+    .map(msg => {
+        msg.side = 'BUY';
+        msg.size = msg.amount;
+        if (msg.trade_type == "ask") {
+            msg.side = 'SELL';
+        }
+        return msg;
+    })
+    .share();
+
+// MONA_JPY
+export const zaif_MONA_JPY = Rx.Observable.create(observer => {
+    const wss = new WebSocket('wss://ws.zaif.jp/stream?currency_pair=mona_jpy')
+    wss.onopen = function () {
+    };
+    wss.onmessage = function (msg) {
+        this.next(msg.data);
+    }.bind(observer);
+})
+    .map(x => JSON.parse(x))
+    .flatMap(msg => msg.trades.sort((a, b) => a.date - b.date))
+    .distinct(msg => msg.tid)
+    .map(msg => {
+        msg.side = 'BUY';
+        msg.size = msg.amount;
+        if (msg.trade_type == "ask") {
+            msg.side = 'SELL';
+        }
+        return msg;
+    })
+    .share();
+
+// MONA_BTC
+export const zaif_MONA_BTC = Rx.Observable.create(observer => {
+    const wss = new WebSocket('wss://ws.zaif.jp/stream?currency_pair=mona_btc')
+    wss.onopen = function () {
+    };
+    wss.onmessage = function (msg) {
+        this.next(msg.data);
+    }.bind(observer);
+})
+    .map(x => JSON.parse(x))
+    .flatMap(msg => msg.trades.sort((a, b) => a.date - b.date))
+    .distinct(msg => msg.tid)
+    .map(msg => {
+        msg.side = 'BUY';
+        msg.size = msg.amount;
+        if (msg.trade_type == "ask") {
+            msg.side = 'SELL';
+        }
+        return msg;
+    })
+    .share();
