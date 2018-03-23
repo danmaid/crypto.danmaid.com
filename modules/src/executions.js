@@ -102,3 +102,26 @@ export const bitmex_XBT_USD = Rx.Observable.create(observer => {
         return msg;
     })
     .share();
+
+///// Zaif
+// BTC_JPY
+export const zaif_BTC_JPY = Rx.Observable.create(observer => {
+    const wss = new WebSocket('wss://ws.zaif.jp/stream?currency_pair=btc_jpy')
+    wss.onopen = function () {
+    };
+    wss.onmessage = function (msg) {
+        this.next(msg.data);
+    }.bind(observer);
+})
+    .map(x => JSON.parse(x))
+    .flatMap(msg => msg.trades.sort((a, b) => a.date - b.date))
+    .distinct(msg => msg.tid)
+    .map(msg => {
+        msg.side = 'BUY';
+        msg.size = msg.amount;
+        if (msg.trade_type == "ask") {
+            msg.side = 'SELL';
+        }
+        return msg;
+    })
+    .share();
