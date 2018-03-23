@@ -275,8 +275,8 @@ export const coincheck_BTC_JPY = Rx.Observable.create(observer => {
     .map(x => JSON.parse(x))
     .map(msg => {
         return {
-            price: msg[2],
-            size: msg[3],
+            price: parseFloat(msg[2]),
+            size: parseFloat(msg[3]),
             side: msg[4].toUpperCase()
         }
     })
