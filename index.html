@@ -67,6 +67,10 @@
             <div>coincheck_BTC_JPY</div>
             <dm-realtime id="coincheck_BTC_JPY"></dm-realtime>
         </div>
+        <div>
+            <div>binance_BTC_USDT</div>
+            <dm-realtime id="binance_BTC_USDT"></dm-realtime>
+        </div>
     </main>
     <script src="https://unpkg.com/@reactivex/rxjs/dist/global/Rx.min.js"></script>
     <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.20.2.js"></script>
@@ -88,6 +92,7 @@
             // riot.mount('#bitflyer_ETH_BTC', 'dm-realtime', { stream: exec.bitflyer_ETH_BTC });
             riot.mount('#bitbankcc_BTC_JPY', 'dm-realtime', { stream: exec.bitbankcc_BTC_JPY });
             riot.mount('#coincheck_BTC_JPY', 'dm-realtime', { stream: exec.coincheck_BTC_JPY });
+            riot.mount('#binance_BTC_USDT', 'dm-realtime', { stream: exec.binance_BTC_USDT });
         });
     </script>
 </body>

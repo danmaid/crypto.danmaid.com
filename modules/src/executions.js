@@ -282,3 +282,23 @@ export const coincheck_BTC_JPY = Rx.Observable.create(observer => {
     })
     .share();
 
+///// binance
+// BTC_USDT
+export const binance_BTC_USDT = Rx.Observable.create(observer => {
+    const wss = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@trade')
+    wss.onopen = function () {
+    };
+    wss.onmessage = function (msg) {
+        this.next(msg.data);
+    }.bind(observer);
+})
+    .map(x => JSON.parse(x))
+    .map(msg => {
+        msg.price = parseFloat(msg.p);
+        msg.size = parseFloat(msg.q);
+        if (msg.m) { msg.side = 'SELL' }
+        else { msg.side = 'BUY' }
+        return msg;
+    })
+    .share();
+
