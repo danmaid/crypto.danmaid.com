@@ -24,6 +24,22 @@
             <dm-realtime id="bitflyer_BTC_JPY"></dm-realtime>
         </div>
         <div>
+            <div>bitbankcc_BTC_JPY</div>
+            <dm-realtime id="bitbankcc_BTC_JPY"></dm-realtime>
+        </div>
+        <div>
+            <div>coincheck_BTC_JPY</div>
+            <dm-realtime id="coincheck_BTC_JPY"></dm-realtime>
+        </div>
+        <div>
+            <div>zaif_BTC_JPY</div>
+            <dm-realtime id="zaif_BTC_JPY"></dm-realtime>
+        </div>
+        <div>
+            <div>fisco_BTC_JPY</div>
+            <dm-realtime id="fisco_BTC_JPY"></dm-realtime>
+        </div>
+        <div>
             <div>bitflyer_FX_BTC_JPY</div>
             <dm-realtime id="bitflyer_FX_BTC_JPY"></dm-realtime>
         </div>
@@ -32,12 +48,12 @@
             <dm-realtime id="bitfinex_BTC_USD"></dm-realtime>
         </div>
         <div>
-            <div>bitmex_XBT_USD</div>
-            <dm-realtime id="bitmex_XBT_USD"></dm-realtime>
+            <div>binance_BTC_USDT</div>
+            <dm-realtime id="binance_BTC_USDT"></dm-realtime>
         </div>
         <div>
-            <div>zaif_BTC_JPY</div>
-            <dm-realtime id="zaif_BTC_JPY"></dm-realtime>
+            <div>bitmex_XBT_USD</div>
+            <dm-realtime id="bitmex_XBT_USD"></dm-realtime>
         </div>
         <!-- <div>
             <div>zaif_XEM_JPY</div>
@@ -59,18 +75,6 @@
             <div>bitflyer_ETH_BTC</div>
             <dm-realtime id="bitflyer_ETH_BTC"></dm-realtime>
         </div> -->
-        <div>
-            <div>bitbankcc_BTC_JPY</div>
-            <dm-realtime id="bitbankcc_BTC_JPY"></dm-realtime>
-        </div>
-        <div>
-            <div>coincheck_BTC_JPY</div>
-            <dm-realtime id="coincheck_BTC_JPY"></dm-realtime>
-        </div>
-        <div>
-            <div>binance_BTC_USDT</div>
-            <dm-realtime id="binance_BTC_USDT"></dm-realtime>
-        </div>
     </main>
     <script src="https://unpkg.com/@reactivex/rxjs/dist/global/Rx.min.js"></script>
     <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.20.2.js"></script>
@@ -93,6 +97,7 @@
             riot.mount('#bitbankcc_BTC_JPY', 'dm-realtime', { stream: exec.bitbankcc_BTC_JPY });
             riot.mount('#coincheck_BTC_JPY', 'dm-realtime', { stream: exec.coincheck_BTC_JPY });
             riot.mount('#binance_BTC_USDT', 'dm-realtime', { stream: exec.binance_BTC_USDT });
+            riot.mount('#fisco_BTC_JPY', 'dm-realtime', { stream: exec.fisco_BTC_JPY });
         });
     </script>
 </body>
