@@ -46,6 +46,24 @@ export const bitflyer_FX_BTC_JPY = Rx.Observable.create(observer => {
     .flatMap(msg => msg)
     .share();
 
+// ETH_BTC
+export const bitflyer_ETH_BTC = Rx.Observable.create(observer => {
+    const exec = new PubNub({
+        subscribeKey: 'sub-c-52a9ab50-291b-11e5-baaa-0619f8945a4f'
+    });
+    exec.addListener({
+        message: function (message) {
+            observer.next(message.message);
+        }
+    });
+    exec.subscribe({
+        channels: ['lightning_executions_ETH_BTC']
+    });
+})
+    .flatMap(msg => msg)
+    .share();
+
+
 ///// bitfinex
 // BTC_USD
 export const bitfinex_BTC_USD = Rx.Observable.create(observer => {
@@ -213,3 +231,54 @@ export const zaif_MONA_BTC = Rx.Observable.create(observer => {
         return msg;
     })
     .share();
+
+///// bitbank.cc
+// require pubnub.js
+// <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.20.2.js"></script>
+
+// BTC_JPY
+export const bitbankcc_BTC_JPY = Rx.Observable.create(observer => {
+    const exec = new PubNub({
+        subscribeKey: 'sub-c-e12e9174-dd60-11e6-806b-02ee2ddab7fe'
+    });
+    exec.addListener({
+        message: function (message) {
+            observer.next(message.message);
+        }
+    });
+    exec.subscribe({
+        channels: ['transactions_btc_jpy']
+    });
+})
+    .flatMap(msg => msg.data.transactions.sort((a, b) => a.executed_at - b.executed_at))
+    .map(msg => {
+        msg.side = msg.side.toUpperCase();
+        msg.size = msg.amount;
+        return msg;
+    })
+    .share();
+
+///// coincheck
+// BTC_JPY
+export const coincheck_BTC_JPY = Rx.Observable.create(observer => {
+    const wss = new WebSocket('wss://ws-api.coincheck.com/')
+    wss.onopen = function () {
+        wss.send(JSON.stringify({
+            "type": "subscribe",
+            "channel": "btc_jpy-trades"
+        }));
+    };
+    wss.onmessage = function (msg) {
+        this.next(msg.data);
+    }.bind(observer);
+})
+    .map(x => JSON.parse(x))
+    .map(msg => {
+        return {
+            price: msg[2],
+            size: msg[3],
+            side: msg[4].toUpperCase()
+        }
+    })
+    .share();
+
