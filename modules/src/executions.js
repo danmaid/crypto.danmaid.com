@@ -77,3 +77,28 @@ export const bitfinex_BTC_USD = Rx.Observable.create(observer => {
         }
     })
     .share();
+
+///// bitmex
+// XBT_USD
+export const bitmex_XBT_USD = Rx.Observable.create(observer => {
+    const wss = new WebSocket('wss://www.bitmex.com/realtime')
+    wss.onopen = function () {
+        wss.send(JSON.stringify({
+            "op": "subscribe",
+            "args": [
+                "trade:XBTUSD"
+            ]
+        }));
+    };
+    wss.onmessage = function (msg) {
+        this.next(msg.data);
+    }.bind(observer);
+})
+    .map(x => JSON.parse(x))
+    .filter(msg => msg.table == 'trade' && msg.action == 'insert')
+    .flatMap(msg => msg.data)
+    .map(msg => {
+        msg.side = msg.side.toUpperCase();
+        return msg;
+    })
+    .share();

@@ -27,6 +27,10 @@
             <div>bitfinex_BTC_USD</div>
             <dm-realtime id="bitfinex_BTC_USD"></dm-realtime>
         </div>
+        <div>
+            <div>bitmex_XBT_USD</div>
+            <dm-realtime id="bitmex_XBT_USD"></dm-realtime>
+        </div>
     </main>
     <script src="https://unpkg.com/@reactivex/rxjs/dist/global/Rx.min.js"></script>
     <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.20.2.js"></script>
@@ -39,6 +43,7 @@
             riot.mount('#bitflyer_BTC_JPY', 'dm-realtime', { stream: exec.bitflyer_BTC_JPY });
             riot.mount('#bitflyer_FX_BTC_JPY', 'dm-realtime', { stream: exec.bitflyer_FX_BTC_JPY });
             riot.mount('#bitfinex_BTC_USD', 'dm-realtime', { stream: exec.bitfinex_BTC_USD });
+            riot.mount('#bitmex_XBT_USD', 'dm-realtime', { stream: exec.bitmex_XBT_USD });
         });
     </script>
 </body>
