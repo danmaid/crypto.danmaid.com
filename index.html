@@ -21,6 +21,7 @@
     <main class="container">
         <div>
             <div>bitflyer_BTC_JPY</div>
+            <dm-lastprice id="ltp-bitflyer_BTC_JPY"></dm-lastprice>
             <dm-realtime id="bitflyer_BTC_JPY"></dm-realtime>
         </div>
         <div>
@@ -80,11 +81,13 @@
     <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.20.2.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/riot/riot+compiler.min.js"></script>
     <script type="riot/tag" src="tags/src/dm-realtime.tag"></script>
+    <script type="riot/tag" src="tags/src/dm-lastprice.tag"></script>
     <script type="module">
         // import { bitflyer_BTC_JPY, bitflyer_FX_BTC_JPY } from './modules/src/executions.js';
         import * as exec from './modules/src/executions.js';
         riot.compile(() => {
             riot.mount('#bitflyer_BTC_JPY', 'dm-realtime', { stream: exec.bitflyer_BTC_JPY });
+            riot.mount('#ltp-bitflyer_BTC_JPY', 'dm-lastprice', { stream: exec.bitflyer_BTC_JPY });
             riot.mount('#bitflyer_FX_BTC_JPY', 'dm-realtime', { stream: exec.bitflyer_FX_BTC_JPY });
             riot.mount('#bitfinex_BTC_USD', 'dm-realtime', { stream: exec.bitfinex_BTC_USD });
             riot.mount('#bitmex_XBT_USD', 'dm-realtime', { stream: exec.bitmex_XBT_USD });

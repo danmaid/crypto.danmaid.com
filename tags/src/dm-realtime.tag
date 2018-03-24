@@ -5,7 +5,6 @@
     }
 -->
 <dm-realtime>
-    <div>{ lastprice }</div>
     <style>
         .buy {
             color: blue;
@@ -19,7 +18,6 @@
         this.on('mount', () => {
             let stream = this.opts.stream
             let target = this.root
-            let self = this
             stream.subscribe(msg => {
                 // 表示して消す。
                 let tag = document.createElement('div')
@@ -28,10 +26,6 @@
                 else if (msg.side == 'SELL') { tag.classList.add('sell') }
                 target.appendChild(tag)
                 setTimeout(function () { target.removeChild(tag) }, 2000)
-
-                // 最終約定価格を更新。
-                self.lastprice = msg.price
-                self.update()
             })
         })
     </script>
