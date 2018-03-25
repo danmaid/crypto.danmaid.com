@@ -7,6 +7,7 @@
     <title>男メイド（暗号通貨）</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/hybrid.min.css">
     <style>
         .tab-bar .mdc-tab {
             color: white;
@@ -35,12 +36,24 @@
                 </nav>
             </section>
         </div>
-
     </header>
     <main>
-        <div>お使いのブラウザはサポートされていないようです。ごめんなさい。</div>
+        <div>お使いのブラウザはサポートされていないようです。ごめんなさい。本サイトのメンテナンスは chrome で行っています。</div>
     </main>
+    <footer class="mdc-toolbar">
+        <div class="mdc-toolbar__row">
+            <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
+            </section>
+            <section class="mdc-toolbar__section">
+                🄫 2018 男メイド 
+            </section>
+            <section class="mdc-toolbar__section mdc-toolbar__section--align-end">
+            </section>
+        </div>
+    </footer>
+
     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
     <script>window.mdc.autoInit();</script>
 
     <script src="https://unpkg.com/@reactivex/rxjs/dist/global/Rx.min.js"></script>
@@ -51,6 +64,7 @@
 
     <!-- サイトコンテンツ -->
     <script type="riot/tag" src="home.tag"></script>
+    <script type="riot/tag" src="product.tag"></script>
     <script type="riot/tag" src="about.tag"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/riot-route@3.1/dist/route.min.js"></script>
@@ -59,11 +73,12 @@
         riot.compile(() => {
             route.base('/');
             route('/about', () => {
-                console.info('routed:about');
                 riot.mount('main', 'about');
             });
+            route('/product', () => {
+                riot.mount('main', 'product', { exec });
+            });
             route('/', () => {
-                console.info('routed:root');
                 riot.mount('main', 'home', { exec });
             });
             route.start(true);
