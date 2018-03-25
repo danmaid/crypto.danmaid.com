@@ -8,23 +8,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.css">
     <style>
-        .container {
-            display: flex;
+        .tab-bar .mdc-tab {
+            color: white;
+            color: var(--mdc-theme-text-primary-on-primary, white);
         }
 
-        .container>div {
-            margin: 0 0.5em;
+        .tab-bar .mdc-tab-bar__indicator {
+            background-color: white;
+            background-color: var(--mdc-theme-text-primary-on-primary, white);
         }
     </style>
 </head>
 
 <body>
-    <nav id="basic-tab-bar" class="mdc-tab-bar" data-mdc-auto-init="MDCTabBar">
-        <a class="mdc-tab mdc-tab--active" href="/">Home</a>
-        <a class="mdc-tab" href="/about">About</a>
-        <span class="mdc-tab-bar__indicator"></span>
-    </nav>
-    <main class="container">
+    <header class="mdc-toolbar">
+        <div class="mdc-toolbar__row">
+            <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
+                <span>男メイド（暗号通貨）</span>
+            </section>
+            <section class="mdc-toolbar__section mdc-toolbar__section--align-end">
+                <nav class="mdc-tab-bar tab-bar" data-mdc-auto-init="MDCTabBar">
+                    <a class="mdc-tab mdc-tab--active" href="/">Home</a>
+                    <a class="mdc-tab" href="/product">Product</a>
+                    <a class="mdc-tab" href="/about">About</a>
+                    <span class="mdc-tab-bar__indicator"></span>
+                </nav>
+            </section>
+        </div>
+
+    </header>
+    <main>
         <div>お使いのブラウザはサポートされていないようです。ごめんなさい。</div>
     </main>
     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.js"></script>
@@ -35,9 +48,9 @@
     <script src="https://cdn.jsdelivr.net/npm/riot/riot+compiler.min.js"></script>
     <script type="riot/tag" src="tags/src/dm-realtime.tag"></script>
     <script type="riot/tag" src="tags/src/dm-lastprice.tag"></script>
-    
+
     <!-- サイトコンテンツ -->
-    <script type="riot/tag" src="main.tag"></script>
+    <script type="riot/tag" src="home.tag"></script>
     <script type="riot/tag" src="about.tag"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/riot-route@3.1/dist/route.min.js"></script>
@@ -51,7 +64,7 @@
             });
             route('/', () => {
                 console.info('routed:root');
-                riot.mount('main', 'main', { exec });
+                riot.mount('main', 'home', { exec });
             });
             route.start(true);
         });

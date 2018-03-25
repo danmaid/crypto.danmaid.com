@@ -5,7 +5,7 @@
     }
 -->
 <dm-lastprice>
-    <div>{ lastprice }</div>
+    <virtual>{ lastprice }</virtual>
     <script>
         this.on('mount', () => {
             let stream = this.opts.stream
