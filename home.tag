@@ -6,35 +6,43 @@
         <div>
             <h3>BTC/JPY</h3>
             <div class="container">
-                <div class="ltp-item">
-                    <div class="market">bitFlyer</div>
-                    <dm-lastprice stream="{ opts.exec.bitflyer_BTC_JPY }" class="price"></dm-lastprice>
-                </div>
+                <a href="https://bitflyer.jp?bf=shwrhqqs" target="_blank">
+                    <div class="ltp-item">
+                        <div class="market">bitFlyer</div>
+                        <dm-lastprice stream="{ opts.exec.bitflyer_BTC_JPY }" class="price"></dm-lastprice>
+                    </div>
+                </a>
                 <div class="ltp-item">
                     <div class="market">bitbank.cc</div>
                     <dm-lastprice stream="{ opts.exec.bitbankcc_BTC_JPY }" class="price"></dm-lastprice>
                 </div>
-                <div class="ltp-item">
-                    <div class="market">Zaif</div>
-                    <dm-lastprice stream="{ opts.exec.zaif_BTC_JPY }" class="price"></dm-lastprice>
-                </div>
+                <a href="https://zaif.jp?ac=v1qklgobx2" target="_blank">
+                    <div class="ltp-item">
+                        <div class="market">Zaif</div>
+                        <dm-lastprice stream="{ opts.exec.zaif_BTC_JPY }" class="price"></dm-lastprice>
+                    </div>
+                </a>
                 <div class="ltp-item">
                     <div class="market">fisco</div>
                     <dm-lastprice stream="{ opts.exec.fisco_BTC_JPY }" class="price"></dm-lastprice>
                 </div>
-                <div class="ltp-item">
-                    <div class="market">coincheck</div>
-                    <dm-lastprice stream="{ opts.exec.coincheck_BTC_JPY }" class="price"></dm-lastprice>
-                </div>
+                <a href="https://coincheck.com/ja/?c=_Keu1VgjTDg" target="_blank">
+                    <div class="ltp-item">
+                        <div class="market">coincheck</div>
+                        <dm-lastprice stream="{ opts.exec.coincheck_BTC_JPY }" class="price"></dm-lastprice>
+                    </div>
+                </a>
             </div>
         </div>
         <div>
             <h3>BTC/JPY FX</h3>
             <div class="container">
-                <div class="ltp-item">
-                    <div class="market">bitFlyer</div>
-                    <dm-lastprice stream="{ opts.exec.bitflyer_FX_BTC_JPY }" class="price"></dm-lastprice>
-                </div>
+                <a href="https://bitflyer.jp/Lightning?bf=shwrhqqs" target="_blank">
+                    <div class="ltp-item">
+                        <div class="market">bitFlyer</div>
+                        <dm-lastprice stream="{ opts.exec.bitflyer_FX_BTC_JPY }" class="price"></dm-lastprice>
+                    </div>
+                </a>
             </div>
         </div>
         <div>
@@ -49,19 +57,23 @@
         <div>
             <h3>BTC/USD FX</h3>
             <div class="container">
-                <div class="ltp-item">
-                    <div class="market">bitmex</div>
-                    <dm-lastprice stream="{ opts.exec.bitmex_XBT_USD }" class="price"></dm-lastprice>
-                </div>
+                <a href="https://www.bitmex.com/register/XprwfJ" target="_blank">
+                    <div class="ltp-item">
+                        <div class="market">bitmex</div>
+                        <dm-lastprice stream="{ opts.exec.bitmex_XBT_USD }" class="price"></dm-lastprice>
+                    </div>
+                </a>
             </div>
         </div>
         <div>
             <h3>BTC/USDT</h3>
             <div class="container">
-                <div class="ltp-item">
-                    <div class="market">binance</div>
-                    <dm-lastprice stream="{ opts.exec.binance_BTC_USDT }" class="price"></dm-lastprice>
-                </div>
+                <a href="https://www.binance.com/?ref=20863976" target="_blank">
+                    <div class="ltp-item">
+                        <div class="market">binance</div>
+                        <dm-lastprice stream="{ opts.exec.binance_BTC_USDT }" class="price"></dm-lastprice>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
@@ -71,35 +83,43 @@
         <div>
             <h3>BTC/JPY</h3>
             <div class="container">
-                <div class="trade-item">
-                    <div class="market">bitFlyer</div>
-                    <dm-realtime stream="{ opts.exec.bitflyer_BTC_JPY }"></dm-realtime>
-                </div>
+                <a href="https://bitflyer.jp?bf=shwrhqqs" target="_blank">
+                    <div class="trade-item">
+                        <div class="market">bitFlyer</div>
+                        <dm-realtime stream="{ opts.exec.bitflyer_BTC_JPY }"></dm-realtime>
+                    </div>
+                </a>
                 <div class="trade-item">
                     <div class="market">bitbank.cc</div>
                     <dm-realtime stream="{ opts.exec.bitbankcc_BTC_JPY }"></dm-realtime>
                 </div>
-                <div class="trade-item">
-                    <div class="market">Zaif</div>
-                    <dm-realtime stream="{ opts.exec.zaif_BTC_JPY }"></dm-realtime>
-                </div>
+                <a href="https://zaif.jp?ac=v1qklgobx2" target="_blank">
+                    <div class="trade-item">
+                        <div class="market">Zaif</div>
+                        <dm-realtime stream="{ opts.exec.zaif_BTC_JPY }"></dm-realtime>
+                    </div>
+                </a>
                 <div class="trade-item">
                     <div class="market">fisco</div>
                     <dm-realtime stream="{ opts.exec.fisco_BTC_JPY }"></dm-realtime>
                 </div>
-                <div class="trade-item">
-                    <div class="market">coincheck</div>
-                    <dm-realtime stream="{ opts.exec.coincheck_BTC_JPY }"></dm-realtime>
-                </div>
+                <a href="https://coincheck.com/ja/?c=_Keu1VgjTDg" target="_blank">
+                    <div class="trade-item">
+                        <div class="market">coincheck</div>
+                        <dm-realtime stream="{ opts.exec.coincheck_BTC_JPY }"></dm-realtime>
+                    </div>
+                </a>
             </div>
         </div>
         <div>
             <h3>BTC/JPY FX</h3>
             <div class="container">
-                <div class="trade-item">
-                    <div class="market">bitFlyer</div>
-                    <dm-realtime stream="{ opts.exec.bitflyer_FX_BTC_JPY }"></dm-realtime>
-                </div>
+                <a href="https://bitflyer.jp/Lightning?bf=shwrhqqs" target="_blank">
+                    <div class="trade-item">
+                        <div class="market">bitFlyer</div>
+                        <dm-realtime stream="{ opts.exec.bitflyer_FX_BTC_JPY }"></dm-realtime>
+                    </div>
+                </a>
             </div>
         </div>
         <div>
@@ -114,19 +134,23 @@
         <div>
             <h3>BTC/USD FX</h3>
             <div class="container">
-                <div class="trade-item">
-                    <div class="market">bitmex(XBT)</div>
-                    <dm-realtime stream="{ opts.exec.bitmex_XBT_USD }"></dm-realtime>
-                </div>
+                <a href="https://www.bitmex.com/register/XprwfJ" target="_blank">
+                    <div class="trade-item">
+                        <div class="market">bitmex(XBT)</div>
+                        <dm-realtime stream="{ opts.exec.bitmex_XBT_USD }"></dm-realtime>
+                    </div>
+                </a>
             </div>
         </div>
         <div>
             <h3>BTC/USDT</h3>
             <div class="container">
-                <div class="trade-item">
-                    <div class="market">binance</div>
-                    <dm-realtime stream="{ opts.exec.binance_BTC_USDT }"></dm-realtime>
-                </div>
+                <a href="https://www.binance.com/?ref=20863976" target="_blank">
+                    <div class="trade-item">
+                        <div class="market">binance</div>
+                        <dm-realtime stream="{ opts.exec.binance_BTC_USDT }"></dm-realtime>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
@@ -193,6 +217,26 @@
             white-space: nowrap;
             overflow-y: auto;
             overflow-x: hidden;
+        }
+
+        :scope a:link {
+            color: inherit
+        }
+
+        :scope a:visited {
+            color: inherit
+        }
+
+        :scope a:hover {
+            color: inherit
+        }
+
+        :scope a:active {
+            color: inherit
+        }
+
+        :scope a {
+            text-decoration: none
         }
     </style>
     <script>
