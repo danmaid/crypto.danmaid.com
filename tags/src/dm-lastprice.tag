@@ -10,11 +10,16 @@
         this.on('mount', () => {
             let stream = this.opts.stream
             let self = this
-            stream.subscribe(msg => {
+            self.subscription = stream.subscribe(msg => {
                 // 最終約定価格を更新。
                 self.lastprice = msg.price
                 self.update()
             })
+        })
+
+        this.on('unmount', () => {
+            let self = this
+            self.subscription.unsubscribe()
         })
     </script>
 </dm-lastprice>

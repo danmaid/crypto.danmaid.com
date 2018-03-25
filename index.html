@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>男メイド（暗号通貨）</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.css">
     <style>
         .container {
             display: flex;
@@ -18,89 +19,41 @@
 </head>
 
 <body>
+    <nav id="basic-tab-bar" class="mdc-tab-bar" data-mdc-auto-init="MDCTabBar">
+        <a class="mdc-tab mdc-tab--active" href="/">Home</a>
+        <a class="mdc-tab" href="/about">About</a>
+        <span class="mdc-tab-bar__indicator"></span>
+    </nav>
     <main class="container">
-        <div>
-            <div>bitflyer_BTC_JPY</div>
-            <dm-lastprice id="ltp-bitflyer_BTC_JPY"></dm-lastprice>
-            <dm-realtime id="bitflyer_BTC_JPY"></dm-realtime>
-        </div>
-        <div>
-            <div>bitbankcc_BTC_JPY</div>
-            <dm-realtime id="bitbankcc_BTC_JPY"></dm-realtime>
-        </div>
-        <div>
-            <div>coincheck_BTC_JPY</div>
-            <dm-realtime id="coincheck_BTC_JPY"></dm-realtime>
-        </div>
-        <div>
-            <div>zaif_BTC_JPY</div>
-            <dm-realtime id="zaif_BTC_JPY"></dm-realtime>
-        </div>
-        <div>
-            <div>fisco_BTC_JPY</div>
-            <dm-realtime id="fisco_BTC_JPY"></dm-realtime>
-        </div>
-        <div>
-            <div>bitflyer_FX_BTC_JPY</div>
-            <dm-realtime id="bitflyer_FX_BTC_JPY"></dm-realtime>
-        </div>
-        <div>
-            <div>bitfinex_BTC_USD</div>
-            <dm-realtime id="bitfinex_BTC_USD"></dm-realtime>
-        </div>
-        <div>
-            <div>binance_BTC_USDT</div>
-            <dm-realtime id="binance_BTC_USDT"></dm-realtime>
-        </div>
-        <div>
-            <div>bitmex_XBT_USD</div>
-            <dm-realtime id="bitmex_XBT_USD"></dm-realtime>
-        </div>
-        <!-- <div>
-            <div>zaif_XEM_JPY</div>
-            <dm-realtime id="zaif_XEM_JPY"></dm-realtime>
-        </div>
-        <div>
-            <div>zaif_XEM_BTC</div>
-            <dm-realtime id="zaif_XEM_BTC"></dm-realtime>
-        </div>
-        <div>
-            <div>zaif_MONA_JPY</div>
-            <dm-realtime id="zaif_MONA_JPY"></dm-realtime>
-        </div>
-        <div>
-            <div>zaif_MONA_BTC</div>
-            <dm-realtime id="zaif_MONA_BTC"></dm-realtime>
-        </div>
-        <div>
-            <div>bitflyer_ETH_BTC</div>
-            <dm-realtime id="bitflyer_ETH_BTC"></dm-realtime>
-        </div> -->
+        <div>お使いのブラウザはサポートされていないようです。ごめんなさい。</div>
     </main>
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.js"></script>
+    <script>window.mdc.autoInit();</script>
+
     <script src="https://unpkg.com/@reactivex/rxjs/dist/global/Rx.min.js"></script>
     <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.20.2.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/riot/riot+compiler.min.js"></script>
     <script type="riot/tag" src="tags/src/dm-realtime.tag"></script>
     <script type="riot/tag" src="tags/src/dm-lastprice.tag"></script>
+    
+    <!-- サイトコンテンツ -->
+    <script type="riot/tag" src="main.tag"></script>
+    <script type="riot/tag" src="about.tag"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/riot-route@3.1/dist/route.min.js"></script>
     <script type="module">
-        // import { bitflyer_BTC_JPY, bitflyer_FX_BTC_JPY } from './modules/src/executions.js';
         import * as exec from './modules/src/executions.js';
         riot.compile(() => {
-            riot.mount('#bitflyer_BTC_JPY', 'dm-realtime', { stream: exec.bitflyer_BTC_JPY });
-            riot.mount('#ltp-bitflyer_BTC_JPY', 'dm-lastprice', { stream: exec.bitflyer_BTC_JPY });
-            riot.mount('#bitflyer_FX_BTC_JPY', 'dm-realtime', { stream: exec.bitflyer_FX_BTC_JPY });
-            riot.mount('#bitfinex_BTC_USD', 'dm-realtime', { stream: exec.bitfinex_BTC_USD });
-            riot.mount('#bitmex_XBT_USD', 'dm-realtime', { stream: exec.bitmex_XBT_USD });
-            riot.mount('#zaif_BTC_JPY', 'dm-realtime', { stream: exec.zaif_BTC_JPY });
-            // riot.mount('#zaif_XEM_JPY', 'dm-realtime', { stream: exec.zaif_XEM_JPY });
-            // riot.mount('#zaif_XEM_BTC', 'dm-realtime', { stream: exec.zaif_XEM_BTC });
-            // riot.mount('#zaif_MONA_JPY', 'dm-realtime', { stream: exec.zaif_MONA_JPY });
-            // riot.mount('#zaif_MONA_BTC', 'dm-realtime', { stream: exec.zaif_MONA_BTC });
-            // riot.mount('#bitflyer_ETH_BTC', 'dm-realtime', { stream: exec.bitflyer_ETH_BTC });
-            riot.mount('#bitbankcc_BTC_JPY', 'dm-realtime', { stream: exec.bitbankcc_BTC_JPY });
-            riot.mount('#coincheck_BTC_JPY', 'dm-realtime', { stream: exec.coincheck_BTC_JPY });
-            riot.mount('#binance_BTC_USDT', 'dm-realtime', { stream: exec.binance_BTC_USDT });
-            riot.mount('#fisco_BTC_JPY', 'dm-realtime', { stream: exec.fisco_BTC_JPY });
+            route.base('/');
+            route('/about', () => {
+                console.info('routed:about');
+                riot.mount('main', 'about');
+            });
+            route('/', () => {
+                console.info('routed:root');
+                riot.mount('main', 'main', { exec });
+            });
+            route.start(true);
         });
     </script>
 </body>

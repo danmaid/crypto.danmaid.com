@@ -14,7 +14,7 @@
 
 // BTC_JPY
 export const bitflyer_BTC_JPY = Rx.Observable.create(observer => {
-    const exec = new PubNub({
+    let exec = new PubNub({
         subscribeKey: 'sub-c-52a9ab50-291b-11e5-baaa-0619f8945a4f'
     });
     exec.addListener({
@@ -25,13 +25,14 @@ export const bitflyer_BTC_JPY = Rx.Observable.create(observer => {
     exec.subscribe({
         channels: ['lightning_executions_BTC_JPY']
     });
+    return () => exec.stop()
 })
     .flatMap(msg => msg)
     .share();
 
 // FX_BTC_JPY
 export const bitflyer_FX_BTC_JPY = Rx.Observable.create(observer => {
-    const exec = new PubNub({
+    let exec = new PubNub({
         subscribeKey: 'sub-c-52a9ab50-291b-11e5-baaa-0619f8945a4f'
     });
     exec.addListener({
@@ -42,13 +43,14 @@ export const bitflyer_FX_BTC_JPY = Rx.Observable.create(observer => {
     exec.subscribe({
         channels: ['lightning_executions_FX_BTC_JPY']
     });
+    return () => exec.stop()
 })
     .flatMap(msg => msg)
     .share();
 
 // ETH_BTC
 export const bitflyer_ETH_BTC = Rx.Observable.create(observer => {
-    const exec = new PubNub({
+    let exec = new PubNub({
         subscribeKey: 'sub-c-52a9ab50-291b-11e5-baaa-0619f8945a4f'
     });
     exec.addListener({
@@ -59,6 +61,7 @@ export const bitflyer_ETH_BTC = Rx.Observable.create(observer => {
     exec.subscribe({
         channels: ['lightning_executions_ETH_BTC']
     });
+    return () => exec.stop()
 })
     .flatMap(msg => msg)
     .share();
@@ -67,7 +70,7 @@ export const bitflyer_ETH_BTC = Rx.Observable.create(observer => {
 ///// bitfinex
 // BTC_USD
 export const bitfinex_BTC_USD = Rx.Observable.create(observer => {
-    const wss = new WebSocket('wss://api.bitfinex.com/ws/')
+    let wss = new WebSocket('wss://api.bitfinex.com/ws/')
     wss.onopen = function () {
         wss.send(JSON.stringify({
             "event": "subscribe",
@@ -78,6 +81,7 @@ export const bitfinex_BTC_USD = Rx.Observable.create(observer => {
     wss.onmessage = function (msg) {
         this.next(msg.data);
     }.bind(observer);
+    return () => wss.close();
 })
     .map(x => JSON.parse(x))
     .filter(msg => msg[1] == "tu")
@@ -99,7 +103,7 @@ export const bitfinex_BTC_USD = Rx.Observable.create(observer => {
 ///// bitmex
 // XBT_USD
 export const bitmex_XBT_USD = Rx.Observable.create(observer => {
-    const wss = new WebSocket('wss://www.bitmex.com/realtime')
+    let wss = new WebSocket('wss://www.bitmex.com/realtime')
     wss.onopen = function () {
         wss.send(JSON.stringify({
             "op": "subscribe",
@@ -111,6 +115,7 @@ export const bitmex_XBT_USD = Rx.Observable.create(observer => {
     wss.onmessage = function (msg) {
         this.next(msg.data);
     }.bind(observer);
+    return () => wss.close();
 })
     .map(x => JSON.parse(x))
     .filter(msg => msg.table == 'trade' && msg.action == 'insert')
@@ -124,12 +129,13 @@ export const bitmex_XBT_USD = Rx.Observable.create(observer => {
 ///// Zaif
 // BTC_JPY
 export const zaif_BTC_JPY = Rx.Observable.create(observer => {
-    const wss = new WebSocket('wss://ws.zaif.jp/stream?currency_pair=btc_jpy')
+    let wss = new WebSocket('wss://ws.zaif.jp/stream?currency_pair=btc_jpy')
     wss.onopen = function () {
     };
     wss.onmessage = function (msg) {
         this.next(msg.data);
     }.bind(observer);
+    return () => wss.close();
 })
     .map(x => JSON.parse(x))
     .flatMap(msg => msg.trades.sort((a, b) => a.date - b.date))
@@ -146,12 +152,13 @@ export const zaif_BTC_JPY = Rx.Observable.create(observer => {
 
 // XEM_JPY
 export const zaif_XEM_JPY = Rx.Observable.create(observer => {
-    const wss = new WebSocket('wss://ws.zaif.jp/stream?currency_pair=xem_jpy')
+    let wss = new WebSocket('wss://ws.zaif.jp/stream?currency_pair=xem_jpy')
     wss.onopen = function () {
     };
     wss.onmessage = function (msg) {
         this.next(msg.data);
     }.bind(observer);
+    return () => wss.close();
 })
     .map(x => JSON.parse(x))
     .flatMap(msg => msg.trades.sort((a, b) => a.date - b.date))
@@ -168,12 +175,13 @@ export const zaif_XEM_JPY = Rx.Observable.create(observer => {
 
 // XEM_BTC
 export const zaif_XEM_BTC = Rx.Observable.create(observer => {
-    const wss = new WebSocket('wss://ws.zaif.jp/stream?currency_pair=xem_btc')
+    let wss = new WebSocket('wss://ws.zaif.jp/stream?currency_pair=xem_btc')
     wss.onopen = function () {
     };
     wss.onmessage = function (msg) {
         this.next(msg.data);
     }.bind(observer);
+    return () => wss.close();
 })
     .map(x => JSON.parse(x))
     .flatMap(msg => msg.trades.sort((a, b) => a.date - b.date))
@@ -190,12 +198,13 @@ export const zaif_XEM_BTC = Rx.Observable.create(observer => {
 
 // MONA_JPY
 export const zaif_MONA_JPY = Rx.Observable.create(observer => {
-    const wss = new WebSocket('wss://ws.zaif.jp/stream?currency_pair=mona_jpy')
+    let wss = new WebSocket('wss://ws.zaif.jp/stream?currency_pair=mona_jpy')
     wss.onopen = function () {
     };
     wss.onmessage = function (msg) {
         this.next(msg.data);
     }.bind(observer);
+    return () => wss.close();
 })
     .map(x => JSON.parse(x))
     .flatMap(msg => msg.trades.sort((a, b) => a.date - b.date))
@@ -212,12 +221,13 @@ export const zaif_MONA_JPY = Rx.Observable.create(observer => {
 
 // MONA_BTC
 export const zaif_MONA_BTC = Rx.Observable.create(observer => {
-    const wss = new WebSocket('wss://ws.zaif.jp/stream?currency_pair=mona_btc')
+    let wss = new WebSocket('wss://ws.zaif.jp/stream?currency_pair=mona_btc')
     wss.onopen = function () {
     };
     wss.onmessage = function (msg) {
         this.next(msg.data);
     }.bind(observer);
+    return () => wss.close();
 })
     .map(x => JSON.parse(x))
     .flatMap(msg => msg.trades.sort((a, b) => a.date - b.date))
@@ -238,7 +248,7 @@ export const zaif_MONA_BTC = Rx.Observable.create(observer => {
 
 // BTC_JPY
 export const bitbankcc_BTC_JPY = Rx.Observable.create(observer => {
-    const exec = new PubNub({
+    let exec = new PubNub({
         subscribeKey: 'sub-c-e12e9174-dd60-11e6-806b-02ee2ddab7fe'
     });
     exec.addListener({
@@ -249,6 +259,7 @@ export const bitbankcc_BTC_JPY = Rx.Observable.create(observer => {
     exec.subscribe({
         channels: ['transactions_btc_jpy']
     });
+    return () => exec.stop()
 })
     .flatMap(msg => msg.data.transactions.sort((a, b) => a.executed_at - b.executed_at))
     .map(msg => {
@@ -261,7 +272,7 @@ export const bitbankcc_BTC_JPY = Rx.Observable.create(observer => {
 ///// coincheck
 // BTC_JPY
 export const coincheck_BTC_JPY = Rx.Observable.create(observer => {
-    const wss = new WebSocket('wss://ws-api.coincheck.com/')
+    let wss = new WebSocket('wss://ws-api.coincheck.com/')
     wss.onopen = function () {
         wss.send(JSON.stringify({
             "type": "subscribe",
@@ -271,6 +282,7 @@ export const coincheck_BTC_JPY = Rx.Observable.create(observer => {
     wss.onmessage = function (msg) {
         this.next(msg.data);
     }.bind(observer);
+    return () => wss.close();
 })
     .map(x => JSON.parse(x))
     .map(msg => {
@@ -285,12 +297,13 @@ export const coincheck_BTC_JPY = Rx.Observable.create(observer => {
 ///// binance
 // BTC_USDT
 export const binance_BTC_USDT = Rx.Observable.create(observer => {
-    const wss = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@trade')
+    let wss = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@trade')
     wss.onopen = function () {
     };
     wss.onmessage = function (msg) {
         this.next(msg.data);
     }.bind(observer);
+    return () => wss.close();
 })
     .map(x => JSON.parse(x))
     .map(msg => {
@@ -305,12 +318,13 @@ export const binance_BTC_USDT = Rx.Observable.create(observer => {
 ///// fisco
 // BTC_JPY
 export const fisco_BTC_JPY = Rx.Observable.create(observer => {
-    const wss = new WebSocket('wss://ws.fcce.jp:8888/stream?currency_pair=btc_jpy')
+    let wss = new WebSocket('wss://ws.fcce.jp:8888/stream?currency_pair=btc_jpy')
     wss.onopen = function () {
     };
     wss.onmessage = function (msg) {
         this.next(msg.data);
     }.bind(observer);
+    return () => wss.close();
 })
     .map(x => JSON.parse(x))
     .flatMap(msg => msg.trades.sort((a, b) => a.date - b.date))

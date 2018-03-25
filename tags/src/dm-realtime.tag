@@ -18,7 +18,8 @@
         this.on('mount', () => {
             let stream = this.opts.stream
             let target = this.root
-            stream.subscribe(msg => {
+            let self = this
+            self.subscription = stream.subscribe(msg => {
                 // 表示して消す。
                 let tag = document.createElement('div')
                 tag.innerText = msg.price + ' ' + msg.size
@@ -27,6 +28,11 @@
                 target.appendChild(tag)
                 setTimeout(function () { target.removeChild(tag) }, 2000)
             })
+        })
+
+        this.on('unmount', () => {
+            let self = this
+            self.subscription.unsubscribe()
         })
     </script>
 </dm-realtime>
