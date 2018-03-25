@@ -1,18 +1,12 @@
-<!DOCTYPE html>
-<html lang="ja">
-
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>sandbox</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.css">
-</head>
-
+<html>
 <body>
+    <script src="https://unpkg.com/@reactivex/rxjs/dist/global/Rx.min.js"></script>
+    <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.20.2.js"></script>
     <script type="module">
-        import {MDCRipple} from 'https://unpkg.com/material-components-web@latest/dist/material-components-web.js'
+        import { bitflyer_FX_BTC_JPY } from 'http://crypto.danmaid.com/modules/src/executions.js';
+        bitflyer_FX_BTC_JPY.subscribe(data => {
+            console.log(data);
+        })
     </script>
 </body>
-
 </html>

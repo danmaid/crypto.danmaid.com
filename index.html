@@ -31,6 +31,7 @@
                 <nav class="mdc-tab-bar tab-bar" data-mdc-auto-init="MDCTabBar">
                     <a class="mdc-tab mdc-tab--active" href="/">Home</a>
                     <a class="mdc-tab" href="/product">Product</a>
+                    <a class="mdc-tab" href="/labo">Labo</a>
                     <a class="mdc-tab" href="/about">About</a>
                     <span class="mdc-tab-bar__indicator"></span>
                 </nav>
@@ -62,9 +63,13 @@
     <script type="riot/tag" src="tags/src/dm-realtime.tag"></script>
     <script type="riot/tag" src="tags/src/dm-lastprice.tag"></script>
 
+    <!-- for labo -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+
     <!-- サイトコンテンツ -->
     <script type="riot/tag" src="home.tag"></script>
     <script type="riot/tag" src="product.tag"></script>
+    <script type="riot/tag" src="labo.tag"></script>
     <script type="riot/tag" src="about.tag"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/riot-route@3.1/dist/route.min.js"></script>
@@ -77,6 +82,9 @@
             });
             route('/product', () => {
                 riot.mount('main', 'product', { exec });
+            });
+            route('/labo', () => {
+                riot.mount('main', 'labo', { exec });
             });
             route('/', () => {
                 riot.mount('main', 'home', { exec });
