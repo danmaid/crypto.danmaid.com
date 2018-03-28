@@ -176,21 +176,9 @@
 
 <labo-multivolume>
     <div class="container">
-        <div class="ltp-item">
-            <div class="market">bitFlyer</div>
-            <dm-lastprice stream="{ opts.exec.bitflyer_BTC_JPY }" class="price"></dm-lastprice>
-        </div>
-        <div class="ltp-item">
-            <div class="market">Zaif</div>
-            <dm-lastprice stream="{ opts.exec.zaif_BTC_JPY }" class="price"></dm-lastprice>
-        </div>
-        <div class="ltp-item">
-            <div class="market">bitbank</div>
-            <dm-lastprice stream="{ opts.exec.bitbankcc_BTC_JPY }" class="price"></dm-lastprice>
-        </div>
-        <div class="ltp-item">
-            <div class="market">coincheck</div>
-            <dm-lastprice stream="{ opts.exec.coincheck_BTC_JPY }" class="price"></dm-lastprice>
+        <div class="ltp-item" each="{ market in ds }" style="border-color: { market.color }">
+            <div class="market">{ market.label }</div>
+            <dm-lastprice stream="{ market.datasource }" class="price"></dm-lastprice>
         </div>
     </div>
     <canvas id="myChart"></canvas>
@@ -221,14 +209,6 @@
 
     <script>
         let label = new Array(30)
-        let bitflyerBuy = (new Array(30)).fill(0)
-        let bitflyerSell = (new Array(30)).fill(0)
-        let zaifBuy = (new Array(30)).fill(0)
-        let zaifSell = (new Array(30)).fill(0)
-        let bitbankBuy = (new Array(30)).fill(0)
-        let bitbankSell = (new Array(30)).fill(0)
-        let coincheckBuy = (new Array(30)).fill(0)
-        let coincheckSell = (new Array(30)).fill(0)
         this.subscriptions = []
 
         this.on('mount', () => {
@@ -236,66 +216,120 @@
             let target = this.root
             let self = this
 
+            let o = [{
+                datasource: exec.bitflyer_BTC_JPY,
+                label: "bitFlyer",
+                color: "#F44336",
+                leverage: 1
+            }, {
+                datasource: exec.zaif_BTC_JPY,
+                label: "Zaif",
+                color: "#E91E63",
+                leverage: 1
+            }, {
+                datasource: exec.bitbankcc_BTC_JPY,
+                label: "bitbank",
+                color: "#9C27B0",
+                leverage: 1
+            }, {
+                datasource: exec.coincheck_BTC_JPY,
+                label: "coincheck",
+                color: "#673AB7",
+                leverage: 1
+            }, {
+                datasource: exec.bitflyer_FX_BTC_JPY,
+                label: "bitFlyerFX",
+                color: "#3F51B5",
+                leverage: 15
+            }, {
+                datasource: exec.bitfinex_BTC_USD,
+                label: "bitfinex",
+                color: "#2196F3",
+                leverage: 1
+            }, {
+                datasource: exec.bitmex_XBT_USD.map(x => { x.size = x.homeNotional; return x }),
+                label: "bitmex",
+                color: "#03A9F4",
+                leverage: 100
+            }, {
+                datasource: exec.binance_BTC_USDT,
+                label: "binance",
+                color: "#00BCD4",
+                leverage: 1
+            }]
+            self.ds = o
+            self.update()
+
+            let buyset = []
+            let sellset = []
+            datasource = {}
+            o.forEach(data => {
+                datasource[data.label] = {
+                    buy: (new Array(30)).fill(0),
+                    sell: (new Array(30)).fill(0)
+                }
+                buyset.push({
+                    label: data.label,
+                    backgroundColor: data.color,
+                    borderColor: data.color,
+                    pointRadius: 0,
+                    data: datasource[data.label].buy
+                })
+                sellset.push({
+                    label: data.label,
+                    backgroundColor: data.color,
+                    borderColor: data.color,
+                    pointRadius: 0,
+                    data: datasource[data.label].sell
+                })
+            })
+
+            self.subscriptions.push(
+                Rx.Observable.interval(5000).timestamp()
+                    .withLatestFrom(o.map(data => data.datasource))
+                    .subscribe(x => {
+                        Object.keys(datasource).forEach(key => {
+                            datasource[key].buy.push(0)
+                            datasource[key].buy.shift()
+                            datasource[key].sell.push(0)
+                            datasource[key].sell.shift()
+                        })
+                        label.push((new Date(x[0].timestamp)).toLocaleTimeString())
+                        label.shift()
+                    })
+            )
+            self.subscriptions.push(
+                Rx.Observable.interval(500).timestamp()
+                    .subscribe(x => {
+                        chart.update()
+                    })
+            )
+
+            o.forEach(data => {
+                let source = data.datasource.share()
+                self.subscriptions.push(
+                    source.filter(x => x.side == 'BUY')
+                        .subscribe(x => {
+                            datasource[data.label].buy[29] += parseFloat(x.size)
+                        })
+                )
+                self.subscriptions.push(
+                    source.filter(x => x.side == 'SELL')
+                        .subscribe(x => {
+                            datasource[data.label].sell[29] -= parseFloat(x.size)
+                        })
+                )
+            })
+
             let ctx = document.getElementById('myChart').getContext('2d');
             let chart = new Chart(ctx, {
-                // The type of chart we want to create
                 type: 'bar',
 
-                // The data for our dataset
                 data: {
                     labels: label,
-                    datasets: [{
-                        label: "bitFlyer",
-                        backgroundColor: 'rgb(255, 99, 132)',
-                        borderColor: 'rgb(255, 99, 132)',
-                        data: bitflyerBuy,
-                        pointRadius: 0,
-                    }, {
-                        label: "Zaif",
-                        backgroundColor: 'rgb(100, 100, 255)',
-                        borderColor: 'rgb(100, 100, 255)',
-                        data: zaifBuy,
-                        pointRadius: 0,
-                    }, {
-                        label: "bitbank",
-                        backgroundColor: 'rgb(100, 255, 100)',
-                        borderColor: 'rgb(100, 255, 100)',
-                        data: bitbankBuy,
-                        pointRadius: 0,
-                    }, {
-                        label: "coincheck",
-                        backgroundColor: 'rgb(255, 100, 50)',
-                        borderColor: 'rgb(255, 100, 50)',
-                        data: coincheckBuy,
-                        pointRadius: 0,
-                    }, {
-                        label: "bitFlyer",
-                        backgroundColor: 'rgb(255, 99, 132)',
-                        borderColor: 'rgb(255, 99, 132)',
-                        data: bitflyerSell,
-                        pointRadius: 0,
-                    }, {
-                        label: "Zaif",
-                        backgroundColor: 'rgb(100, 100, 255)',
-                        borderColor: 'rgb(100, 100, 255)',
-                        data: zaifSell,
-                        pointRadius: 0,
-                    }, {
-                        label: "bitbank",
-                        backgroundColor: 'rgb(100, 255, 100)',
-                        borderColor: 'rgb(100, 255, 100)',
-                        data: bitbankSell,
-                        pointRadius: 0,
-                    }, {
-                        label: "coincheck",
-                        backgroundColor: 'rgb(255, 100, 50)',
-                        borderColor: 'rgb(255, 100, 50)',
-                        data: coincheckSell,
-                        pointRadius: 0,
-                    }]
+                    datasets: buyset.concat(sellset)
                 },
 
-                // Configuration options go here
                 options: {
                     responsive: true,
                     hoverMode: 'index',
@@ -304,101 +338,18 @@
                             stacked: true
                         }],
                         yAxes: [{
-                            stacked: true
+                            stacked: true,
+                            ticks: {
+                                min: -120,
+                                max: 120
+                            }
                         }],
                     },
                     legend: {
                         display: false
                     }
                 }
-            });
-
-            self.subscriptions.push(
-                Rx.Observable.interval(5000).timestamp()
-                    .withLatestFrom(
-                        exec.bitflyer_BTC_JPY,
-                        exec.zaif_BTC_JPY,
-                        exec.bitbankcc_BTC_JPY,
-                        exec.coincheck_BTC_JPY
-                    )
-                    .subscribe(x => {
-                        bitflyerBuy.push(0)
-                        bitflyerBuy.shift()
-                        bitflyerSell.push(0)
-                        bitflyerSell.shift()
-                        zaifBuy.push(0)
-                        zaifBuy.shift()
-                        zaifSell.push(0)
-                        zaifSell.shift()
-                        bitbankBuy.push(0)
-                        bitbankBuy.shift()
-                        bitbankSell.push(0)
-                        bitbankSell.shift()
-                        coincheckBuy.push(0)
-                        coincheckBuy.shift()
-                        coincheckSell.push(0)
-                        coincheckSell.shift()
-                        label.push((new Date(x[0].timestamp)).toLocaleTimeString())
-                        label.shift()
-                        chart.update()
-                    })
-            )
-
-            let bitflyer = exec.bitflyer_BTC_JPY.share()
-            self.subscriptions.push(
-                bitflyer.filter(x => x.side == 'BUY')
-                    .subscribe(x => {
-                        bitflyerBuy[bitflyerBuy.length - 1] += x.size
-                    })
-            )
-            self.subscriptions.push(
-                bitflyer.filter(x => x.side == 'SELL')
-                    .subscribe(x => {
-                        bitflyerSell[bitflyerSell.length - 1] -= x.size
-                    })
-            )
-
-            let zaif = exec.zaif_BTC_JPY.share()
-            self.subscriptions.push(
-                zaif.filter(x => x.side == 'BUY')
-                    .subscribe(x => {
-                        zaifBuy[zaifBuy.length - 1] += x.size
-                    })
-            )
-            self.subscriptions.push(
-                zaif.filter(x => x.side == 'SELL')
-                    .subscribe(x => {
-                        zaifSell[zaifSell.length - 1] -= x.size
-                    })
-            )
-
-            let bitbank = exec.bitbankcc_BTC_JPY.share()
-            self.subscriptions.push(
-                bitbank.filter(x => x.side == 'BUY')
-                    .subscribe(x => {
-                        bitbankBuy[bitbankBuy.length - 1] += x.size
-                    })
-            )
-            self.subscriptions.push(
-                bitbank.filter(x => x.side == 'SELL')
-                    .subscribe(x => {
-                        bitbankSell[bitbankSell.length - 1] -= x.size
-                    })
-            )
-
-            let coincheck = exec.coincheck_BTC_JPY.share()
-            self.subscriptions.push(
-                coincheck.filter(x => x.side == 'BUY')
-                    .subscribe(x => {
-                        coincheckBuy[coincheckBuy.length - 1] += x.size
-                    })
-            )
-            self.subscriptions.push(
-                coincheck.filter(x => x.side == 'SELL')
-                    .subscribe(x => {
-                        coincheckSell[coincheckSell.length - 1] -= x.size
-                    })
-            )
+            })
         })
 
         this.on('unmount', () => {
