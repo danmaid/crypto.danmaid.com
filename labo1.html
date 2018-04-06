@@ -41,10 +41,11 @@
             width: 200px;
             border: 1px solid rgba(200, 200, 200, 0.8);
             display: flex;
+            flex-direction: row-reverse;
         }
 
         .bar.reverse {
-            flex-direction: row-reverse;
+            flex-direction: row;
         }
 
         .bar .item {
@@ -73,71 +74,71 @@
 <body>
     <div id="btcusd" style="margin: 12px;">
         <div id="bitmex" class="cont">
-            <div id="sell-volume" class="bar reverse">
-                <div id="item" class="item sell"></div>
-                <div id="text"></div>
-            </div>
             <div id="buy-volume" class="bar">
                 <div id="item" class="item buy"></div>
+                <div id="text"></div>
+            </div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
                 <div id="text"></div>
             </div>
             <div>bitmex</div>
             <div id="lastprice"></div>
         </div>
         <div id="mix" class="cont">
-            <div id="sell-volume" class="bar reverse">
-                <div id="item" class="item sell"></div>
-                <div id="text"></div>
-            </div>
             <div id="buy-volume" class="bar">
                 <div id="item" class="item buy"></div>
                 <div id="text"></div>
             </div>
-            <div>Mix</div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
+                <div id="text"></div>
+            </div>
+            <div>Mix BTC_USD</div>
         </div>
         <div id="bitfinex" class="cont">
-            <div id="sell-volume" class="bar reverse">
-                <div id="item" class="item sell"></div>
-                <div id="text"></div>
-            </div>
             <div id="buy-volume" class="bar">
                 <div id="item" class="item buy"></div>
+                <div id="text"></div>
+            </div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
                 <div id="text"></div>
             </div>
             <div>bitfinex</div>
             <div id="lastprice"></div>
         </div>
         <div id="gdax" class="cont">
-            <div id="sell-volume" class="bar reverse">
-                <div id="item" class="item sell"></div>
-                <div id="text"></div>
-            </div>
             <div id="buy-volume" class="bar">
                 <div id="item" class="item buy"></div>
+                <div id="text"></div>
+            </div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
                 <div id="text"></div>
             </div>
             <div>GDAX</div>
             <div id="lastprice"></div>
         </div>
         <div id="okcoin" class="cont">
-            <div id="sell-volume" class="bar reverse">
-                <div id="item" class="item sell"></div>
-                <div id="text"></div>
-            </div>
             <div id="buy-volume" class="bar">
                 <div id="item" class="item buy"></div>
+                <div id="text"></div>
+            </div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
                 <div id="text"></div>
             </div>
             <div>OKCoin</div>
             <div id="lastprice"></div>
         </div>
         <div id="bitstamp" class="cont">
-            <div id="sell-volume" class="bar reverse">
-                <div id="item" class="item sell"></div>
-                <div id="text"></div>
-            </div>
             <div id="buy-volume" class="bar">
                 <div id="item" class="item buy"></div>
+                <div id="text"></div>
+            </div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
                 <div id="text"></div>
             </div>
             <div>Bitstamp</div>
@@ -147,35 +148,35 @@
 
     <div id="btcusdt" style="margin: 12px;">
         <div id="mix" class="cont">
-            <div id="sell-volume" class="bar reverse">
-                <div id="item" class="item sell"></div>
-                <div id="text"></div>
-            </div>
             <div id="buy-volume" class="bar">
                 <div id="item" class="item buy"></div>
                 <div id="text"></div>
             </div>
-            <div>Mix</div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
+                <div id="text"></div>
+            </div>
+            <div>Mix BTC_USDT</div>
         </div>
         <div id="binance" class="cont">
-            <div id="sell-volume" class="bar reverse">
-                <div id="item" class="item sell"></div>
-                <div id="text"></div>
-            </div>
             <div id="buy-volume" class="bar">
                 <div id="item" class="item buy"></div>
+                <div id="text"></div>
+            </div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
                 <div id="text"></div>
             </div>
             <div>binance</div>
             <div id="lastprice"></div>
         </div>
         <div id="okex" class="cont">
-            <div id="sell-volume" class="bar reverse">
-                <div id="item" class="item sell"></div>
-                <div id="text"></div>
-            </div>
             <div id="buy-volume" class="bar">
                 <div id="item" class="item buy"></div>
+                <div id="text"></div>
+            </div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
                 <div id="text"></div>
             </div>
             <div>OKEx</div>
@@ -185,74 +186,174 @@
 
     <div id="btcjpy" style="margin: 12px;">
         <div id="bitflyerFX" class="cont">
-            <div id="sell-volume" class="bar reverse">
-                <div id="item" class="item sell"></div>
-                <div id="text"></div>
-            </div>
             <div id="buy-volume" class="bar">
                 <div id="item" class="item buy"></div>
+                <div id="text"></div>
+            </div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
                 <div id="text"></div>
             </div>
             <div>bitflyerFX</div>
             <div id="lastprice"></div>
         </div>
         <div id="mix" class="cont">
-            <div id="sell-volume" class="bar reverse">
-                <div id="item" class="item sell"></div>
-                <div id="text"></div>
-            </div>
             <div id="buy-volume" class="bar">
                 <div id="item" class="item buy"></div>
                 <div id="text"></div>
             </div>
-            <div>Mix</div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
+                <div id="text"></div>
+            </div>
+            <div>Mix BTC_JPY</div>
         </div>
         <div id="bitflyer" class="cont">
-            <div id="sell-volume" class="bar reverse">
-                <div id="item" class="item sell"></div>
-                <div id="text"></div>
-            </div>
             <div id="buy-volume" class="bar">
                 <div id="item" class="item buy"></div>
+                <div id="text"></div>
+            </div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
                 <div id="text"></div>
             </div>
             <div>bitflyer</div>
             <div id="lastprice"></div>
         </div>
         <div id="zaif" class="cont">
-            <div id="sell-volume" class="bar reverse">
-                <div id="item" class="item sell"></div>
-                <div id="text"></div>
-            </div>
             <div id="buy-volume" class="bar">
                 <div id="item" class="item buy"></div>
+                <div id="text"></div>
+            </div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
                 <div id="text"></div>
             </div>
             <div>Zaif</div>
             <div id="lastprice"></div>
         </div>
         <div id="bitbank" class="cont">
-            <div id="sell-volume" class="bar reverse">
-                <div id="item" class="item sell"></div>
-                <div id="text"></div>
-            </div>
             <div id="buy-volume" class="bar">
                 <div id="item" class="item buy"></div>
+                <div id="text"></div>
+            </div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
                 <div id="text"></div>
             </div>
             <div>bitbank</div>
             <div id="lastprice"></div>
         </div>
         <div id="coincheck" class="cont">
-            <div id="sell-volume" class="bar reverse">
-                <div id="item" class="item sell"></div>
-                <div id="text"></div>
-            </div>
             <div id="buy-volume" class="bar">
                 <div id="item" class="item buy"></div>
                 <div id="text"></div>
             </div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
+                <div id="text"></div>
+            </div>
             <div>coincheck</div>
+            <div id="lastprice"></div>
+        </div>
+    </div>
+
+    <div id="ethusd" style="margin: 12px;">
+        <div id="mix" class="cont">
+            <div id="buy-volume" class="bar">
+                <div id="item" class="item buy"></div>
+                <div id="text"></div>
+            </div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
+                <div id="text"></div>
+            </div>
+            <div>Mix ETH_USD</div>
+        </div>
+        <div id="bitfinex" class="cont">
+            <div id="buy-volume" class="bar">
+                <div id="item" class="item buy"></div>
+                <div id="text"></div>
+            </div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
+                <div id="text"></div>
+            </div>
+            <div>bitfinex</div>
+            <div id="lastprice"></div>
+        </div>
+    </div>
+
+    <div id="usdbtc" style="margin: 12px;">
+        <div id="bitmex" class="cont">
+            <div id="buy-volume" class="bar">
+                <div id="item" class="item buy"></div>
+                <div id="text"></div>
+            </div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
+                <div id="text"></div>
+            </div>
+            <div>bitmex</div>
+            <div id="lastprice"></div>
+        </div>
+        <div id="mix" class="cont">
+            <div id="buy-volume" class="bar">
+                <div id="item" class="item buy"></div>
+                <div id="text"></div>
+            </div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
+                <div id="text"></div>
+            </div>
+            <div>Mix USD_BTC</div>
+        </div>
+        <div id="bitfinex" class="cont">
+            <div id="buy-volume" class="bar">
+                <div id="item" class="item buy"></div>
+                <div id="text"></div>
+            </div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
+                <div id="text"></div>
+            </div>
+            <div>bitfinex</div>
+            <div id="lastprice"></div>
+        </div>
+        <div id="gdax" class="cont">
+            <div id="buy-volume" class="bar">
+                <div id="item" class="item buy"></div>
+                <div id="text"></div>
+            </div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
+                <div id="text"></div>
+            </div>
+            <div>GDAX</div>
+            <div id="lastprice"></div>
+        </div>
+        <div id="okcoin" class="cont">
+            <div id="buy-volume" class="bar">
+                <div id="item" class="item buy"></div>
+                <div id="text"></div>
+            </div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
+                <div id="text"></div>
+            </div>
+            <div>OKCoin</div>
+            <div id="lastprice"></div>
+        </div>
+        <div id="bitstamp" class="cont">
+            <div id="buy-volume" class="bar">
+                <div id="item" class="item buy"></div>
+                <div id="text"></div>
+            </div>
+            <div id="sell-volume" class="bar reverse">
+                <div id="item" class="item sell"></div>
+                <div id="text"></div>
+            </div>
+            <div>Bitstamp</div>
             <div id="lastprice"></div>
         </div>
     </div>
@@ -335,6 +436,64 @@
             bitstampBtcUsd.push(e.detail)
         })
 
+        // USD_BTC
+        let usdbtc = new Pair()
+        let usdbtcTag = document.querySelector('#usdbtc')
+        let usdbtcBitfinexLtp = usdbtcTag.querySelector('#bitfinex #lastprice')
+        let usdbtcBitfinex = new Pair()
+        exec.bitfinex_BTC_USD.addEventListener('message', (e) => {
+            let rev = JSON.parse(JSON.stringify(e.detail))
+            rev.volume = e.detail.volume * e.detail.price
+            rev.date = new Date(rev.date)
+            rev.side = rev.side == side.SELL ? side.BUY : side.SELL
+            usdbtc.push(rev)
+            usdbtcBitfinexLtp.textContent = rev.price
+            usdbtcBitfinex.push(rev)
+        })
+        let usdbtcBitmexLtp = usdbtcTag.querySelector('#bitmex #lastprice')
+        let usdbtcBitmex = new Pair()
+        exec.bitmex_BTC_USD.addEventListener('message', (e) => {
+            let rev = JSON.parse(JSON.stringify(e.detail))
+            rev.volume = e.detail.volume * e.detail.price
+            rev.date = new Date(rev.date)
+            rev.side = rev.side == side.SELL ? side.BUY : side.SELL
+            usdbtcBitmexLtp.textContent = rev.price
+            usdbtcBitmex.push(rev)
+        })
+        let usdbtcGdaxLtp = usdbtcTag.querySelector('#gdax #lastprice')
+        let usdbtcGdax = new Pair()
+        exec.gdax_BTC_USD.addEventListener('message', (e) => {
+            let rev = JSON.parse(JSON.stringify(e.detail))
+            rev.volume = e.detail.volume * e.detail.price
+            rev.date = new Date(rev.date)
+            rev.side = rev.side == side.SELL ? side.BUY : side.SELL
+            usdbtc.push(rev)
+            usdbtcGdaxLtp.textContent = rev.price
+            usdbtcGdax.push(rev)
+        })
+        let usdbtcOkcoinLtp = usdbtcTag.querySelector('#okcoin #lastprice')
+        let usdbtcOkcoin = new Pair()
+        exec.okcoin_BTC_USD.addEventListener('message', (e) => {
+            let rev = JSON.parse(JSON.stringify(e.detail))
+            rev.volume = e.detail.volume * e.detail.price
+            rev.date = new Date(rev.date)
+            rev.side = rev.side == side.SELL ? side.BUY : side.SELL
+            usdbtc.push(rev)
+            usdbtcOkcoinLtp.textContent = rev.price
+            usdbtcOkcoin.push(rev)
+        })
+        let usdbtcBitstampLtp = usdbtcTag.querySelector('#bitstamp #lastprice')
+        let usdbtcBitstamp = new Pair()
+        exec.bitstamp_BTC_USD.addEventListener('message', (e) => {
+            let rev = JSON.parse(JSON.stringify(e.detail))
+            rev.volume = e.detail.volume * e.detail.price
+            rev.date = new Date(rev.date)
+            rev.side = rev.side == side.SELL ? side.BUY : side.SELL
+            usdbtc.push(rev)
+            usdbtcBitstampLtp.textContent = rev.price
+            usdbtcBitstamp.push(rev)
+        })
+
         // BTC_USDT
         let btcusdt = new Pair()
         let btcusdtTag = document.querySelector('#btcusdt')
@@ -392,7 +551,18 @@
             coincheckBtcJpy.push(e.detail)
         })
 
+        // ETH_USD
+        let ethusd = new Pair()
+        let ethusdTag = document.querySelector('#ethusd')
+        let bitfinexEthUsdLtp = ethusdTag.querySelector('#bitfinex #lastprice')
+        let bitfinexEthUsd = new Pair()
+        exec.bitfinex_ETH_USD.addEventListener('message', (e) => {
+            ethusd.push(e.detail)
+            bitfinexEthUsdLtp.textContent = e.detail.price
+            bitfinexEthUsd.push(e.detail)
+        })
 
+        // BTC_USD
         let target = btcusdTag.querySelector('#mix')
         let btcusdmix = {
             sellVolume: target.querySelector('#sell-volume #item'),
@@ -436,6 +606,51 @@
             buyText: target.querySelector('#buy-volume #text')
         }
 
+        // USD_BTC
+        target = usdbtcTag.querySelector('#mix')
+        let usdbtcMixTag = {
+            sellVolume: target.querySelector('#sell-volume #item'),
+            buyVolume: target.querySelector('#buy-volume #item'),
+            sellText: target.querySelector('#sell-volume #text'),
+            buyText: target.querySelector('#buy-volume #text')
+        }
+        target = usdbtcTag.querySelector('#bitfinex')
+        let usdbtcBitfinexTag = {
+            sellVolume: target.querySelector('#sell-volume #item'),
+            buyVolume: target.querySelector('#buy-volume #item'),
+            sellText: target.querySelector('#sell-volume #text'),
+            buyText: target.querySelector('#buy-volume #text')
+        }
+        target = usdbtcTag.querySelector('#bitmex')
+        let usdbtcBitmexTag = {
+            sellVolume: target.querySelector('#sell-volume #item'),
+            buyVolume: target.querySelector('#buy-volume #item'),
+            sellText: target.querySelector('#sell-volume #text'),
+            buyText: target.querySelector('#buy-volume #text')
+        }
+        target = usdbtcTag.querySelector('#gdax')
+        let usdbtcGdaxTag = {
+            sellVolume: target.querySelector('#sell-volume #item'),
+            buyVolume: target.querySelector('#buy-volume #item'),
+            sellText: target.querySelector('#sell-volume #text'),
+            buyText: target.querySelector('#buy-volume #text')
+        }
+        target = usdbtcTag.querySelector('#okcoin')
+        let usdbtcOkcoinTag = {
+            sellVolume: target.querySelector('#sell-volume #item'),
+            buyVolume: target.querySelector('#buy-volume #item'),
+            sellText: target.querySelector('#sell-volume #text'),
+            buyText: target.querySelector('#buy-volume #text')
+        }
+        target = usdbtcTag.querySelector('#bitstamp')
+        let usdbtcBitstampTag = {
+            sellVolume: target.querySelector('#sell-volume #item'),
+            buyVolume: target.querySelector('#buy-volume #item'),
+            sellText: target.querySelector('#sell-volume #text'),
+            buyText: target.querySelector('#buy-volume #text')
+        }
+
+        // BTC_USDT
         target = btcusdtTag.querySelector('#mix')
         let btcusdtmix = {
             sellVolume: target.querySelector('#sell-volume #item'),
@@ -500,7 +715,24 @@
             sellText: target.querySelector('#sell-volume #text'),
             buyText: target.querySelector('#buy-volume #text')
         }
+
+        // ETH_USD
+        target = ethusdTag.querySelector('#mix')
+        let ethusdmix = {
+            sellVolume: target.querySelector('#sell-volume #item'),
+            buyVolume: target.querySelector('#buy-volume #item'),
+            sellText: target.querySelector('#sell-volume #text'),
+            buyText: target.querySelector('#buy-volume #text')
+        }
+        target = ethusdTag.querySelector('#bitfinex')
+        let ethusdbitfinex = {
+            sellVolume: target.querySelector('#sell-volume #item'),
+            buyVolume: target.querySelector('#buy-volume #item'),
+            sellText: target.querySelector('#sell-volume #text'),
+            buyText: target.querySelector('#buy-volume #text')
+        }
         setInterval(() => {
+            // BTC_USD
             btcusdmix.sellVolume.style.width = btcusd.getSellVolume() + '%'
             btcusdmix.buyVolume.style.width = btcusd.getBuyVolume() + '%'
             btcusdmix.sellText.textContent = btcusd.getSellVolume()
@@ -531,7 +763,38 @@
             bitstamp.sellText.textContent = bitstampBtcUsd.getSellVolume()
             bitstamp.buyText.textContent = bitstampBtcUsd.getBuyVolume()
 
+            // USD_BTC
+            usdbtcMixTag.sellVolume.style.width = usdbtc.getSellVolume() / 10000 + '%'
+            usdbtcMixTag.buyVolume.style.width = usdbtc.getBuyVolume() / 10000 + '%'
+            usdbtcMixTag.sellText.textContent = usdbtc.getSellVolume()
+            usdbtcMixTag.buyText.textContent = usdbtc.getBuyVolume()
 
+            usdbtcBitfinexTag.sellVolume.style.width = usdbtcBitfinex.getSellVolume() / 10000 + '%'
+            usdbtcBitfinexTag.buyVolume.style.width = usdbtcBitfinex.getBuyVolume() / 10000 + '%'
+            usdbtcBitfinexTag.sellText.textContent = usdbtcBitfinex.getSellVolume()
+            usdbtcBitfinexTag.buyText.textContent = usdbtcBitfinex.getBuyVolume()
+
+            usdbtcBitmexTag.sellVolume.style.width = usdbtcBitmex.getSellVolume() / 10000 + '%'
+            usdbtcBitmexTag.buyVolume.style.width = usdbtcBitmex.getBuyVolume() / 10000 + '%'
+            usdbtcBitmexTag.sellText.textContent = usdbtcBitmex.getSellVolume()
+            usdbtcBitmexTag.buyText.textContent = usdbtcBitmex.getBuyVolume()
+
+            usdbtcGdaxTag.sellVolume.style.width = usdbtcGdax.getSellVolume() / 10000 + '%'
+            usdbtcGdaxTag.buyVolume.style.width = usdbtcGdax.getBuyVolume() / 10000 + '%'
+            usdbtcGdaxTag.sellText.textContent = usdbtcGdax.getSellVolume()
+            usdbtcGdaxTag.buyText.textContent = usdbtcGdax.getBuyVolume()
+
+            usdbtcOkcoinTag.sellVolume.style.width = usdbtcOkcoin.getSellVolume() / 10000 + '%'
+            usdbtcOkcoinTag.buyVolume.style.width = usdbtcOkcoin.getBuyVolume() / 10000 + '%'
+            usdbtcOkcoinTag.sellText.textContent = usdbtcOkcoin.getSellVolume()
+            usdbtcOkcoinTag.buyText.textContent = usdbtcOkcoin.getBuyVolume()
+
+            usdbtcBitstampTag.sellVolume.style.width = usdbtcBitstamp.getSellVolume() / 10000 + '%'
+            usdbtcBitstampTag.buyVolume.style.width = usdbtcBitstamp.getBuyVolume() / 10000 + '%'
+            usdbtcBitstampTag.sellText.textContent = usdbtcBitstamp.getSellVolume()
+            usdbtcBitstampTag.buyText.textContent = usdbtcBitstamp.getBuyVolume()
+
+            // BTC_USDT
             btcusdtmix.sellVolume.style.width = btcusdt.getSellVolume() + '%'
             btcusdtmix.buyVolume.style.width = btcusdt.getBuyVolume() + '%'
             btcusdtmix.sellText.textContent = btcusdt.getSellVolume()
@@ -577,6 +840,17 @@
             coincheck.buyVolume.style.width = coincheckBtcJpy.getBuyVolume() + '%'
             coincheck.sellText.textContent = coincheckBtcJpy.getSellVolume()
             coincheck.buyText.textContent = coincheckBtcJpy.getBuyVolume()
+
+            // ETH_USD
+            ethusdmix.sellVolume.style.width = ethusd.getSellVolume() + '%'
+            ethusdmix.buyVolume.style.width = ethusd.getBuyVolume() + '%'
+            ethusdmix.sellText.textContent = ethusd.getSellVolume()
+            ethusdmix.buyText.textContent = ethusd.getBuyVolume()
+
+            ethusdbitfinex.sellVolume.style.width = bitfinexEthUsd.getSellVolume() + '%'
+            ethusdbitfinex.buyVolume.style.width = bitfinexEthUsd.getBuyVolume() + '%'
+            ethusdbitfinex.sellText.textContent = bitfinexEthUsd.getSellVolume()
+            ethusdbitfinex.buyText.textContent = bitfinexEthUsd.getBuyVolume()
         }, 1000)
     </script>
 </body>

@@ -160,6 +160,41 @@ export const bitfinex_BTC_USD = function () {
     return target
 }()
 
+// ETH_USD
+export const bitfinex_ETH_USD = function () {
+    let target = new EventTarget()
+    let wss = new WebSocket('wss://api.bitfinex.com/ws/')
+    wss.onopen = function () {
+        wss.send(JSON.stringify({
+            "event": "subscribe",
+            "channel": "trades",
+            "pair": "ETHUSD"
+        }));
+    };
+    wss.onmessage = function (msg) {
+        let data = JSON.parse(msg.data)
+        if (data[1] != "tu") { return }
+
+        let side = 'BUY';
+        let volume = data[6];
+        if (volume < 0) {
+            side = 'SELL';
+            volume = (- data[6]);
+        }
+
+        target.dispatchEvent(new CustomEvent('message', {
+            detail: {
+                price: data[5],
+                volume: volume,
+                side: side,
+                date: new Date(data[4] * 1000),
+                raw: msg.data
+            }
+        }))
+    };
+    return target
+}()
+
 ///// bitmex
 // BTC_USD
 export const bitmex_BTC_USD = function () {
