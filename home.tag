@@ -200,7 +200,7 @@
 
         .ltp-item {
             border: 1px solid;
-            border-color: rgba(0, 0, 0, 0.25);
+            border-color: rgb(190, 190, 210);
             padding: 0.5em 1.5em;
         }
 
@@ -210,7 +210,7 @@
 
         .trade-item {
             border: 1px solid;
-            border-color: rgba(0, 0, 0, 0.25);
+            border-color: rgb(190, 190, 210);
             width: 10em;
             height: 20em;
             padding: 0.5em 1em;

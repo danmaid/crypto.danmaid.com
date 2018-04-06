@@ -4,14 +4,82 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>男メイド（暗号通貨）</title>
+    <title>暗号通貨 | 男メイド</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c"
+        crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/regular.js" integrity="sha384-t7yHmUlwFrLxHXNLstawVRBMeSLcXTbQ5hsd0ifzwGtN7ZF7RZ8ppM7Ldinuoiif"
+        crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/hybrid.min.css">
     <style>
+        :root {
+            background-color: rgb(19, 19, 21);
+            color: rgb(190, 190, 210);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-corner {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgb(57, 57, 63);
+            border: 0 none #fff;
+            border-radius: 50px;
+        }
+
+        ::-webkit-scrollbar-track {
+            border: 0 none #fff;
+            border-radius: 50px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .header {
+            background-color: rgb(31, 31, 135);
+            color: rgb(228, 228, 252);
+        }
+
+        .header .title {
+            font-size: 1.5em;
+        }
+
+        .footer {
+            text-align: end;
+        }
+
+        .mark {
+            margin-right: 4px;
+        }
+
+        a:link {
+            color: inherit
+        }
+
+        a:visited {
+            color: inherit
+        }
+
+        a:hover {
+            color: inherit
+        }
+
+        a:active {
+            color: inherit
+        }
+
+        a {
+            text-decoration: none
+        }
+
         .tab-bar .mdc-tab {
             color: white;
             color: var(--mdc-theme-text-primary-on-primary, white);
+            min-width: 100px;
         }
 
         .tab-bar .mdc-tab-bar__indicator {
@@ -22,10 +90,10 @@
 </head>
 
 <body>
-    <header class="mdc-toolbar">
+    <header class="mdc-toolbar header">
         <div class="mdc-toolbar__row">
-            <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
-                <span>男メイド（暗号通貨）</span>
+            <section class="mdc-toolbar__section mdc-toolbar__section--align-start title">
+                <a href="https://crypto.danmaid.com/">暗号通貨 | 男メイド</a>
             </section>
             <section class="mdc-toolbar__section mdc-toolbar__section--align-end">
                 <nav class="mdc-tab-bar tab-bar" data-mdc-auto-init="MDCTabBar">
@@ -41,16 +109,9 @@
     <main>
         <div>お使いのブラウザはサポートされていないようです。ごめんなさい。本サイトのメンテナンスは chrome で行っています。</div>
     </main>
-    <footer class="mdc-toolbar">
-        <div class="mdc-toolbar__row">
-            <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
-            </section>
-            <section class="mdc-toolbar__section">
-                🄫 2018 男メイド 
-            </section>
-            <section class="mdc-toolbar__section mdc-toolbar__section--align-end">
-            </section>
-        </div>
+    <footer class="footer">
+        <a href="https://danmaid.com/">
+            <i class="far fa-copyright mark"></i>2018 男メイド</a>
     </footer>
 
     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.js"></script>

@@ -7,11 +7,11 @@
 <dm-realtime>
     <style>
         .buy {
-            color: blue;
+            color: #2196F3;
         }
 
         .sell {
-            color: red;
+            color: #E91E63;
         }
     </style>
     <script>

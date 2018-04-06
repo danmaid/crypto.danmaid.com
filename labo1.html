@@ -1,0 +1,267 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>ボリューム | ラボ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        :root {
+            background-color: rgb(19, 19, 21);
+            color: rgb(190, 190, 210);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-corner {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgb(57, 57, 63);
+            border: 0 none #fff;
+            border-radius: 50px;
+        }
+
+        ::-webkit-scrollbar-track {
+            border: 0 none #fff;
+            border-radius: 50px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .cont {
+            display: flex;
+        }
+
+        .bar {
+            height: 20px;
+            width: 200px;
+            border: 1px solid rgba(200, 200, 200, 0.8);
+            display: flex;
+        }
+
+        .bar.reverse {
+            flex-direction: row-reverse;
+        }
+
+        .bar .item {
+            height: 100%;
+            transition: all 0.5s;
+        }
+
+        .bar .item.volume {
+            background-color: green;
+        }
+
+        .bar .item.sell {
+            background-color: red;
+        }
+
+        .bar .item.buy {
+            background-color: blue;
+        }
+
+        .bar #text {
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mix" class="cont">
+        <div id="sell-volume" class="bar reverse">
+            <div id="item" class="item sell"></div>
+            <div id="text"></div>
+        </div>
+        <div id="buy-volume" class="bar">
+            <div id="item" class="item buy"></div>
+            <div id="text"></div>
+        </div>
+        <div>Mix</div>
+    </div>
+    <div id="bitfinex" class="cont">
+        <div id="sell-volume" class="bar reverse">
+            <div id="item" class="item sell"></div>
+            <div id="text"></div>
+        </div>
+        <div id="buy-volume" class="bar">
+            <div id="item" class="item buy"></div>
+            <div id="text"></div>
+        </div>
+        <div>bitfinex</div>
+        <div id="lastprice"></div>
+    </div>
+    <div id="bitmex" class="cont">
+        <div id="sell-volume" class="bar reverse">
+            <div id="item" class="item sell"></div>
+            <div id="text"></div>
+        </div>
+        <div id="buy-volume" class="bar">
+            <div id="item" class="item buy"></div>
+            <div id="text"></div>
+        </div>
+        <div>bitmex</div>
+        <div id="lastprice"></div>
+    </div>
+    <div id="gdax" class="cont">
+        <div id="sell-volume" class="bar reverse">
+            <div id="item" class="item sell"></div>
+            <div id="text"></div>
+        </div>
+        <div id="buy-volume" class="bar">
+            <div id="item" class="item buy"></div>
+            <div id="text"></div>
+        </div>
+        <div>GDAX</div>
+        <div id="lastprice"></div>
+    </div>
+    <div id="okcoin" class="cont">
+        <div id="sell-volume" class="bar reverse">
+            <div id="item" class="item sell"></div>
+            <div id="text"></div>
+        </div>
+        <div id="buy-volume" class="bar">
+            <div id="item" class="item buy"></div>
+            <div id="text"></div>
+        </div>
+        <div>OKCoin</div>
+        <div id="lastprice"></div>
+    </div>
+
+    <script type="module">
+        import * as exec from './modules/src/executions2.js'
+
+        const side = {
+            SELL: 'SELL',
+            BUY: 'BUY'
+        }
+
+        class Pair {
+            constructor() {
+                this.exec = []
+                setInterval(() => {
+                    // 5秒前
+                    let sec5ago = new Date()
+                    sec5ago.setSeconds(sec5ago.getSeconds() - 5)
+
+                    // 5秒前以前のデータをパージ
+                    this.exec = this.exec.filter(e => e.date > sec5ago)
+                }, 1000)
+            }
+            push(exec) {
+                this.exec.push(exec)
+            }
+            getVolume() {
+                let arr = this.exec
+                return arr.length > 0 ? arr.map(exec => exec.volume).reduce((x, y) => x + y) : 0
+            }
+            getSellVolume() {
+                let arr = this.exec.filter(exec => exec.side == side.SELL)
+                return arr.length > 0 ? arr.map(exec => exec.volume).reduce((x, y) => x + y) : 0
+            }
+            getBuyVolume() {
+                let arr = this.exec.filter(exec => exec.side == side.BUY)
+                return arr.length > 0 ? arr.map(exec => exec.volume).reduce((x, y) => x + y) : 0
+            }
+        }
+
+        console.log(exec)
+        let btcusd = new Pair()
+        let bitfinexLtp = document.querySelector('#bitfinex #lastprice')
+        let bitfinexBtcUsd = new Pair()
+        exec.bitfinex_BTC_USD.addEventListener('message', (e) => {
+            btcusd.push(e.detail)
+            bitfinexLtp.textContent = e.detail.price
+            bitfinexBtcUsd.push(e.detail)
+        })
+        let bitmexLtp = document.querySelector('#bitmex #lastprice')
+        let bitmexBtcUsd = new Pair()
+        exec.bitmex_BTC_USD.addEventListener('message', (e) => {
+            btcusd.push(e.detail)
+            bitmexLtp.textContent = e.detail.price
+            bitmexBtcUsd.push(e.detail)
+        })
+        let gdaxLtp = document.querySelector('#gdax #lastprice')
+        let gdaxBtcUsd = new Pair()
+        exec.gdax_BTC_USD.addEventListener('message', (e) => {
+            btcusd.push(e.detail)
+            gdaxLtp.textContent = e.detail.price
+            gdaxBtcUsd.push(e.detail)
+        })
+        let okcoinLtp = document.querySelector('#okcoin #lastprice')
+        let okcoinBtcUsd = new Pair()
+        exec.okcoin_BTC_USD.addEventListener('message', (e) => {
+            btcusd.push(e.detail)
+            okcoinLtp.textContent = e.detail.price
+            okcoinBtcUsd.push(e.detail)
+        })
+
+
+        let target = document.getElementById('mix')
+        let mix = {
+            sellVolume: target.querySelector('#sell-volume #item'),
+            buyVolume: target.querySelector('#buy-volume #item'),
+            sellText: target.querySelector('#sell-volume #text'),
+            buyText: target.querySelector('#buy-volume #text')
+        }
+        target = document.getElementById('bitfinex')
+        let bitfinex = {
+            sellVolume: target.querySelector('#sell-volume #item'),
+            buyVolume: target.querySelector('#buy-volume #item'),
+            sellText: target.querySelector('#sell-volume #text'),
+            buyText: target.querySelector('#buy-volume #text')
+        }
+        target = document.getElementById('bitmex')
+        let bitmex = {
+            sellVolume: target.querySelector('#sell-volume #item'),
+            buyVolume: target.querySelector('#buy-volume #item'),
+            sellText: target.querySelector('#sell-volume #text'),
+            buyText: target.querySelector('#buy-volume #text')
+        }
+        target = document.getElementById('gdax')
+        let gdax = {
+            sellVolume: target.querySelector('#sell-volume #item'),
+            buyVolume: target.querySelector('#buy-volume #item'),
+            sellText: target.querySelector('#sell-volume #text'),
+            buyText: target.querySelector('#buy-volume #text')
+        }
+        target = document.getElementById('okcoin')
+        let okcoin = {
+            sellVolume: target.querySelector('#sell-volume #item'),
+            buyVolume: target.querySelector('#buy-volume #item'),
+            sellText: target.querySelector('#sell-volume #text'),
+            buyText: target.querySelector('#buy-volume #text')
+        }
+        setInterval(() => {
+            mix.sellVolume.style.width = btcusd.getSellVolume() + '%'
+            mix.buyVolume.style.width = btcusd.getBuyVolume() + '%'
+            mix.sellText.textContent = btcusd.getSellVolume()
+            mix.buyText.textContent = btcusd.getBuyVolume()
+
+            bitfinex.sellVolume.style.width = bitfinexBtcUsd.getSellVolume() + '%'
+            bitfinex.buyVolume.style.width = bitfinexBtcUsd.getBuyVolume() + '%'
+            bitfinex.sellText.textContent = bitfinexBtcUsd.getSellVolume()
+            bitfinex.buyText.textContent = bitfinexBtcUsd.getBuyVolume()
+
+            bitmex.sellVolume.style.width = bitmexBtcUsd.getSellVolume() + '%'
+            bitmex.buyVolume.style.width = bitmexBtcUsd.getBuyVolume() + '%'
+            bitmex.sellText.textContent = bitmexBtcUsd.getSellVolume()
+            bitmex.buyText.textContent = bitmexBtcUsd.getBuyVolume()
+
+            gdax.sellVolume.style.width = gdaxBtcUsd.getSellVolume() + '%'
+            gdax.buyVolume.style.width = gdaxBtcUsd.getBuyVolume() + '%'
+            gdax.sellText.textContent = gdaxBtcUsd.getSellVolume()
+            gdax.buyText.textContent = gdaxBtcUsd.getBuyVolume()
+
+            okcoin.sellVolume.style.width = okcoinBtcUsd.getSellVolume() + '%'
+            okcoin.buyVolume.style.width = okcoinBtcUsd.getBuyVolume() + '%'
+            okcoin.sellText.textContent = okcoinBtcUsd.getSellVolume()
+            okcoin.buyText.textContent = okcoinBtcUsd.getBuyVolume()
+        }, 1000)
+    </script>
+</body>
+
+</html>
