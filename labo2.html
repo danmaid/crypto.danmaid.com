@@ -1,0 +1,316 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>ワールド暗号資産サテライト（仮） | 男メイドラボ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c"
+        crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/regular.js" integrity="sha384-t7yHmUlwFrLxHXNLstawVRBMeSLcXTbQ5hsd0ifzwGtN7ZF7RZ8ppM7Ldinuoiif"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="/common.css" />
+    <style>
+        .viewbox {
+            width: 1900px;
+            height: 950px;
+            min-width: 1900px;
+            min-height: 950px;
+            max-width: 1900px;
+            max-height: 950px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-image: url(/images/worldmap.svg);
+            position: relative;
+            font-size: 12px;
+            overflow: hidden;
+        }
+
+        .cont {
+            display: flex;
+        }
+
+        .wrap {
+            flex-wrap: wrap;
+        }
+
+        .bar {
+            height: 16px;
+            width: 100px;
+            border: 1px solid rgba(200, 200, 200, 0.8);
+            display: flex;
+            flex-direction: row-reverse;
+        }
+
+        .bar.reverse {
+            flex-direction: row;
+        }
+
+        .bar .item {
+            height: 100%;
+            transition: all 0.5s;
+        }
+
+        .bar .item.sell {
+            background-color: red;
+        }
+
+        .bar .item.buy {
+            background-color: blue;
+        }
+
+        .bar #text {
+            position: absolute;
+        }
+
+        .title {
+            width: 30px;
+            /* border-bottom: 1px dashed; */
+        }
+
+        .lastprice {
+            width: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="viewbox">
+            <div id="jpy" style="position: absolute; left: 1600px; top: 350px;">
+                <h2>JPY</h2>
+                <div id="jpybtc" class="cont exchange">
+                    <div id="buy-volume" class="bar">
+                        <div id="item" class="item buy"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div id="sell-volume" class="bar reverse">
+                        <div id="item" class="item sell"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div class="title">BTC</div>
+                    <div id="lastprice" class="lastprice"></div>
+                </div>
+            </div>
+
+            <div id="usd" style="position: absolute; left: 300px; top: 350px;">
+                <h2>USD</h2>
+                <div id="usdbtc" class="cont exchange">
+                    <div id="buy-volume" class="bar">
+                        <div id="item" class="item buy"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div id="sell-volume" class="bar reverse">
+                        <div id="item" class="item sell"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div class="title">BTC</div>
+                    <div id="lastprice" class="lastprice"></div>
+                </div>
+            </div>
+
+            <div id="btc" style="position: absolute; left: 100px; top: 700px;">
+                <h2>BTC</h2>
+                <div id="btcusd" class="cont exchange">
+                    <div id="buy-volume" class="bar">
+                        <div id="item" class="item buy"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div id="sell-volume" class="bar reverse">
+                        <div id="item" class="item sell"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div class="title">USD</div>
+                    <div id="lastprice" class="lastprice"></div>
+                </div>
+                <div id="btcjpy" class="cont exchange">
+                    <div id="buy-volume" class="bar">
+                        <div id="item" class="item buy"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div id="sell-volume" class="bar reverse">
+                        <div id="item" class="item sell"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div class="title">JPY</div>
+                    <div id="lastprice" class="lastprice"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="footer">
+        <a href="https://danmaid.com/">
+            <i class="far fa-copyright mark"></i>2018 男メイド</a>
+    </footer>
+
+    <script src="https://js.pusher.com/4.2/pusher.min.js"></script>
+    <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.20.2.js"></script>
+    <script type="module">
+        import * as exec from './modules/src/executions2.js'
+
+        const side = {
+            SELL: 'SELL',
+            BUY: 'BUY'
+        }
+
+        class Pair {
+            constructor() {
+                this.exec = []
+                setInterval(() => {
+                    // 10秒前
+                    let secago = new Date()
+                    secago.setSeconds(secago.getSeconds() - 10)
+
+                    // 10秒前以前のデータをパージ
+                    this.exec = this.exec.filter(e => e.date > secago)
+                }, 1000)
+            }
+            push(exec) {
+                this.exec.push(exec)
+            }
+
+            getVolume() { return this.getLeftVolume() }
+            getSellVolume() { return this.getLeftSellVolume() }
+            getBuyVolume() { return this.getLeftBuyVolume() }
+
+            // ペアの左側、取引量を返す
+            getLeftVolume() {
+                let arr = this.exec
+                return arr.length > 0 ? arr.map(exec => exec.volume).reduce((x, y) => x + y) : 0
+            }
+
+            // ペアの右側、取引量を返す
+            getRightVolume() {
+                let arr = this.exec
+                return arr.length > 0 ? arr.map(exec => exec.volume * exec.price).reduce((x, y) => x + y) : 0
+            }
+
+            // ペアの左側、売りの取引量を返す
+            getLeftSellVolume() {
+                let arr = this.exec.filter(exec => exec.side == side.SELL)
+                return arr.length > 0 ? arr.map(exec => exec.volume).reduce((x, y) => x + y) : 0
+            }
+
+            // ペアの右側、売りの取引量を返す
+            getRightSellVolume() {
+                let arr = this.exec.filter(exec => exec.side == side.BUY)
+                return arr.length > 0 ? arr.map(exec => exec.volume * exec.price).reduce((x, y) => x + y) : 0
+            }
+
+            // ペアの左側、買いの取引量を返す
+            getLeftBuyVolume() {
+                let arr = this.exec.filter(exec => exec.side == side.BUY)
+                return arr.length > 0 ? arr.map(exec => exec.volume).reduce((x, y) => x + y) : 0
+            }
+
+            // ペアの右側、買いの取引量を返す
+            getRightBuyVolume() {
+                let arr = this.exec.filter(exec => exec.side == side.SELL)
+                return arr.length > 0 ? arr.map(exec => exec.volume * exec.price).reduce((x, y) => x + y) : 0
+            }
+        }
+
+        // BTC
+        let btcTag = document.querySelector('#btc')
+
+        // USD
+        let usdTag = document.querySelector('#usd')
+
+        // BTC_USD
+        let btcusd = new Pair()
+        let btcusdTag = {
+            sellVolume: btcTag.querySelector('#btcusd #sell-volume #item'),
+            buyVolume: btcTag.querySelector('#btcusd #buy-volume #item'),
+            sellText: btcTag.querySelector('#btcusd #sell-volume #text'),
+            buyText: btcTag.querySelector('#btcusd #buy-volume #text'),
+            lastprice: btcTag.querySelector('#btcusd #lastprice')
+        }
+        let usdbtcTag = {
+            sellVolume: usdTag.querySelector('#usdbtc #sell-volume #item'),
+            buyVolume: usdTag.querySelector('#usdbtc #buy-volume #item'),
+            sellText: usdTag.querySelector('#usdbtc #sell-volume #text'),
+            buyText: usdTag.querySelector('#usdbtc #buy-volume #text'),
+            lastprice: usdTag.querySelector('#usdbtc #lastprice')
+        }
+        exec.bitfinex_BTC_USD.addEventListener('message', (e) => {
+            btcusd.push(e.detail)
+            btcusdTag.lastprice.textContent = e.detail.price
+            usdbtcTag.lastprice.textContent = e.detail.price
+        })
+        exec.gdax_BTC_USD.addEventListener('message', (e) => {
+            btcusd.push(e.detail)
+        })
+        exec.okcoin_BTC_USD.addEventListener('message', (e) => {
+            btcusd.push(e.detail)
+        })
+        exec.bitstamp_BTC_USD.addEventListener('message', (e) => {
+            btcusd.push(e.detail)
+        })
+
+        // JPY
+        let jpyTag = document.querySelector('#jpy')
+
+        // BTC_JPY
+        let btcjpy = new Pair()
+        let btcjpyTag = {
+            sellVolume: btcTag.querySelector('#btcjpy #sell-volume #item'),
+            buyVolume: btcTag.querySelector('#btcjpy #buy-volume #item'),
+            sellText: btcTag.querySelector('#btcjpy #sell-volume #text'),
+            buyText: btcTag.querySelector('#btcjpy #buy-volume #text'),
+            lastprice: btcTag.querySelector('#btcjpy #lastprice')
+        }
+        let jpybtcTag = {
+            sellVolume: jpyTag.querySelector('#jpybtc #sell-volume #item'),
+            buyVolume: jpyTag.querySelector('#jpybtc #buy-volume #item'),
+            sellText: jpyTag.querySelector('#jpybtc #sell-volume #text'),
+            buyText: jpyTag.querySelector('#jpybtc #buy-volume #text'),
+            lastprice: jpyTag.querySelector('#jpybtc #lastprice')
+        }
+        exec.bitflyer_BTC_JPY.addEventListener('message', (e) => {
+            btcjpy.push(e.detail)
+            btcjpyTag.lastprice.textContent = e.detail.price
+            jpybtcTag.lastprice.textContent = e.detail.price
+        })
+        exec.zaif_BTC_JPY.addEventListener('message', (e) => {
+            btcjpy.push(e.detail)
+        })
+        exec.bitbank_BTC_JPY.addEventListener('message', (e) => {
+            btcjpy.push(e.detail)
+        })
+        exec.coincheck_BTC_JPY.addEventListener('message', (e) => {
+            btcjpy.push(e.detail)
+        })
+        exec.bitfinex_BTC_JPY.addEventListener('message', (e) => {
+            btcjpy.push(e.detail)
+        })
+
+        setInterval(() => {
+            // BTC_USD
+            btcusdTag.sellVolume.style.width = btcusd.getLeftSellVolume() + '%'
+            btcusdTag.buyVolume.style.width = btcusd.getLeftBuyVolume() + '%'
+            btcusdTag.sellText.textContent = Math.round(btcusd.getLeftSellVolume() * 10000) / 10000
+            btcusdTag.buyText.textContent = Math.round(btcusd.getLeftBuyVolume() * 10000) / 10000
+
+            // USD_BTC
+            usdbtcTag.sellVolume.style.width = btcusd.getRightSellVolume() / 10000 + '%'
+            usdbtcTag.buyVolume.style.width = btcusd.getRightBuyVolume() / 10000 + '%'
+            usdbtcTag.sellText.textContent = Math.round(btcusd.getRightSellVolume() * 100) / 100
+            usdbtcTag.buyText.textContent = Math.round(btcusd.getRightBuyVolume() * 100) / 100
+
+            // BTC_JPY
+            btcjpyTag.sellVolume.style.width = btcjpy.getLeftSellVolume() + '%'
+            btcjpyTag.buyVolume.style.width = btcjpy.getLeftBuyVolume() + '%'
+            btcjpyTag.sellText.textContent = Math.round(btcjpy.getLeftSellVolume() * 10000) / 10000
+            btcjpyTag.buyText.textContent = Math.round(btcjpy.getLeftBuyVolume() * 10000) / 10000
+
+            // JPY_BTC
+            jpybtcTag.sellVolume.style.width = btcjpy.getRightSellVolume() / 1000000 + '%'
+            jpybtcTag.buyVolume.style.width = btcjpy.getRightBuyVolume() / 1000000 + '%'
+            jpybtcTag.sellText.textContent = Math.round(btcjpy.getRightSellVolume())
+            jpybtcTag.buyText.textContent = Math.round(btcjpy.getRightBuyVolume())
+        }, 1000)
+    </script>
+</body>
+
+</html>

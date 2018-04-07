@@ -55,11 +55,12 @@
         .bar #text {
             position: absolute;
         }
-        
+
         .title {
             width: 60px;
             /* border-bottom: 1px dashed; */
         }
+
         .lastprice {
             width: 50px;
         }
@@ -258,6 +259,34 @@
                         <div id="text"></div>
                     </div>
                     <div class="title">coincheck</div>
+                    <div id="lastprice" class="lastprice"></div>
+                </div>
+                <div id="bitfinex" class="cont exchange">
+                    <div id="buy-volume" class="bar">
+                        <div id="item" class="item buy"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div id="sell-volume" class="bar reverse">
+                        <div id="item" class="item sell"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div class="title">bitfinex</div>
+                    <div id="lastprice" class="lastprice"></div>
+                </div>
+            </div>
+
+            <div id="btceur" style="margin: 12px;">
+                <h3>BTC/EUR</h3>
+                <div id="mix" class="cont exchange">
+                    <div id="buy-volume" class="bar">
+                        <div id="item" class="item buy"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div id="sell-volume" class="bar reverse">
+                        <div id="item" class="item sell"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div class="title">Mix</div>
                     <div id="lastprice" class="lastprice"></div>
                 </div>
                 <div id="bitfinex" class="cont exchange">
@@ -637,6 +666,65 @@
                     <div id="lastprice" class="lastprice"></div>
                 </div>
             </div>
+
+            <div id="jpymona" style="margin: 12px;">
+                <h3>JPY/MONA</h3>
+                <div id="mix" class="cont exchange">
+                    <div id="buy-volume" class="bar">
+                        <div id="item" class="item buy"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div id="sell-volume" class="bar reverse">
+                        <div id="item" class="item sell"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div class="title">Mix</div>
+                    <div id="lastprice" class="lastprice"></div>
+                </div>
+                <div id="zaif" class="cont exchange">
+                    <div id="buy-volume" class="bar">
+                        <div id="item" class="item buy"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div id="sell-volume" class="bar reverse">
+                        <div id="item" class="item sell"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div class="title">Zaif</div>
+                    <div id="lastprice" class="lastprice"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="eur">
+            <h2>EUR</h2>
+            <div id="eurbtc" style="margin: 12px;">
+                <h3>EUR/BTC</h3>
+                <div id="mix" class="cont exchange">
+                    <div id="buy-volume" class="bar">
+                        <div id="item" class="item buy"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div id="sell-volume" class="bar reverse">
+                        <div id="item" class="item sell"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div class="title">Mix</div>
+                    <div id="lastprice" class="lastprice"></div>
+                </div>
+                <div id="bitfinex" class="cont exchange">
+                    <div id="buy-volume" class="bar">
+                        <div id="item" class="item buy"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div id="sell-volume" class="bar reverse">
+                        <div id="item" class="item sell"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div class="title">bitfinex</div>
+                    <div id="lastprice" class="lastprice"></div>
+                </div>
+            </div>
         </div>
 
         <div id="eth">
@@ -772,6 +860,37 @@
 
             <div id="xembtc" style="margin: 12px;">
                 <h3>XEM/BTC</h3>
+                <div id="mix" class="cont exchange">
+                    <div id="buy-volume" class="bar">
+                        <div id="item" class="item buy"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div id="sell-volume" class="bar reverse">
+                        <div id="item" class="item sell"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div class="title">Mix</div>
+                    <div id="lastprice" class="lastprice"></div>
+                </div>
+                <div id="zaif" class="cont exchange">
+                    <div id="buy-volume" class="bar">
+                        <div id="item" class="item buy"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div id="sell-volume" class="bar reverse">
+                        <div id="item" class="item sell"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div class="title">Zaif</div>
+                    <div id="lastprice" class="lastprice"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="mona">
+            <h2>MONA</h2>
+            <div id="monajpy" style="margin: 12px;">
+                <h3>MONA/JPY</h3>
                 <div id="mix" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
@@ -1444,6 +1563,86 @@
             btcxemZaifTag.lastprice.textContent = e.detail.price
         })
 
+        // MONA_JPY
+        let monajpy = new Pair()
+        let monajpyTag = document.querySelector('#monajpy')
+        let monajpyMixTag = {
+            sellVolume: monajpyTag.querySelector('#mix #sell-volume #item'),
+            buyVolume: monajpyTag.querySelector('#mix #buy-volume #item'),
+            sellText: monajpyTag.querySelector('#mix #sell-volume #text'),
+            buyText: monajpyTag.querySelector('#mix #buy-volume #text')
+        }
+        let jpymonaTag = document.querySelector('#jpymona')
+        let jpymonaMixTag = {
+            sellVolume: jpymonaTag.querySelector('#mix #sell-volume #item'),
+            buyVolume: jpymonaTag.querySelector('#mix #buy-volume #item'),
+            sellText: jpymonaTag.querySelector('#mix #sell-volume #text'),
+            buyText: jpymonaTag.querySelector('#mix #buy-volume #text')
+        }
+
+        // zaif
+        let monajpyZaif = new Pair()
+        let monajpyZaifTag = {
+            sellVolume: monajpyTag.querySelector('#zaif #sell-volume #item'),
+            buyVolume: monajpyTag.querySelector('#zaif #buy-volume #item'),
+            sellText: monajpyTag.querySelector('#zaif #sell-volume #text'),
+            buyText: monajpyTag.querySelector('#zaif #buy-volume #text'),
+            lastprice: monajpyTag.querySelector('#zaif #lastprice')
+        }
+        let jpymonaZaifTag = {
+            sellVolume: jpymonaTag.querySelector('#zaif #sell-volume #item'),
+            buyVolume: jpymonaTag.querySelector('#zaif #buy-volume #item'),
+            sellText: jpymonaTag.querySelector('#zaif #sell-volume #text'),
+            buyText: jpymonaTag.querySelector('#zaif #buy-volume #text'),
+            lastprice: jpymonaTag.querySelector('#zaif #lastprice')
+        }
+        exec.zaif_XEM_BTC.addEventListener('message', (e) => {
+            monajpy.push(e.detail)
+            monajpyZaif.push(e.detail)
+            monajpyZaifTag.lastprice.textContent = e.detail.price
+            jpymonaZaifTag.lastprice.textContent = e.detail.price
+        })
+
+        // BTC_EUR
+        let btceur = new Pair()
+        let btceurTag = document.querySelector('#btceur')
+        let btceurMixTag = {
+            sellVolume: btceurTag.querySelector('#mix #sell-volume #item'),
+            buyVolume: btceurTag.querySelector('#mix #buy-volume #item'),
+            sellText: btceurTag.querySelector('#mix #sell-volume #text'),
+            buyText: btceurTag.querySelector('#mix #buy-volume #text')
+        }
+        let eurbtcTag = document.querySelector('#eurbtc')
+        let eurbtcMixTag = {
+            sellVolume: eurbtcTag.querySelector('#mix #sell-volume #item'),
+            buyVolume: eurbtcTag.querySelector('#mix #buy-volume #item'),
+            sellText: eurbtcTag.querySelector('#mix #sell-volume #text'),
+            buyText: eurbtcTag.querySelector('#mix #buy-volume #text')
+        }
+
+        // bitfinex
+        let btceurBitfinex = new Pair()
+        let btceurBitfinexTag = {
+            sellVolume: btceurTag.querySelector('#bitfinex #sell-volume #item'),
+            buyVolume: btceurTag.querySelector('#bitfinex #buy-volume #item'),
+            sellText: btceurTag.querySelector('#bitfinex #sell-volume #text'),
+            buyText: btceurTag.querySelector('#bitfinex #buy-volume #text'),
+            lastprice: btceurTag.querySelector('#bitfinex #lastprice')
+        }
+        let eurbtcBitfinexTag = {
+            sellVolume: eurbtcTag.querySelector('#bitfinex #sell-volume #item'),
+            buyVolume: eurbtcTag.querySelector('#bitfinex #buy-volume #item'),
+            sellText: eurbtcTag.querySelector('#bitfinex #sell-volume #text'),
+            buyText: eurbtcTag.querySelector('#bitfinex #buy-volume #text'),
+            lastprice: eurbtcTag.querySelector('#bitfinex #lastprice')
+        }
+        exec.bitfinex_BTC_EUR.addEventListener('message', (e) => {
+            btceur.push(e.detail)
+            btceurBitfinex.push(e.detail)
+            btceurBitfinexTag.lastprice.textContent = e.detail.price
+            eurbtcBitfinexTag.lastprice.textContent = e.detail.price
+        })
+
         setInterval(() => {
             // BTC_USD
             btcusdMixTag.sellVolume.style.width = btcusd.getLeftSellVolume() + '%'
@@ -1730,6 +1929,50 @@
             btcxemZaifTag.buyVolume.style.width = xembtcZaif.getRightBuyVolume() + '%'
             btcxemZaifTag.sellText.textContent = Math.round(xembtcZaif.getRightSellVolume() * 10000) / 10000
             btcxemZaifTag.buyText.textContent = Math.round(xembtcZaif.getRightBuyVolume() * 10000) / 10000
+
+            // MONA_JPY
+            monajpyMixTag.sellVolume.style.width = monajpy.getLeftSellVolume() + '%'
+            monajpyMixTag.buyVolume.style.width = monajpy.getLeftBuyVolume() + '%'
+            monajpyMixTag.sellText.textContent = Math.round(monajpy.getLeftSellVolume() * 10000) / 10000
+            monajpyMixTag.buyText.textContent = Math.round(monajpy.getLeftBuyVolume() * 10000) / 10000
+
+            monajpyZaifTag.sellVolume.style.width = monajpyZaif.getLeftSellVolume() + '%'
+            monajpyZaifTag.buyVolume.style.width = monajpyZaif.getLeftBuyVolume() + '%'
+            monajpyZaifTag.sellText.textContent = Math.round(monajpyZaif.getLeftSellVolume() * 10000) / 10000
+            monajpyZaifTag.buyText.textContent = Math.round(monajpyZaif.getLeftBuyVolume() * 10000) / 10000
+
+            // JPY_MONA
+            jpymonaMixTag.sellVolume.style.width = monajpy.getRightSellVolume() / 1000000 + '%'
+            jpymonaMixTag.buyVolume.style.width = monajpy.getRightBuyVolume() / 1000000 + '%'
+            jpymonaMixTag.sellText.textContent = Math.round(monajpy.getRightSellVolume())
+            jpymonaMixTag.buyText.textContent = Math.round(monajpy.getRightBuyVolume())
+
+            jpymonaZaifTag.sellVolume.style.width = monajpyZaif.getRightSellVolume() + '%'
+            jpymonaZaifTag.buyVolume.style.width = monajpyZaif.getRightBuyVolume() + '%'
+            jpymonaZaifTag.sellText.textContent = Math.round(monajpyZaif.getRightSellVolume())
+            jpymonaZaifTag.buyText.textContent = Math.round(monajpyZaif.getRightBuyVolume())
+
+            // BTC_EUR
+            btceurMixTag.sellVolume.style.width = btceur.getLeftSellVolume() + '%'
+            btceurMixTag.buyVolume.style.width = btceur.getLeftBuyVolume() + '%'
+            btceurMixTag.sellText.textContent = Math.round(btceur.getLeftSellVolume() * 10000) / 10000
+            btceurMixTag.buyText.textContent = Math.round(btceur.getLeftBuyVolume() * 10000) / 10000
+
+            btceurBitfinexTag.sellVolume.style.width = btceurBitfinex.getLeftSellVolume() + '%'
+            btceurBitfinexTag.buyVolume.style.width = btceurBitfinex.getLeftBuyVolume() + '%'
+            btceurBitfinexTag.sellText.textContent = Math.round(btceurBitfinex.getLeftSellVolume() * 10000) / 10000
+            btceurBitfinexTag.buyText.textContent = Math.round(btceurBitfinex.getLeftBuyVolume() * 10000) / 10000
+
+            // EUR_BTC
+            eurbtcMixTag.sellVolume.style.width = btceur.getRightSellVolume() / 1000 + '%'
+            eurbtcMixTag.buyVolume.style.width = btceur.getRightBuyVolume() / 1000 + '%'
+            eurbtcMixTag.sellText.textContent = Math.round(btceur.getRightSellVolume())
+            eurbtcMixTag.buyText.textContent = Math.round(btceur.getRightBuyVolume())
+
+            eurbtcBitfinexTag.sellVolume.style.width = btceurBitfinex.getRightSellVolume() / 1000 + '%'
+            eurbtcBitfinexTag.buyVolume.style.width = btceurBitfinex.getRightBuyVolume() / 1000 + '%'
+            eurbtcBitfinexTag.sellText.textContent = Math.round(btceurBitfinex.getRightSellVolume())
+            eurbtcBitfinexTag.buyText.textContent = Math.round(btceurBitfinex.getRightBuyVolume())
         }, 1000)
     </script>
 </body>

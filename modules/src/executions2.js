@@ -159,6 +159,28 @@ export const zaif_XEM_BTC = function () {
     return target
 }()
 
+// MONA/JPY
+export const zaif_MONA_JPY = function () {
+    let target = new EventTarget()
+    let wss = new WebSocket('wss://ws.zaif.jp/stream?currency_pair=mona_jpy')
+    let tid = 0
+    wss.onopen = function () {
+    };
+    wss.onmessage = function (msg) {
+        let data = JSON.parse(msg.data)
+        data = data.trades.filter(trade => tid < trade.tid)
+        data = data.sort((a, b) => a.date - b.date)
+        data.forEach(trade => {
+            trade.volume = trade.amount
+            trade.date = new Date(trade.date * 1000)
+            trade.side = trade.trade_type == 'ask' ? 'SELL' : 'BUY'
+            target.dispatchEvent(new CustomEvent('message', { detail: trade }))
+            tid = trade.tid
+        })
+    };
+    return target
+}()
+
 ///// bitbank
 // BTC_JPY
 export const bitbank_BTC_JPY = function () {
@@ -290,6 +312,41 @@ export const bitfinex_BTC_JPY = function () {
             "event": "subscribe",
             "channel": "trades",
             "pair": "BTCJPY"
+        }));
+    };
+    wss.onmessage = function (msg) {
+        let data = JSON.parse(msg.data)
+        if (data[1] != "tu") { return }
+
+        let side = 'BUY';
+        let volume = data[6];
+        if (volume < 0) {
+            side = 'SELL';
+            volume = (- data[6]);
+        }
+
+        target.dispatchEvent(new CustomEvent('message', {
+            detail: {
+                price: data[5],
+                volume: volume,
+                side: side,
+                date: new Date(data[4] * 1000),
+                raw: msg.data
+            }
+        }))
+    };
+    return target
+}()
+
+// BTC_EUR
+export const bitfinex_BTC_EUR = function () {
+    let target = new EventTarget()
+    let wss = new WebSocket('wss://api.bitfinex.com/ws/')
+    wss.onopen = function () {
+        wss.send(JSON.stringify({
+            "event": "subscribe",
+            "channel": "trades",
+            "pair": "BTCEUR"
         }));
     };
     wss.onmessage = function (msg) {
