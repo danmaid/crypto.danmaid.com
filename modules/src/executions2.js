@@ -137,6 +137,28 @@ export const zaif_XEM_JPY = function () {
     return target
 }()
 
+// XEM/BTC
+export const zaif_XEM_BTC = function () {
+    let target = new EventTarget()
+    let wss = new WebSocket('wss://ws.zaif.jp/stream?currency_pair=xem_btc')
+    let tid = 0
+    wss.onopen = function () {
+    };
+    wss.onmessage = function (msg) {
+        let data = JSON.parse(msg.data)
+        data = data.trades.filter(trade => tid < trade.tid)
+        data = data.sort((a, b) => a.date - b.date)
+        data.forEach(trade => {
+            trade.volume = trade.amount
+            trade.date = new Date(trade.date * 1000)
+            trade.side = trade.trade_type == 'ask' ? 'SELL' : 'BUY'
+            target.dispatchEvent(new CustomEvent('message', { detail: trade }))
+            tid = trade.tid
+        })
+    };
+    return target
+}()
+
 ///// bitbank
 // BTC_JPY
 export const bitbank_BTC_JPY = function () {

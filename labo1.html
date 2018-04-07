@@ -55,6 +55,14 @@
         .bar #text {
             position: absolute;
         }
+        
+        .title {
+            width: 60px;
+            /* border-bottom: 1px dashed; */
+        }
+        .lastprice {
+            width: 50px;
+        }
     </style>
 </head>
 
@@ -64,7 +72,7 @@
             <h2>BTC</h2>
             <div id="btcusd" style="margin: 12px;">
                 <h3>BTC/USD</h3>
-                <div id="bitmex" class="cont" style="margin-bottom: 6px;">
+                <div id="bitmex" class="cont exchange" style="margin-bottom: 6px;">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -73,10 +81,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>bitmex</div>
-                    <div id="lastprice"></div>
+                    <div class="title">bitmex</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="mix" class="cont">
+                <div id="mix" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -85,9 +93,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>Mix</div>
+                    <div class="title">Mix</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="bitfinex" class="cont">
+                <div id="bitfinex" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -96,10 +105,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>bitfinex</div>
-                    <div id="lastprice"></div>
+                    <div class="title">bitfinex</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="gdax" class="cont">
+                <div id="gdax" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -108,10 +117,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>GDAX</div>
-                    <div id="lastprice"></div>
+                    <div class="title">GDAX</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="okcoin" class="cont">
+                <div id="okcoin" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -120,10 +129,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>OKCoin</div>
-                    <div id="lastprice"></div>
+                    <div class="title">OKCoin</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="bitstamp" class="cont">
+                <div id="bitstamp" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -132,14 +141,14 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>Bitstamp</div>
-                    <div id="lastprice"></div>
+                    <div class="title">Bitstamp</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
             </div>
 
             <div id="btcusdt" style="margin: 12px;">
                 <h3>BTC/USDT</h3>
-                <div id="mix" class="cont">
+                <div id="mix" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -148,9 +157,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>Mix</div>
+                    <div class="title">Mix</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="binance" class="cont">
+                <div id="binance" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -159,10 +169,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>binance</div>
-                    <div id="lastprice"></div>
+                    <div class="title">binance</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="okex" class="cont">
+                <div id="okex" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -171,14 +181,14 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>OKEx</div>
-                    <div id="lastprice"></div>
+                    <div class="title">OKEx</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
             </div>
 
             <div id="btcjpy" style="margin: 12px;">
                 <h3>BTC/JPY</h3>
-                <div id="bitflyerFX" class="cont" style="margin-bottom: 6px;">
+                <div id="bitflyerFX" class="cont exchange" style="margin-bottom: 6px;">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -187,10 +197,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>bitflyerFX</div>
-                    <div id="lastprice"></div>
+                    <div class="title">bitflyerFX</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="mix" class="cont">
+                <div id="mix" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -199,9 +209,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>Mix</div>
+                    <div class="title">Mix</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="bitflyer" class="cont">
+                <div id="bitflyer" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -210,10 +221,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>bitflyer</div>
-                    <div id="lastprice"></div>
+                    <div class="title">bitflyer</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="zaif" class="cont">
+                <div id="zaif" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -222,10 +233,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>Zaif</div>
-                    <div id="lastprice"></div>
+                    <div class="title">Zaif</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="bitbank" class="cont">
+                <div id="bitbank" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -234,10 +245,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>bitbank</div>
-                    <div id="lastprice"></div>
+                    <div class="title">bitbank</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="coincheck" class="cont">
+                <div id="coincheck" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -246,10 +257,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>coincheck</div>
-                    <div id="lastprice"></div>
+                    <div class="title">coincheck</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="bitfinex" class="cont">
+                <div id="bitfinex" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -258,14 +269,14 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>bitfinex</div>
-                    <div id="lastprice"></div>
+                    <div class="title">bitfinex</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
             </div>
 
             <div id="btceth" style="margin: 12px;">
                 <h3>BTC/ETH</h3>
-                <div id="mix" class="cont">
+                <div id="mix" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -274,9 +285,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>Mix</div>
+                    <div class="title">Mix</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="bitflyer" class="cont">
+                <div id="bitflyer" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -285,14 +297,14 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>bitflyer</div>
-                    <div id="lastprice"></div>
+                    <div class="title">bitflyer</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
             </div>
 
             <div id="btcbch" style="margin: 12px;">
                 <h3>BTC/BCH</h3>
-                <div id="mix" class="cont">
+                <div id="mix" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -301,9 +313,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>Mix</div>
+                    <div class="title">Mix</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="bitflyer" class="cont">
+                <div id="bitflyer" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -312,8 +325,36 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>bitflyer</div>
-                    <div id="lastprice"></div>
+                    <div class="title">bitflyer</div>
+                    <div id="lastprice" class="lastprice"></div>
+                </div>
+            </div>
+
+            <div id="btcxem" style="margin: 12px;">
+                <h3>BTC/XEM</h3>
+                <div id="mix" class="cont exchange">
+                    <div id="buy-volume" class="bar">
+                        <div id="item" class="item buy"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div id="sell-volume" class="bar reverse">
+                        <div id="item" class="item sell"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div class="title">Mix</div>
+                    <div id="lastprice" class="lastprice"></div>
+                </div>
+                <div id="zaif" class="cont exchange">
+                    <div id="buy-volume" class="bar">
+                        <div id="item" class="item buy"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div id="sell-volume" class="bar reverse">
+                        <div id="item" class="item sell"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div class="title">Zaif</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
             </div>
         </div>
@@ -322,7 +363,7 @@
             <h2>USD</h2>
             <div id="usdbtc" style="margin: 12px;">
                 <h3>USD/BTC</h3>
-                <div id="bitmex" class="cont" style="margin-bottom: 6px;">
+                <div id="bitmex" class="cont exchange" style="margin-bottom: 6px;">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -331,10 +372,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>bitmex</div>
-                    <div id="lastprice"></div>
+                    <div class="title">bitmex</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="mix" class="cont">
+                <div id="mix" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -343,9 +384,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>Mix</div>
+                    <div class="title">Mix</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="bitfinex" class="cont">
+                <div id="bitfinex" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -354,10 +396,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>bitfinex</div>
-                    <div id="lastprice"></div>
+                    <div class="title">bitfinex</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="gdax" class="cont">
+                <div id="gdax" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -366,10 +408,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>GDAX</div>
-                    <div id="lastprice"></div>
+                    <div class="title">GDAX</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="okcoin" class="cont">
+                <div id="okcoin" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -378,10 +420,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>OKCoin</div>
-                    <div id="lastprice"></div>
+                    <div class="title">OKCoin</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="bitstamp" class="cont">
+                <div id="bitstamp" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -390,13 +432,13 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>Bitstamp</div>
-                    <div id="lastprice"></div>
+                    <div class="title">Bitstamp</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
             </div>
             <div id="usdeth" style="margin: 12px;">
                 <h3>USD/ETH</h3>
-                <div id="mix" class="cont">
+                <div id="mix" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -405,9 +447,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>Mix</div>
+                    <div class="title">Mix</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="bitfinex" class="cont">
+                <div id="bitfinex" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -416,10 +459,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>bitfinex</div>
-                    <div id="lastprice"></div>
+                    <div class="title">bitfinex</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="gdax" class="cont">
+                <div id="gdax" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -428,8 +471,8 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>GDAX</div>
-                    <div id="lastprice"></div>
+                    <div class="title">GDAX</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
             </div>
         </div>
@@ -438,7 +481,7 @@
             <h2>USDT</h2>
             <div id="usdtbtc" style="margin: 12px;">
                 <h3>USDT/BTC</h3>
-                <div id="mix" class="cont">
+                <div id="mix" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -447,9 +490,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>Mix</div>
+                    <div class="title">Mix</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="binance" class="cont">
+                <div id="binance" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -458,10 +502,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>binance</div>
-                    <div id="lastprice"></div>
+                    <div class="title">binance</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="okex" class="cont">
+                <div id="okex" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -470,8 +514,8 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>OKEx</div>
-                    <div id="lastprice"></div>
+                    <div class="title">OKEx</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
             </div>
         </div>
@@ -480,7 +524,7 @@
             <h2>JPY</h2>
             <div id="jpybtc" style="margin: 12px;">
                 <h3>JPY/BTC</h3>
-                <div id="bitflyerFX" class="cont" style="margin-bottom: 6px;">
+                <div id="bitflyerFX" class="cont exchange" style="margin-bottom: 6px;">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -489,10 +533,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>bitflyerFX</div>
-                    <div id="lastprice"></div>
+                    <div class="title">bitflyerFX</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="mix" class="cont">
+                <div id="mix" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -501,9 +545,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>Mix</div>
+                    <div class="title">Mix</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="bitflyer" class="cont">
+                <div id="bitflyer" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -512,10 +557,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>bitflyer</div>
-                    <div id="lastprice"></div>
+                    <div class="title">bitflyer</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="zaif" class="cont">
+                <div id="zaif" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -524,10 +569,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>Zaif</div>
-                    <div id="lastprice"></div>
+                    <div class="title">Zaif</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="bitbank" class="cont">
+                <div id="bitbank" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -536,10 +581,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>bitbank</div>
-                    <div id="lastprice"></div>
+                    <div class="title">bitbank</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="coincheck" class="cont">
+                <div id="coincheck" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -548,10 +593,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>coincheck</div>
-                    <div id="lastprice"></div>
+                    <div class="title">coincheck</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="bitfinex" class="cont">
+                <div id="bitfinex" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -560,14 +605,14 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>bitfinex</div>
-                    <div id="lastprice"></div>
+                    <div class="title">bitfinex</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
             </div>
 
             <div id="jpyxem" style="margin: 12px;">
                 <h3>JPY/XEM</h3>
-                <div id="mix" class="cont">
+                <div id="mix" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -576,9 +621,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>Mix</div>
+                    <div class="title">Mix</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="zaif" class="cont">
+                <div id="zaif" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -587,8 +633,8 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>Zaif</div>
-                    <div id="lastprice"></div>
+                    <div class="title">Zaif</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
             </div>
         </div>
@@ -597,7 +643,7 @@
             <h2>ETH</h2>
             <div id="ethusd" style="margin: 12px;">
                 <h3>ETH/USD</h3>
-                <div id="mix" class="cont">
+                <div id="mix" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -606,9 +652,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>Mix</div>
+                    <div class="title">Mix</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="bitfinex" class="cont">
+                <div id="bitfinex" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -617,10 +664,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>bitfinex</div>
-                    <div id="lastprice"></div>
+                    <div class="title">bitfinex</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="gdax" class="cont">
+                <div id="gdax" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -629,13 +676,13 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>GDAX</div>
-                    <div id="lastprice"></div>
+                    <div class="title">GDAX</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
             </div>
             <div id="ethbtc" style="margin: 12px;">
                 <h3>ETH/BTC</h3>
-                <div id="mix" class="cont">
+                <div id="mix" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -644,9 +691,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>Mix</div>
+                    <div class="title">Mix</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="bitflyer" class="cont">
+                <div id="bitflyer" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -655,8 +703,8 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>bitflyer</div>
-                    <div id="lastprice"></div>
+                    <div class="title">bitflyer</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
             </div>
         </div>
@@ -665,7 +713,7 @@
             <h2>BCH</h2>
             <div id="bchbtc" style="margin: 12px;">
                 <h3>BCH/BTC</h3>
-                <div id="mix" class="cont">
+                <div id="mix" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -674,9 +722,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>Mix</div>
+                    <div class="title">Mix</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="bitflyer" class="cont">
+                <div id="bitflyer" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -685,8 +734,8 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>bitflyer</div>
-                    <div id="lastprice"></div>
+                    <div class="title">bitflyer</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
             </div>
         </div>
@@ -695,7 +744,7 @@
             <h2>XEM</h2>
             <div id="xemjpy" style="margin: 12px;">
                 <h3>XEM/JPY</h3>
-                <div id="mix" class="cont">
+                <div id="mix" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -704,9 +753,10 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>Mix</div>
+                    <div class="title">Mix</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
-                <div id="zaif" class="cont">
+                <div id="zaif" class="cont exchange">
                     <div id="buy-volume" class="bar">
                         <div id="item" class="item buy"></div>
                         <div id="text"></div>
@@ -715,8 +765,36 @@
                         <div id="item" class="item sell"></div>
                         <div id="text"></div>
                     </div>
-                    <div>Zaif</div>
-                    <div id="lastprice"></div>
+                    <div class="title">Zaif</div>
+                    <div id="lastprice" class="lastprice"></div>
+                </div>
+            </div>
+
+            <div id="xembtc" style="margin: 12px;">
+                <h3>XEM/BTC</h3>
+                <div id="mix" class="cont exchange">
+                    <div id="buy-volume" class="bar">
+                        <div id="item" class="item buy"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div id="sell-volume" class="bar reverse">
+                        <div id="item" class="item sell"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div class="title">Mix</div>
+                    <div id="lastprice" class="lastprice"></div>
+                </div>
+                <div id="zaif" class="cont exchange">
+                    <div id="buy-volume" class="bar">
+                        <div id="item" class="item buy"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div id="sell-volume" class="bar reverse">
+                        <div id="item" class="item sell"></div>
+                        <div id="text"></div>
+                    </div>
+                    <div class="title">Zaif</div>
+                    <div id="lastprice" class="lastprice"></div>
                 </div>
             </div>
         </div>
@@ -1326,6 +1404,46 @@
             jpyxemZaifTag.lastprice.textContent = e.detail.price
         })
 
+        // XEM_BTC
+        let xembtc = new Pair()
+        let xembtcTag = document.querySelector('#xembtc')
+        let xembtcMixTag = {
+            sellVolume: xembtcTag.querySelector('#mix #sell-volume #item'),
+            buyVolume: xembtcTag.querySelector('#mix #buy-volume #item'),
+            sellText: xembtcTag.querySelector('#mix #sell-volume #text'),
+            buyText: xembtcTag.querySelector('#mix #buy-volume #text')
+        }
+        let btcxemTag = document.querySelector('#btcxem')
+        let btcxemMixTag = {
+            sellVolume: btcxemTag.querySelector('#mix #sell-volume #item'),
+            buyVolume: btcxemTag.querySelector('#mix #buy-volume #item'),
+            sellText: btcxemTag.querySelector('#mix #sell-volume #text'),
+            buyText: btcxemTag.querySelector('#mix #buy-volume #text')
+        }
+
+        // zaif
+        let xembtcZaif = new Pair()
+        let xembtcZaifTag = {
+            sellVolume: xembtcTag.querySelector('#zaif #sell-volume #item'),
+            buyVolume: xembtcTag.querySelector('#zaif #buy-volume #item'),
+            sellText: xembtcTag.querySelector('#zaif #sell-volume #text'),
+            buyText: xembtcTag.querySelector('#zaif #buy-volume #text'),
+            lastprice: xembtcTag.querySelector('#zaif #lastprice')
+        }
+        let btcxemZaifTag = {
+            sellVolume: btcxemTag.querySelector('#zaif #sell-volume #item'),
+            buyVolume: btcxemTag.querySelector('#zaif #buy-volume #item'),
+            sellText: btcxemTag.querySelector('#zaif #sell-volume #text'),
+            buyText: btcxemTag.querySelector('#zaif #buy-volume #text'),
+            lastprice: btcxemTag.querySelector('#zaif #lastprice')
+        }
+        exec.zaif_XEM_BTC.addEventListener('message', (e) => {
+            xembtc.push(e.detail)
+            xembtcZaif.push(e.detail)
+            xembtcZaifTag.lastprice.textContent = e.detail.price
+            btcxemZaifTag.lastprice.textContent = e.detail.price
+        })
+
         setInterval(() => {
             // BTC_USD
             btcusdMixTag.sellVolume.style.width = btcusd.getLeftSellVolume() + '%'
@@ -1590,6 +1708,28 @@
             jpyxemZaifTag.buyVolume.style.width = xemjpyZaif.getRightBuyVolume() / 1000000 + '%'
             jpyxemZaifTag.sellText.textContent = Math.round(xemjpyZaif.getRightSellVolume())
             jpyxemZaifTag.buyText.textContent = Math.round(xemjpyZaif.getRightBuyVolume())
+
+            // XEM_BTC
+            xembtcMixTag.sellVolume.style.width = xembtc.getLeftSellVolume() + '%'
+            xembtcMixTag.buyVolume.style.width = xembtc.getLeftBuyVolume() + '%'
+            xembtcMixTag.sellText.textContent = Math.round(xembtc.getLeftSellVolume() * 10000) / 10000
+            xembtcMixTag.buyText.textContent = Math.round(xembtc.getLeftBuyVolume() * 10000) / 10000
+
+            xembtcZaifTag.sellVolume.style.width = xembtcZaif.getLeftSellVolume() + '%'
+            xembtcZaifTag.buyVolume.style.width = xembtcZaif.getLeftBuyVolume() + '%'
+            xembtcZaifTag.sellText.textContent = Math.round(xembtcZaif.getLeftSellVolume() * 10000) / 10000
+            xembtcZaifTag.buyText.textContent = Math.round(xembtcZaif.getLeftBuyVolume() * 10000) / 10000
+
+            // BTC_XEM
+            btcxemMixTag.sellVolume.style.width = xembtc.getRightSellVolume() + '%'
+            btcxemMixTag.buyVolume.style.width = xembtc.getRightBuyVolume() + '%'
+            btcxemMixTag.sellText.textContent = Math.round(xembtc.getRightSellVolume() * 10000) / 10000
+            btcxemMixTag.buyText.textContent = Math.round(xembtc.getRightBuyVolume() * 10000) / 10000
+
+            btcxemZaifTag.sellVolume.style.width = xembtcZaif.getRightSellVolume() + '%'
+            btcxemZaifTag.buyVolume.style.width = xembtcZaif.getRightBuyVolume() + '%'
+            btcxemZaifTag.sellText.textContent = Math.round(xembtcZaif.getRightSellVolume() * 10000) / 10000
+            btcxemZaifTag.buyText.textContent = Math.round(xembtcZaif.getRightBuyVolume() * 10000) / 10000
         }, 1000)
     </script>
 </body>
