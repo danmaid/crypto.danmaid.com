@@ -276,6 +276,7 @@ export const okcoin_BTC_USD = function () {
             if ((parseInt(elem[3].split(':')[0]) - 8) < 0) {
                 date.setUTCDate(date.getUTCDate() + 1)
             }
+            if (date > (new Date)) { return }
             target.dispatchEvent(new CustomEvent('message', {
                 detail: {
                     price: parseFloat(elem[1]),
@@ -350,6 +351,7 @@ export const okex_BTC_USDT = function () {
             if ((parseInt(elem[3].split(':')[0]) - 8) < 0) {
                 date.setUTCDate(date.getUTCDate() + 1)
             }
+            if (date > (new Date)) { return }
             target.dispatchEvent(new CustomEvent('message', {
                 detail: {
                     price: parseFloat(elem[1]),

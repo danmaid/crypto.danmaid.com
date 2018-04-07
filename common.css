@@ -1,0 +1,63 @@
+:root {
+    background-color: rgb(19, 19, 21);
+    color: rgb(190, 190, 210);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(57, 57, 63);
+    border: 0 none #fff;
+    border-radius: 50px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border: 0 none #fff;
+    border-radius: 0;
+}
+
+.footer {
+    text-align: end;
+}
+
+a:link {
+    color: inherit
+}
+
+a:visited {
+    color: inherit
+}
+
+a:hover {
+    color: inherit
+}
+
+a:active {
+    color: inherit
+}
+
+a {
+    text-decoration: none
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-size: 1.0em;
+    margin: unset;
+    font-weight: unset;
+}
+
+h1 {
+    font-size: 1.2em;
+}
+
+.mark {
+    margin-right: 4px;
+}
