@@ -66,6 +66,8 @@
                 <!-- <dm-exec-list id="BTC_ZAR_list"></dm-exec-list> -->
                 <dm-exec-mixed id="BTC_ILS" name=ILS></dm-exec-mixed>
                 <!-- <dm-exec-list id="BTC_ILS_list"></dm-exec-list> -->
+                <dm-exec-mixed id="BTC_INR" name=INR></dm-exec-mixed>
+                <!-- <dm-exec-list id="BTC_INR_list"></dm-exec-list> -->
             </div>
             <div style="position: absolute; left: 1600px; top: 350px;">
                 <h2>JPY</h2>
@@ -144,6 +146,11 @@
                 <h2>ILS</h2>
                 <dm-exec-mixed id="ILS_BTC" name="BTC" scale="100000" round="100"></dm-exec-mixed>
                 <!-- <dm-exec-list id="ILS_BTC_list" scale="100000" round="100"></dm-exec-list> -->
+            </div>
+            <div style="position: absolute; left: 1300px; top: 550px;">
+                <h2>INR</h2>
+                <dm-exec-mixed id="INR_BTC" name="BTC" scale="1000000" round="100"></dm-exec-mixed>
+                <!-- <dm-exec-list id="INR_BTC_list" scale="1000000" round="100"></dm-exec-list> -->
             </div>
         </div>
     </main>
@@ -307,6 +314,13 @@
                 refreshList = refreshList.concat(riot.mount('dm-exec-mixed#ILS_BTC', 'dm-exec-mixed', { data: exec['ILS']['BTC'] }))
                 // refreshList = refreshList.concat(riot.mount('dm-exec-list#ILS_BTC_list', 'dm-exec-list', { data: exec['ILS']['BTC'] }))
             })
+            .then(() => addTradeChannels('BTC', 'INR', socket, exec))
+            .then(() => {
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#BTC_INR', 'dm-exec-mixed', { data: exec['BTC']['INR'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#BTC_INR_list', 'dm-exec-list', { data: exec['BTC']['INR'] }))
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#INR_BTC', 'dm-exec-mixed', { data: exec['INR']['BTC'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#INR_BTC_list', 'dm-exec-list', { data: exec['INR']['BTC'] }))
+            })
         )
 
 
@@ -317,7 +331,6 @@
             return fetch('https://min-api.cryptocompare.com/data/subs?fsym=' + fsym + '&tsyms=' + tsym)
                 .then(r => r.json())
                 .then(data => {
-                    console.log('x')
                     let channels = data[tsym]['TRADES']
                     // ゴミExchange除外
                     channels = channels.filter(x => !ignoreChannels.includes(x))
