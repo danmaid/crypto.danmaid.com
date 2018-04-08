@@ -1,0 +1,188 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>ワールド暗号資産サテライト（仮） | 男メイドラボ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c"
+        crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/regular.js" integrity="sha384-t7yHmUlwFrLxHXNLstawVRBMeSLcXTbQ5hsd0ifzwGtN7ZF7RZ8ppM7Ldinuoiif"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="/common.css" />
+    <style>
+        .viewbox {
+            width: 1900px;
+            height: 950px;
+            min-width: 1900px;
+            min-height: 950px;
+            max-width: 1900px;
+            max-height: 950px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-image: url(/images/worldmap.svg);
+            position: relative;
+            font-size: 12px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="viewbox">
+            <div style="position: absolute; left: 100px; top: 700px;">
+                <dm-exec-mixed id="BTC_JPY" name="BTC/JPY"></dm-exec-mixed>
+                <dm-exec-list id="BTC_JPY_list"></dm-exec-list>
+            </div>
+            <div style="position: absolute; left: 1600px; top: 350px;">
+                <dm-exec-mixed id="JPY_BTC" name="JPY/BTC" scale="1000000" round="1"></dm-exec-mixed>
+                <dm-exec-list id="JPY_BTC_list" scale="1000000" round="1"></dm-exec-list>
+            </div>
+        </div>
+    </main>
+    <footer class="footer">
+        <a href="https://danmaid.com/">
+            <i class="far fa-copyright mark"></i>2018 男メイド</a>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/riot/riot+compiler.min.js"></script>
+    <script type="riot/tag" src="dm-exec.tag"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.2/socket.io.js"></script>
+    <script>
+        const side = {
+            SELL: 'SELL',
+            BUY: 'BUY'
+        }
+
+        const ignoreChannels = [
+            "0~LocalBitcoins~BTC~JPY",
+            "0~LakeBTC~BTC~JPY",
+            "0~MonetaGo~BTC~JPY",
+            "0~BitSquare~BTC~JPY",
+            "0~Lykke~BTC~JPY",
+        ]
+
+        function getVolume(arr, side) {
+            let t = arr.slice(1).filter(e => e.side == side)
+            return t.length > 0 ? t.map(e => e.volume).reduce((x, y) => x + y) : 0
+        }
+        function getLastPrice(arr) {
+            return arr[0] ? arr[0].price : 0
+        }
+
+        function getMixedVolume(obj, side) {
+            let sum = 0
+            for (k of Object.keys(obj)) {
+                sum += getVolume(obj[k], side)
+            }
+            return sum
+        }
+
+        function getMixedLastPrice(obj) {
+            let avg = 0;
+            for (k of Object.keys(obj)) {
+                avg = (getLastPrice(obj[k]) + avg) / 2
+            }
+            return avg
+        }
+
+        var refreshList = []
+        setInterval(() => {
+            refreshList.forEach(x => x.update())
+        }, 1000)
+
+        riot.compile(() => {
+            addTradeChannels('BTC', 'JPY', socket, exec)
+                .then(() => {
+                    refreshList = refreshList.concat(riot.mount('dm-exec-mixed#BTC_JPY', 'dm-exec-mixed', { data: exec['BTC']['JPY'] }))
+                    refreshList = refreshList.concat(riot.mount('dm-exec-list#BTC_JPY_list', 'dm-exec-list', { data: exec['BTC']['JPY'] }))
+
+                    refreshList = refreshList.concat(riot.mount('dm-exec-mixed#JPY_BTC', 'dm-exec-mixed', { data: exec['JPY']['BTC'] }))
+                    refreshList = refreshList.concat(riot.mount('dm-exec-list#JPY_BTC_list', 'dm-exec-list', { data: exec['JPY']['BTC'] }))
+                })
+        })
+
+
+
+        var socket = io("https://streamer.cryptocompare.com/")
+
+        function addTradeChannels(fsym, tsym, socket, target) {
+            return fetch('https://min-api.cryptocompare.com/data/subs?fsym=' + fsym + '&tsyms=' + tsym)
+                .then(r => r.json())
+                .then(data => {
+                    let channels = data[tsym]['TRADES']
+                    // ゴミExchange除外
+                    channels = channels.filter(x => !ignoreChannels.includes(x))
+
+                    // データ初期化
+                    if (target[fsym] == null) { target[fsym] = {} }
+                    if (target[fsym][tsym] == null) { target[fsym][tsym] = {} }
+                    channels.map(x => x.split('~')[1]).forEach(element => {
+                        if (target[fsym][tsym][element] == null) { target[fsym][tsym][element] = [] }
+                    });
+                    if (target[tsym] == null) { target[tsym] = {} }
+                    if (target[tsym][fsym] == null) { target[tsym][fsym] = {} }
+                    channels.map(x => x.split('~')[1]).forEach(element => {
+                        if (target[tsym][fsym][element] == null) { target[tsym][fsym][element] = [] }
+                    });
+
+                    // 購読開始
+                    socket.emit('SubAdd', { subs: channels })
+                })
+        }
+
+
+        var exec = {} // [CUR][CUR][Exchange][Execution]
+
+        socket.on('m', function (data) {
+            let trade = data.split('~')
+            // console.log(trade)
+            if (trade[0] != "0") { return }
+            exec[trade[2]][trade[3]][trade[1]].push({
+                date: parseInt(trade[6]),
+                volume: parseFloat(trade[7]),
+                price: parseFloat(trade[8]),
+                side: trade[4] == "1" ? side.SELL : side.BUY
+            })
+            // Lastprice インチキ
+            exec[trade[2]][trade[3]][trade[1]][0] = {
+                date: 9999999999,
+                volume: parseFloat(trade[7]),
+                price: parseFloat(trade[8]),
+                side: trade[4] == "1" ? side.SELL : side.BUY
+            }
+            // 反対
+            exec[trade[3]][trade[2]][trade[1]].push({
+                date: parseInt(trade[6]),
+                volume: parseFloat(trade[9]),
+                price: parseFloat(trade[8]),
+                side: trade[4] == "1" ? side.BUY : side.SELL
+            })
+            // Lastprice インチキ
+            exec[trade[3]][trade[2]][trade[1]][0] = {
+                date: 9999999999,
+                volume: parseFloat(trade[9]),
+                price: parseFloat(trade[8]),
+                side: trade[4] == "1" ? side.BUY : side.SELL
+            }
+        })
+
+
+        setInterval(() => {
+            // パージ
+            let now = Math.floor((new Date()).getTime() / 1000)
+            for (f of Object.keys(exec)) {
+                for (t of Object.keys(exec[f])) {
+                    for (e of Object.keys(exec[f][t])) {
+                        exec[f][t][e] = exec[f][t][e].filter(e => e.date > (now - 10))
+                    }
+                }
+            }
+        }, 1000)
+
+    </script>
+</body>
+
+</html>
