@@ -1,5 +1,6 @@
-riot.tag2('dm-exec-mixed', '<dm-exec if="{data}" name="{opts.name}" buy="{Math.round(getMixedVolume(data, \'BUY\') * round) / round }⁗         sell=⁗{ Math.round(getMixedVolume(data, \'SELL\') * round) / round}" scale="{scale}"></dm-exec>', '', '', function(opts) {
+riot.tag2('dm-exec-mixed', '<dm-exec if="{data}" name="{opts.name}" buy="{Math.round(getMixedVolume(data, side.BUY) * round) / round }⁗ sell=⁗{ Math.round(getMixedVolume(data, side.SELL) * round) / round}" scale="{scale}"></dm-exec>', '', '', function(opts) {
         this.on('mount', () => {
+            console.log(this)
             this.data = this.opts.data
             this.round = this.opts.round ? parseInt(this.opts.round) : 10000
             this.scale = this.opts.scale
@@ -7,7 +8,7 @@ riot.tag2('dm-exec-mixed', '<dm-exec if="{data}" name="{opts.name}" buy="{Math.r
         })
 });
 
-riot.tag2('dm-exec-list', '<dm-exec each="{v,k in data}" name="{k}" price="{Math.round(getLastPrice(v) * 100) / 100 }⁗ buy=⁗{ Math.round(getVolume(v, \'BUY\') * round) / round}" sell="{Math.round(getVolume(v, \'SELL\') * round) / round }⁗ scale=⁗{ scale }⁗></dm-exec>}', '', '', function(opts) {
+riot.tag2('dm-exec-list', '<dm-exec each="{v,k in data}" name="{k}" price="{Math.round(getLastPrice(v) * 100) / 100 }⁗ buy=⁗{ Math.round(getVolume(v, side.BUY) * round) / round}" sell="{Math.round(getVolume(v, side.SELL) * round) / round }⁗ scale=⁗{ scale }⁗></dm-exec>}', '', '', function(opts) {
         this.on('mount', () => {
             this.data = this.opts.data
             this.round = this.opts.round ? parseInt(this.opts.round) : 10000
@@ -24,6 +25,7 @@ riot.tag2('dm-exec', '<div class="bar"> <div class="item buy" riot-style="{buySt
             this.sellStyle = {
                 width: this.opts.sell / this.scale + '%'
             }
+            console.log(this)
         })
         this.on('mount', () => {
             this.scale = this.opts.scale ? this.opts.scale : 1

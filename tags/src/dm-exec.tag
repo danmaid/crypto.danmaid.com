@@ -1,6 +1,5 @@
 <dm-exec-mixed>
-    <dm-exec if="{ data }" name="{ opts.name }" buy="{ Math.round(getMixedVolume(data, 'BUY') * round) / round }"
-        sell="{ Math.round(getMixedVolume(data, 'SELL') * round) / round }" scale="{ scale }"></dm-exec>
+    <dm-exec if="{ data }" name="{ opts.name }" buy="{ Math.round(getMixedVolume(data, side.BUY) * round) / round }" sell="{ Math.round(getMixedVolume(data, side.SELL) * round) / round }" scale="{ scale }"></dm-exec>
 
     <script>
         this.on('mount', () => {
@@ -13,8 +12,7 @@
 </dm-exec-mixed>
 
 <dm-exec-list>
-    <dm-exec each="{ v,k in data }" name="{ k }" price="{ Math.round(getLastPrice(v) * 100) / 100 }" buy="{ Math.round(getVolume(v, 'BUY') * round) / round }"
-        sell="{ Math.round(getVolume(v, 'SELL') * round) / round }" scale="{ scale }"></dm-exec>
+    <dm-exec each="{ v,k in data }" name="{ k }" price="{ Math.round(getLastPrice(v) * 100) / 100 }" buy="{ Math.round(getVolume(v, side.BUY) * round) / round }" sell="{ Math.round(getVolume(v, side.SELL) * round) / round }" scale="{ scale }"></dm-exec>
 
     <script>
         this.on('mount', () => {
@@ -28,11 +26,11 @@
 
 <dm-exec>
     <div class="bar">
-        <div class="item buy" style="{ buyStyle }"></div>
+        <div class="item buy" style={ buyStyle }></div>
         <div class="text">{ opts.buy }</div>
     </div>
     <div class="bar reverse">
-        <div class="item sell" style="{ sellStyle }"></div>
+        <div class="item sell" style={ sellStyle }></div>
         <div class="text">{ opts.sell }</div>
     </div>
     <div class="title">{ opts.name }</div>
