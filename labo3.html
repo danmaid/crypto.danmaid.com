@@ -24,7 +24,7 @@
             background-image: url(/images/worldmap.svg);
             position: relative;
             font-size: 12px;
-            overflow: hidden;
+            /* overflow: hidden; */
         }
     </style>
 </head>
@@ -32,13 +32,118 @@
 <body>
     <main>
         <div class="viewbox">
-            <div style="position: absolute; left: 100px; top: 700px;">
-                <dm-exec-mixed id="BTC_JPY" name="BTC/JPY"></dm-exec-mixed>
-                <dm-exec-list id="BTC_JPY_list"></dm-exec-list>
+            <div style="position: absolute; left: 10px; top: 10px;">
+                <h2>BTC</h2>
+                <dm-exec-mixed id="BTC_JPY" name="JPY"></dm-exec-mixed>
+                <!-- <dm-exec-list id="BTC_JPY_list"></dm-exec-list> -->
+                <dm-exec-mixed id="BTC_USD" name="USD"></dm-exec-mixed>
+                <!-- <dm-exec-list id="BTC_USD_list"></dm-exec-list> -->
+                <dm-exec-mixed id="BTC_USDT" name="USDT"></dm-exec-mixed>
+                <!-- <dm-exec-list id="BTC_USDT_list"></dm-exec-list> -->
+                <dm-exec-mixed id="BTC_EUR" name="EUR"></dm-exec-mixed>
+                <!-- <dm-exec-list id="BTC_EUR_list"></dm-exec-list> -->
+                <dm-exec-mixed id="BTC_GBP" name="GBP"></dm-exec-mixed>
+                <!-- <dm-exec-list id="BTC_GBP_list"></dm-exec-list> -->
+                <dm-exec-mixed id="BTC_PLN" name="PLN"></dm-exec-mixed>
+                <!-- <dm-exec-list id="BTC_PLN_list"></dm-exec-list> -->
+                <dm-exec-mixed id="BTC_CAD" name="CAD"></dm-exec-mixed>
+                <!-- <dm-exec-list id="BTC_CAD_list"></dm-exec-list> -->
+                <dm-exec-mixed id="BTC_CNY" name="CNY"></dm-exec-mixed>
+                <!-- <dm-exec-list id="BTC_CNY_list"></dm-exec-list> -->
+                <dm-exec-mixed id="BTC_RUB" name="RUB"></dm-exec-mixed>
+                <!-- <dm-exec-list id="BTC_RUB_list"></dm-exec-list> -->
+                <dm-exec-mixed id="BTC_HKD" name=HKD></dm-exec-mixed>
+                <!-- <dm-exec-list id="BTC_HKD_list"></dm-exec-list> -->
+                <dm-exec-mixed id="BTC_SGD" name=SGD></dm-exec-mixed>
+                <!-- <dm-exec-list id="BTC_SGD_list"></dm-exec-list> -->
+                <dm-exec-mixed id="BTC_AUD" name=AUD></dm-exec-mixed>
+                <!-- <dm-exec-list id="BTC_AUD_list"></dm-exec-list> -->
+                <dm-exec-mixed id="BTC_KRW" name=KRW></dm-exec-mixed>
+                <!-- <dm-exec-list id="BTC_KRW_list"></dm-exec-list> -->
+                <dm-exec-mixed id="BTC_BRL" name=BRL></dm-exec-mixed>
+                <!-- <dm-exec-list id="BTC_BRL_list"></dm-exec-list> -->
+                <dm-exec-mixed id="BTC_ZAR" name=ZAR></dm-exec-mixed>
+                <!-- <dm-exec-list id="BTC_ZAR_list"></dm-exec-list> -->
+                <dm-exec-mixed id="BTC_ILS" name=ILS></dm-exec-mixed>
+                <!-- <dm-exec-list id="BTC_ILS_list"></dm-exec-list> -->
             </div>
             <div style="position: absolute; left: 1600px; top: 350px;">
-                <dm-exec-mixed id="JPY_BTC" name="JPY/BTC" scale="1000000" round="1"></dm-exec-mixed>
-                <dm-exec-list id="JPY_BTC_list" scale="1000000" round="1"></dm-exec-list>
+                <h2>JPY</h2>
+                <dm-exec-mixed id="JPY_BTC" name="BTC" scale="1000000" round="1"></dm-exec-mixed>
+                <!-- <dm-exec-list id="JPY_BTC_list" scale="1000000" round="1"></dm-exec-list> -->
+            </div>
+            <div style="position: absolute; left: 350px; top: 300px;">
+                <h2>USD</h2>
+                <dm-exec-mixed id="USD_BTC" name="BTC" scale="10000" round="100"></dm-exec-mixed>
+                <!-- <dm-exec-list id="USD_BTC_list" scale="10000" round="100"></dm-exec-list> -->
+                <h2>USDT</h2>
+                <dm-exec-mixed id="USDT_BTC" name="BTC" scale="10000" round="100"></dm-exec-mixed>
+                <!-- <dm-exec-list id="USDT_BTC_list" scale="10000" round="100"></dm-exec-list> -->
+            </div>
+            <div style="position: absolute; left: 300px; top: 200px;">
+                <h2>CAD</h2>
+                <dm-exec-mixed id="CAD_BTC" name="BTC" scale="10000" round="100"></dm-exec-mixed>
+                <!-- <dm-exec-list id="CAD_BTC_list" scale="10000" round="100"></dm-exec-list> -->
+            </div>
+            <div style="position: absolute; left: 950px; top: 300px;">
+                <h2>EUR</h2>
+                <dm-exec-mixed id="EUR_BTC" name="BTC" scale="10000" round="100"></dm-exec-mixed>
+                <!-- <dm-exec-list id="EUR_BTC_list" scale="10000" round="100"></dm-exec-list> -->
+            </div>
+            <div style="position: absolute; left: 850px; top: 230px;">
+                <h2>GBP</h2>
+                <dm-exec-mixed id="GBP_BTC" name="BTC" scale="10000" round="100"></dm-exec-mixed>
+                <!-- <dm-exec-list id="GBP_BTC_list" scale="10000" round="100"></dm-exec-list> -->
+            </div>
+            <div style="position: absolute; left: 1000px; top: 270px;">
+                <h2>PLN</h2>
+                <dm-exec-mixed id="PLN_BTC" name="BTC" scale="100000" round="100"></dm-exec-mixed>
+                <!-- <dm-exec-list id="PLN_BTC_list" scale="100000" round="100"></dm-exec-list> -->
+            </div>
+            <div style="position: absolute; left: 1200px; top: 100px;">
+                <h2>RUB</h2>
+                <dm-exec-mixed id="RUB_BTC" name="BTC" scale="1000000" round="100"></dm-exec-mixed>
+                <!-- <dm-exec-list id="RUB_BTC_list" scale="1000000" round="100"></dm-exec-list> -->
+            </div>
+            <div style="position: absolute; left: 1300px; top: 300px;">
+                <h2>CNY</h2>
+                <dm-exec-mixed id="CNY_BTC" name="BTC" scale="100000" round="100"></dm-exec-mixed>
+                <!-- <dm-exec-list id="CNY_BTC_list" scale="100000" round="100"></dm-exec-list> -->
+            </div>
+            <div style="position: absolute; left: 1550px; top: 450px;">
+                <h2>HKD</h2>
+                <dm-exec-mixed id="HKD_BTC" name="BTC" scale="100000" round="100"></dm-exec-mixed>
+                <!-- <dm-exec-list id="HKD_BTC_list" scale="100000" round="100"></dm-exec-list> -->
+            </div>
+            <div style="position: absolute; left: 1500px; top: 500px;">
+                <h2>SGD</h2>
+                <dm-exec-mixed id="SGD_BTC" name="BTC" scale="10000" round="100"></dm-exec-mixed>
+                <!-- <dm-exec-list id="SGD_BTC_list" scale="10000" round="100"></dm-exec-list> -->
+            </div>
+            <div style="position: absolute; left: 1550px; top: 700px;">
+                <h2>AUD</h2>
+                <dm-exec-mixed id="AUD_BTC" name="BTC" scale="10000" round="100"></dm-exec-mixed>
+                <!-- <dm-exec-list id="AUD_BTC_list" scale="10000" round="100"></dm-exec-list> -->
+            </div>
+            <div style="position: absolute; left: 1600px; top: 300px;">
+                <h2>KRW</h2>
+                <dm-exec-mixed id="KRW_BTC" name="BTC" scale="10000000" round="100"></dm-exec-mixed>
+                <!-- <dm-exec-list id="KRW_BTC_list" scale="10000000" round="100"></dm-exec-list> -->
+            </div>
+            <div style="position: absolute; left: 600px; top: 700px;">
+                <h2>BRL</h2>
+                <dm-exec-mixed id="BRL_BTC" name="BTC" scale="100000" round="100"></dm-exec-mixed>
+                <!-- <dm-exec-list id="BRL_BTC_list" scale="100000" round="100"></dm-exec-list> -->
+            </div>
+            <div style="position: absolute; left: 1000px; top: 700px;">
+                <h2>ZAR</h2>
+                <dm-exec-mixed id="ZAR_BTC" name="BTC" scale="100000" round="100"></dm-exec-mixed>
+                <!-- <dm-exec-list id="ZAR_BTC_list" scale="100000" round="100"></dm-exec-list> -->
+            </div>
+            <div style="position: absolute; left: 1100px; top: 400px;">
+                <h2>ILS</h2>
+                <dm-exec-mixed id="ILS_BTC" name="BTC" scale="100000" round="100"></dm-exec-mixed>
+                <!-- <dm-exec-list id="ILS_BTC_list" scale="100000" round="100"></dm-exec-list> -->
             </div>
         </div>
     </main>
@@ -57,11 +162,7 @@
         }
 
         const ignoreChannels = [
-            "0~LocalBitcoins~BTC~JPY",
-            "0~LakeBTC~BTC~JPY",
-            "0~MonetaGo~BTC~JPY",
-            "0~BitSquare~BTC~JPY",
-            "0~Lykke~BTC~JPY",
+            "0~bitFlyerFX~BTC~JPY",
         ]
 
         function getVolume(arr, side) {
@@ -93,16 +194,120 @@
             refreshList.forEach(x => x.update())
         }, 1000)
 
-        riot.compile(() => {
-            addTradeChannels('BTC', 'JPY', socket, exec)
-                .then(() => {
-                    refreshList = refreshList.concat(riot.mount('dm-exec-mixed#BTC_JPY', 'dm-exec-mixed', { data: exec['BTC']['JPY'] }))
-                    refreshList = refreshList.concat(riot.mount('dm-exec-list#BTC_JPY_list', 'dm-exec-list', { data: exec['BTC']['JPY'] }))
-
-                    refreshList = refreshList.concat(riot.mount('dm-exec-mixed#JPY_BTC', 'dm-exec-mixed', { data: exec['JPY']['BTC'] }))
-                    refreshList = refreshList.concat(riot.mount('dm-exec-list#JPY_BTC_list', 'dm-exec-list', { data: exec['JPY']['BTC'] }))
-                })
-        })
+        riot.compile(Promise.resolve()
+            .then(() => addTradeChannels('BTC', 'JPY', socket, exec))
+            .then(() => {
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#BTC_JPY', 'dm-exec-mixed', { data: exec['BTC']['JPY'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#BTC_JPY_list', 'dm-exec-list', { data: exec['BTC']['JPY'] }))
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#JPY_BTC', 'dm-exec-mixed', { data: exec['JPY']['BTC'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#JPY_BTC_list', 'dm-exec-list', { data: exec['JPY']['BTC'] }))
+            })
+            .then(() => addTradeChannels('BTC', 'USD', socket, exec))
+            .then(() => {
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#BTC_USD', 'dm-exec-mixed', { data: exec['BTC']['USD'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#BTC_USD_list', 'dm-exec-list', { data: exec['BTC']['USD'] }))
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#USD_BTC', 'dm-exec-mixed', { data: exec['USD']['BTC'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#USD_BTC_list', 'dm-exec-list', { data: exec['USD']['BTC'] }))
+            })
+            .then(() => addTradeChannels('BTC', 'USDT', socket, exec))
+            .then(() => {
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#BTC_USDT', 'dm-exec-mixed', { data: exec['BTC']['USDT'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#BTC_USDT_list', 'dm-exec-list', { data: exec['BTC']['USDT'] }))
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#USDT_BTC', 'dm-exec-mixed', { data: exec['USDT']['BTC'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#USDT_BTC_list', 'dm-exec-list', { data: exec['USDT']['BTC'] }))
+            })
+            .then(() => addTradeChannels('BTC', 'EUR', socket, exec))
+            .then(() => {
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#BTC_EUR', 'dm-exec-mixed', { data: exec['BTC']['EUR'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#BTC_EUR_list', 'dm-exec-list', { data: exec['BTC']['EUR'] }))
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#EUR_BTC', 'dm-exec-mixed', { data: exec['EUR']['BTC'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#EUR_BTC_list', 'dm-exec-list', { data: exec['EUR']['BTC'] }))
+            })
+            .then(() => addTradeChannels('BTC', 'CAD', socket, exec))
+            .then(() => {
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#BTC_CAD', 'dm-exec-mixed', { data: exec['BTC']['CAD'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#BTC_CAD_list', 'dm-exec-list', { data: exec['BTC']['CAD'] }))
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#CAD_BTC', 'dm-exec-mixed', { data: exec['CAD']['BTC'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#CAD_BTC_list', 'dm-exec-list', { data: exec['CAD']['BTC'] }))
+            })
+            .then(() => addTradeChannels('BTC', 'CNY', socket, exec))
+            .then(() => {
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#BTC_CNY', 'dm-exec-mixed', { data: exec['BTC']['CNY'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#BTC_CNY_list', 'dm-exec-list', { data: exec['BTC']['CNY'] }))
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#CNY_BTC', 'dm-exec-mixed', { data: exec['CNY']['BTC'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#CNY_BTC_list', 'dm-exec-list', { data: exec['CNY']['BTC'] }))
+            })
+            .then(() => addTradeChannels('BTC', 'GBP', socket, exec))
+            .then(() => {
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#BTC_GBP', 'dm-exec-mixed', { data: exec['BTC']['GBP'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#BTC_GBP_list', 'dm-exec-list', { data: exec['BTC']['GBP'] }))
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#GBP_BTC', 'dm-exec-mixed', { data: exec['GBP']['BTC'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#GBP_BTC_list', 'dm-exec-list', { data: exec['GBP']['BTC'] }))
+            })
+            .then(() => addTradeChannels('BTC', 'PLN', socket, exec))
+            .then(() => {
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#BTC_PLN', 'dm-exec-mixed', { data: exec['BTC']['PLN'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#BTC_PLN_list', 'dm-exec-list', { data: exec['BTC']['PLN'] }))
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#PLN_BTC', 'dm-exec-mixed', { data: exec['PLN']['BTC'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#PLN_BTC_list', 'dm-exec-list', { data: exec['PLN']['BTC'] }))
+            })
+            .then(() => addTradeChannels('BTC', 'RUB', socket, exec))
+            .then(() => {
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#BTC_RUB', 'dm-exec-mixed', { data: exec['BTC']['RUB'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#BTC_RUB_list', 'dm-exec-list', { data: exec['BTC']['RUB'] }))
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#RUB_BTC', 'dm-exec-mixed', { data: exec['RUB']['BTC'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#RUB_BTC_list', 'dm-exec-list', { data: exec['RUB']['BTC'] }))
+            })
+            .then(() => addTradeChannels('BTC', 'HKD', socket, exec))
+            .then(() => {
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#BTC_HKD', 'dm-exec-mixed', { data: exec['BTC']['HKD'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#BTC_HKD_list', 'dm-exec-list', { data: exec['BTC']['HKD'] }))
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#HKD_BTC', 'dm-exec-mixed', { data: exec['HKD']['BTC'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#HKD_BTC_list', 'dm-exec-list', { data: exec['HKD']['BTC'] }))
+            })
+            .then(() => addTradeChannels('BTC', 'SGD', socket, exec))
+            .then(() => {
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#BTC_SGD', 'dm-exec-mixed', { data: exec['BTC']['SGD'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#BTC_SGD_list', 'dm-exec-list', { data: exec['BTC']['SGD'] }))
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#SGD_BTC', 'dm-exec-mixed', { data: exec['SGD']['BTC'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#SGD_BTC_list', 'dm-exec-list', { data: exec['SGD']['BTC'] }))
+            })
+            .then(() => addTradeChannels('BTC', 'AUD', socket, exec))
+            .then(() => {
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#BTC_AUD', 'dm-exec-mixed', { data: exec['BTC']['AUD'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#BTC_AUD_list', 'dm-exec-list', { data: exec['BTC']['AUD'] }))
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#AUD_BTC', 'dm-exec-mixed', { data: exec['AUD']['BTC'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#AUD_BTC_list', 'dm-exec-list', { data: exec['AUD']['BTC'] }))
+            })
+            .then(() => addTradeChannels('BTC', 'KRW', socket, exec))
+            .then(() => {
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#BTC_KRW', 'dm-exec-mixed', { data: exec['BTC']['KRW'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#BTC_KRW_list', 'dm-exec-list', { data: exec['BTC']['KRW'] }))
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#KRW_BTC', 'dm-exec-mixed', { data: exec['KRW']['BTC'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#KRW_BTC_list', 'dm-exec-list', { data: exec['KRW']['BTC'] }))
+            })
+            .then(() => addTradeChannels('BTC', 'BRL', socket, exec))
+            .then(() => {
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#BTC_BRL', 'dm-exec-mixed', { data: exec['BTC']['BRL'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#BTC_BRL_list', 'dm-exec-list', { data: exec['BTC']['BRL'] }))
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#BRL_BTC', 'dm-exec-mixed', { data: exec['BRL']['BTC'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#BRL_BTC_list', 'dm-exec-list', { data: exec['BRL']['BTC'] }))
+            })
+            .then(() => addTradeChannels('BTC', 'ZAR', socket, exec))
+            .then(() => {
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#BTC_ZAR', 'dm-exec-mixed', { data: exec['BTC']['ZAR'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#BTC_ZAR_list', 'dm-exec-list', { data: exec['BTC']['ZAR'] }))
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#ZAR_BTC', 'dm-exec-mixed', { data: exec['ZAR']['BTC'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#ZAR_BTC_list', 'dm-exec-list', { data: exec['ZAR']['BTC'] }))
+            })
+            .then(() => addTradeChannels('BTC', 'ILS', socket, exec))
+            .then(() => {
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#BTC_ILS', 'dm-exec-mixed', { data: exec['BTC']['ILS'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#BTC_ILS_list', 'dm-exec-list', { data: exec['BTC']['ILS'] }))
+                refreshList = refreshList.concat(riot.mount('dm-exec-mixed#ILS_BTC', 'dm-exec-mixed', { data: exec['ILS']['BTC'] }))
+                // refreshList = refreshList.concat(riot.mount('dm-exec-list#ILS_BTC_list', 'dm-exec-list', { data: exec['ILS']['BTC'] }))
+            })
+        )
 
 
 
@@ -112,6 +317,7 @@
             return fetch('https://min-api.cryptocompare.com/data/subs?fsym=' + fsym + '&tsyms=' + tsym)
                 .then(r => r.json())
                 .then(data => {
+                    console.log('x')
                     let channels = data[tsym]['TRADES']
                     // ゴミExchange除外
                     channels = channels.filter(x => !ignoreChannels.includes(x))
@@ -176,7 +382,7 @@
             for (f of Object.keys(exec)) {
                 for (t of Object.keys(exec[f])) {
                     for (e of Object.keys(exec[f][t])) {
-                        exec[f][t][e] = exec[f][t][e].filter(e => e.date > (now - 10))
+                        exec[f][t][e] = exec[f][t][e].filter(e => e.date > (now - 60))
                     }
                 }
             }

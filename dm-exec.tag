@@ -1,5 +1,5 @@
 <dm-exec-mixed>
-    <dm-exec if="{ data }" name="{ opts.name }" price="{ getMixedLastPrice(data) }" buy="{ Math.round(getMixedVolume(data, 'BUY') * round) / round }"
+    <dm-exec if="{ data }" name="{ opts.name }" buy="{ Math.round(getMixedVolume(data, 'BUY') * round) / round }"
         sell="{ Math.round(getMixedVolume(data, 'SELL') * round) / round }" scale="{ scale }"></dm-exec>
 
     <script>
@@ -13,7 +13,7 @@
 </dm-exec-mixed>
 
 <dm-exec-list>
-    <dm-exec each="{ v,k in data }" name="{ k }" price="{ getLastPrice(v) }" buy="{ Math.round(getVolume(v, 'BUY') * round) / round }"
+    <dm-exec each="{ v,k in data }" name="{ k }" price="{ Math.round(getLastPrice(v) * 100) / 100 }" buy="{ Math.round(getVolume(v, 'BUY') * round) / round }"
         sell="{ Math.round(getVolume(v, 'SELL') * round) / round }" scale="{ scale }"></dm-exec>
 
     <script>
