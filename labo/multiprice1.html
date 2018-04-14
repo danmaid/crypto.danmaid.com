@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>暗号通貨 | 男メイド</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script async src="https://danmaid.com/tags/dm-tags.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="https://danmaid.com/common.css" />
+    <style>
+        .ltp-item {
+            border: 1px solid;
+            border-color: rgba(0, 0, 0, 0.25);
+            padding: 0.5em 1.5em;
+        }
+
+        .ltp-item .price {
+            font-size: 1.5em;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .container>div {
+            margin: 0 0.5em;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <canvas id="myChart"></canvas>
+    </main>
+
+    <dm-footer></dm-footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <script src="https://unpkg.com/@reactivex/rxjs/dist/global/Rx.min.js"></script>
+    <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.20.2.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/riot/riot+compiler.min.js"></script>
+    <script type="riot/tag" src="tags/src/dm-lastprice.tag"></script>
+
+    <script type="module">
+        import * as exec from '/modules/src/executions.js'
+        let label = new Array(300);
+        let bitflyer = new Array(300);
+        let zaif = new Array(300);
+        let bitbank = new Array(300);
+        let coincheck = new Array(300);
+
+        let ctx = document.getElementById('myChart').getContext('2d');
+        let chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+            data: {
+                labels: label,
+                datasets: [{
+                    label: "bitFlyer",
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    fill: false,
+                    data: bitflyer,
+                    yAxisID: "y-axis-1",
+                    pointRadius: 0,
+                }, {
+                    label: "Zaif",
+                    backgroundColor: 'rgb(100, 100, 255)',
+                    borderColor: 'rgb(100, 100, 255)',
+                    fill: false,
+                    data: zaif,
+                    yAxisID: "y-axis-1",
+                    pointRadius: 0,
+                }, {
+                    label: "bitbank",
+                    backgroundColor: 'rgb(100, 255, 100)',
+                    borderColor: 'rgb(100, 255, 100)',
+                    fill: false,
+                    data: bitbank,
+                    yAxisID: "y-axis-1",
+                    pointRadius: 0,
+                }, {
+                    label: "coincheck",
+                    backgroundColor: 'rgb(255, 100, 50)',
+                    borderColor: 'rgb(255, 100, 50)',
+                    fill: false,
+                    data: coincheck,
+                    yAxisID: "y-axis-1",
+                    pointRadius: 0,
+                }]
+            },
+
+            // Configuration options go here
+            options: {
+                responsive: true,
+                hoverMode: 'index',
+                stacked: false,
+                scales: {
+                    yAxes: [{
+                        type: "linear",
+                        display: true,
+                        position: "right",
+                        id: "y-axis-1",
+                    }],
+                }
+            }
+        });
+
+        Rx.Observable.interval(1000).timestamp()
+            .withLatestFrom(
+                exec.bitflyer_BTC_JPY,
+                exec.zaif_BTC_JPY,
+                exec.bitbankcc_BTC_JPY,
+                exec.coincheck_BTC_JPY
+            )
+            .subscribe(x => {
+                label.push((new Date(x[0].timestamp)).toLocaleTimeString())
+                label.shift()
+                bitflyer.push(x[1].price)
+                bitflyer.shift()
+                zaif.push(x[2].price)
+                zaif.shift()
+                bitbank.push(x[3].price)
+                bitbank.shift()
+                coincheck.push(x[4].price)
+                coincheck.shift()
+                chart.update()
+            })
+    </script>
+</body>
+
+</html>

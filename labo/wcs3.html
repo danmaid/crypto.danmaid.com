@@ -10,6 +10,8 @@
     <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/regular.js" integrity="sha384-t7yHmUlwFrLxHXNLstawVRBMeSLcXTbQ5hsd0ifzwGtN7ZF7RZ8ppM7Ldinuoiif"
         crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="/common.css" />
+    <script async src="https://danmaid.com/tags/dm-tags.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="https://danmaid.com/common.css" />
     <style>
         .viewbox {
             width: 1900px;
@@ -79,6 +81,8 @@
                 <!-- <dm-exec-list id="BTC_BCH_list"></dm-exec-list> -->
                 <dm-exec-mixed id="BTC_XRP" name=XRP></dm-exec-mixed>
                 <!-- <dm-exec-list id="BTC_XRP_list"></dm-exec-list> -->
+                <dm-exec-mixed id="BTC_TRX" name=TRX></dm-exec-mixed>
+                <!-- <dm-exec-list id="BTC_TRX_list"></dm-exec-list> -->
             </div>
             <div style="position: absolute; left: 10px; top: 500px;">
                 <h2>ETH scale=10</h2>
@@ -121,6 +125,8 @@
                 <!-- <dm-exec-list id="ETH_BCH_list" scale="10"></dm-exec-list> -->
                 <dm-exec-mixed id="ETH_XRP" name="XRP" scale="10"></dm-exec-mixed>
                 <!-- <dm-exec-list id="ETH_XRP_list" scale="10"></dm-exec-list> -->
+                <dm-exec-mixed id="ETH_TRX" name="TRX" scale="10"></dm-exec-mixed>
+                <!-- <dm-exec-list id="ETH_TRX_list" scale="10"></dm-exec-list> -->
             </div>
             <div style="position: absolute; left: 250px; top: 500px;">
                 <h2>BCH scale=10</h2>
@@ -187,6 +193,13 @@
                 <!-- <dm-exec-list id="XRP_BTC_list" scale="10000"></dm-exec-list> -->
                 <dm-exec-mixed id="XRP_ETH" name="ETH" scale="10000"></dm-exec-mixed>
                 <!-- <dm-exec-list id="XRP_ETH_list" scale="10000"></dm-exec-list> -->
+            </div>
+            <div style="position: absolute; left: 250px; top: 10px;">
+                <h2>TRX scale=100000</h2>
+                <dm-exec-mixed id="TRX_ETH" name="ETH" scale="100000"></dm-exec-mixed>
+                <!-- <dm-exec-list id="TRX_ETH_list" scale="10000"></dm-exec-list> -->
+                <dm-exec-mixed id="TRX_BTC" name="BTC" scale="100000"></dm-exec-mixed>
+                <!-- <dm-exec-list id="TRX_BTC_list" scale="10000"></dm-exec-list> -->
             </div>
 
             <div style="position: absolute; left: 1600px; top: 250px;">
@@ -345,10 +358,8 @@
             </div>
         </div>
     </main>
-    <footer class="footer">
-        <a href="https://danmaid.com/">
-            <i class="far fa-copyright mark"></i>2018 男メイド</a>
-    </footer>
+
+    <dm-footer></dm-footer>
 
     <script src="https://cdn.jsdelivr.net/npm/riot/riot+compiler.min.js"></script>
     <script type="riot/tag" src="/tags/src/dm-exec.tag"></script>
@@ -549,8 +560,8 @@
                     refreshList = refreshList.concat(riot.mount('dm-exec-mixed#INR_BTC', 'dm-exec-mixed', { data: exec['INR']['BTC'] }))
                     // refreshList = refreshList.concat(riot.mount('dm-exec-list#INR_BTC_list', 'dm-exec-list', { data: exec['INR']['BTC'] }))
                 })
-                .catch(() => {
-                    console.error('Initialize failed.')
+                .catch((e) => {
+                    console.error('Initialize failed.', e)
                     socket1.close()
                 })
             )
@@ -781,6 +792,21 @@
                     refreshList = refreshList.concat(riot.mount('dm-exec-mixed#JPY_XRP', 'dm-exec-mixed', { data: exec['JPY']['XRP'] }))
                     // refreshList = refreshList.concat(riot.mount('dm-exec-list#JPY_XRP_list', 'dm-exec-list', { data: exec['JPY']['XRP'] }))
                 })
+                // TRX
+                .then(() => addTradeChannels('TRX', 'ETH', socket3, exec))
+                .then(() => {
+                    refreshList = refreshList.concat(riot.mount('dm-exec-mixed#TRX_ETH', 'dm-exec-mixed', { data: exec['TRX']['ETH'] }))
+                    // refreshList = refreshList.concat(riot.mount('dm-exec-list#TRX_ETH_list', 'dm-exec-list', { data: exec['TRX']['ETH'] }))
+                    refreshList = refreshList.concat(riot.mount('dm-exec-mixed#ETH_TRX', 'dm-exec-mixed', { data: exec['ETH']['TRX'] }))
+                    // refreshList = refreshList.concat(riot.mount('dm-exec-list#ETH_TRX_list', 'dm-exec-list', { data: exec['ETH']['TRX'] }))
+                })
+                .then(() => addTradeChannels('TRX', 'BTC', socket3, exec))
+                .then(() => {
+                    refreshList = refreshList.concat(riot.mount('dm-exec-mixed#TRX_BTC', 'dm-exec-mixed', { data: exec['TRX']['BTC'] }))
+                    // refreshList = refreshList.concat(riot.mount('dm-exec-list#TRX_BTC_list', 'dm-exec-list', { data: exec['TRX']['BTC'] }))
+                    refreshList = refreshList.concat(riot.mount('dm-exec-mixed#BTC_TRX', 'dm-exec-mixed', { data: exec['BTC']['TRX'] }))
+                    // refreshList = refreshList.concat(riot.mount('dm-exec-list#BTC_TRX_list', 'dm-exec-list', { data: exec['BTC']['TRX'] }))
+                })
                 .catch(() => {
                     console.error('Initialize failed.')
                     socket3.close()
@@ -924,6 +950,7 @@
             let trade = data.split('~')
             // console.log(trade)
             if (trade[0] != "0") { return }
+            if (trade[4] != "1" && trade[4] != "2") { return }
             exec[trade[2]][trade[3]][trade[1]].push({
                 date: parseInt(trade[6]),
                 volume: parseFloat(trade[7]),

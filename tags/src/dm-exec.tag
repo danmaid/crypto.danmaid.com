@@ -27,11 +27,11 @@
 <dm-exec>
     <div class="bar">
         <div class="item buy" style={ buyStyle }></div>
-        <div class="text">{ opts.buy }</div>
+        <div class="text">{ opts.sellCount } { opts.buy }</div>
     </div>
     <div class="bar reverse">
         <div class="item sell" style={ sellStyle }></div>
-        <div class="text">{ opts.sell }</div>
+        <div class="text">{ opts.buyCount } { opts.sell }</div>
     </div>
     <div class="title">{ opts.name }</div>
     <div class="lastprice">{ opts.price }</div>
@@ -64,7 +64,7 @@
         }
 
         .bar .item.buy {
-            background-color: blue;
+            background-color: green;
         }
 
         .bar .text {

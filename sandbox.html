@@ -1,27 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Page Title</title>
+    <title>sandbox</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script defer src="https://danmaid.com/tags/dm-tags.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="https://danmaid.com/common.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/common.css" />
 </head>
 
 <body>
-    <script>
-        let date = new Date()
-        console.log('new Date:', date);
-        date.setHours(8)
-        console.log('8', date)
-        console.log(date.getUTCHours())
-        date.setUTCHours(8)
-        console.log('0', date)
-        date.setUTCHours(12-8)
-        console.log('12-8', date)
-        console.log(date.getUTCHours())
-    </script>
+    <header class="header">
+        <div class="title">
+            <h1>ページ１ほげほげほげほげほげ</h1>
+            <i class="fas fa-angle-left"></i>
+            <a href="/">暗号資産</a>
+            <i class="fas fa-angle-left"></i>
+            <a href="https://danmaid.com/">男メイド</a>
+        </div>
+        <nav class="menu">
+            <button class="button" onclick="classList.toggle('active')">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a class="menuitem" href="#">ページ１</a>
+            <a class="menuitem" href="#">ペー</a>
+            <a class="menuitem" href="#">ページ３</a>
+        </nav>
+    </header>
+    <main>
 
+    </main>
 </body>
 
 </html>

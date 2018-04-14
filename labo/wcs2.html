@@ -10,6 +10,8 @@
     <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/regular.js" integrity="sha384-t7yHmUlwFrLxHXNLstawVRBMeSLcXTbQ5hsd0ifzwGtN7ZF7RZ8ppM7Ldinuoiif"
         crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="/common.css" />
+    <script async src="https://danmaid.com/tags/dm-tags.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="https://danmaid.com/common.css" />
     <style>
         .viewbox {
             width: 1900px;
@@ -139,15 +141,13 @@
             </div>
         </div>
     </main>
-    <footer class="footer">
-        <a href="https://danmaid.com/">
-            <i class="far fa-copyright mark"></i>2018 男メイド</a>
-    </footer>
+
+    <dm-footer></dm-footer>
 
     <script src="https://js.pusher.com/4.2/pusher.min.js"></script>
     <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.20.2.js"></script>
     <script type="module">
-        import * as exec from './modules/src/executions2.js'
+        import * as exec from '/modules/src/executions2.js'
 
         const side = {
             SELL: 'SELL',

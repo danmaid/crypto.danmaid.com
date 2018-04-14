@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>暗号通貨 | 男メイド</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script async src="https://danmaid.com/tags/dm-tags.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="https://danmaid.com/common.css" />
+    <style>
+        :scope {
+            display: block;
+        }
+
+        .ltp-item {
+            border: 1px solid;
+            border-color: rgba(0, 0, 0, 0.25);
+            padding: 0.5em 1.5em;
+        }
+
+        .ltp-item .price {
+            font-size: 1.5em;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .container>div {
+            margin: 0 0.5em;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <canvas id="myChart"></canvas>
+    </main>
+
+    <dm-footer></dm-footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <script src="https://unpkg.com/@reactivex/rxjs/dist/global/Rx.min.js"></script>
+    <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.20.2.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/riot/riot+compiler.min.js"></script>
+    <script type="riot/tag" src="tags/src/dm-lastprice.tag"></script>
+
+    <script type="module">
+        import * as exec from '/modules/src/executions.js'
+        let label = new Array(30)
+        let subscriptions = []
+
+        let o = [{
+            datasource: exec.bitflyer_BTC_JPY,
+            label: "bitFlyer",
+            color: "#F44336",
+            leverage: 1
+        }, {
+            datasource: exec.zaif_BTC_JPY,
+            label: "Zaif",
+            color: "#E91E63",
+            leverage: 1
+        }, {
+            datasource: exec.bitbankcc_BTC_JPY,
+            label: "bitbank",
+            color: "#9C27B0",
+            leverage: 1
+        }, {
+            datasource: exec.coincheck_BTC_JPY,
+            label: "coincheck",
+            color: "#673AB7",
+            leverage: 1
+        }, {
+            datasource: exec.bitflyer_FX_BTC_JPY,
+            label: "bitFlyerFX",
+            color: "#3F51B5",
+            leverage: 15
+        }, {
+            datasource: exec.bitfinex_BTC_USD,
+            label: "bitfinex",
+            color: "#2196F3",
+            leverage: 1
+        }, {
+            datasource: exec.bitmex_XBT_USD.map(x => { x.size = x.homeNotional; return x }),
+            label: "bitmex",
+            color: "#03A9F4",
+            leverage: 100
+        }, {
+            datasource: exec.binance_BTC_USDT,
+            label: "binance",
+            color: "#00BCD4",
+            leverage: 1
+        }]
+
+        let buyset = []
+        let sellset = []
+        let datasource = {}
+        o.forEach(data => {
+            datasource[data.label] = {
+                buy: (new Array(30)).fill(0),
+                sell: (new Array(30)).fill(0)
+            }
+            buyset.push({
+                label: data.label,
+                backgroundColor: data.color,
+                borderColor: data.color,
+                pointRadius: 0,
+                data: datasource[data.label].buy
+            })
+            sellset.push({
+                label: data.label,
+                backgroundColor: data.color,
+                borderColor: data.color,
+                pointRadius: 0,
+                data: datasource[data.label].sell
+            })
+        })
+
+        subscriptions.push(
+            Rx.Observable.interval(5000).timestamp()
+                .withLatestFrom(o.map(data => data.datasource))
+                .subscribe(x => {
+                    Object.keys(datasource).forEach(key => {
+                        datasource[key].buy.push(0)
+                        datasource[key].buy.shift()
+                        datasource[key].sell.push(0)
+                        datasource[key].sell.shift()
+                    })
+                    label.push((new Date(x[0].timestamp)).toLocaleTimeString())
+                    label.shift()
+                })
+        )
+        subscriptions.push(
+            Rx.Observable.interval(500).timestamp()
+                .subscribe(x => {
+                    chart.update()
+                })
+        )
+
+        o.forEach(data => {
+            let source = data.datasource.share()
+            subscriptions.push(
+                source.filter(x => x.side == 'BUY')
+                    .subscribe(x => {
+                        datasource[data.label].buy[29] += parseFloat(x.size)
+                    })
+            )
+            subscriptions.push(
+                source.filter(x => x.side == 'SELL')
+                    .subscribe(x => {
+                        datasource[data.label].sell[29] -= parseFloat(x.size)
+                    })
+            )
+        })
+
+        let ctx = document.getElementById('myChart').getContext('2d');
+        let chart = new Chart(ctx, {
+            type: 'bar',
+
+            data: {
+                labels: label,
+                datasets: buyset.concat(sellset)
+            },
+
+            options: {
+                responsive: true,
+                hoverMode: 'index',
+                scales: {
+                    xAxes: [{
+                        stacked: true
+                    }],
+                    yAxes: [{
+                        stacked: true,
+                        ticks: {
+                            min: -120,
+                            max: 120
+                        }
+                    }],
+                },
+                legend: {
+                    display: false
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

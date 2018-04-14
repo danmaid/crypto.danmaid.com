@@ -4,154 +4,244 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>暗号通貨 | 男メイド</title>
+    <title>暗号資産 | 男メイド</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c"
-        crossorigin="anonymous"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/regular.js" integrity="sha384-t7yHmUlwFrLxHXNLstawVRBMeSLcXTbQ5hsd0ifzwGtN7ZF7RZ8ppM7Ldinuoiif"
-        crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/hybrid.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="https://danmaid.com/common.css" />
+    <script defer src="https://danmaid.com/tags/dm-tags.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="/common.css" />
     <style>
-        :root {
-            background-color: rgb(19, 19, 21);
-            color: rgb(190, 190, 210);
+        .container-outer {
+            display: flex;
+            flex-wrap: wrap;
         }
 
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        .container {
+            display: flex;
         }
 
-        ::-webkit-scrollbar-corner {
-            background: transparent;
+        .container>div {
+            margin: 0 0.5em;
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: rgb(57, 57, 63);
-            border: 0 none #fff;
-            border-radius: 50px;
+        .ltp-item {
+            border: 1px solid;
+            border-color: rgb(190, 190, 210);
+            padding: 0.5em 1.5em;
         }
 
-        ::-webkit-scrollbar-track {
-            border: 0 none #fff;
-            border-radius: 50px;
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        .header {
-            background-color: rgb(31, 31, 135);
-            color: rgb(228, 228, 252);
-        }
-
-        .header .title {
+        .ltp-item .price {
             font-size: 1.5em;
         }
 
-        .footer {
-            text-align: end;
-        }
-
-        .mark {
-            margin-right: 4px;
-        }
-
-        a:link {
-            color: inherit
-        }
-
-        a:visited {
-            color: inherit
-        }
-
-        a:hover {
-            color: inherit
-        }
-
-        a:active {
-            color: inherit
-        }
-
-        a {
-            text-decoration: none
-        }
-
-        .tab-bar .mdc-tab {
-            color: white;
-            color: var(--mdc-theme-text-primary-on-primary, white);
-            min-width: 100px;
-        }
-
-        .tab-bar .mdc-tab-bar__indicator {
-            background-color: white;
-            background-color: var(--mdc-theme-text-primary-on-primary, white);
+        .trade-item {
+            border: 1px solid;
+            border-color: rgb(190, 190, 210);
+            width: 10em;
+            height: 20em;
+            padding: 0.5em 1em;
+            white-space: nowrap;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
     </style>
 </head>
 
 <body>
-    <header class="mdc-toolbar header">
-        <div class="mdc-toolbar__row">
-            <section class="mdc-toolbar__section mdc-toolbar__section--align-start title">
-                <a href="https://crypto.danmaid.com/">暗号通貨 | 男メイド</a>
-            </section>
-            <section class="mdc-toolbar__section mdc-toolbar__section--align-end">
-                <nav class="mdc-tab-bar tab-bar" data-mdc-auto-init="MDCTabBar">
-                    <a class="mdc-tab mdc-tab--active" href="/">Home</a>
-                    <a class="mdc-tab" href="/product">Product</a>
-                    <a class="mdc-tab" href="/labo">Labo</a>
-                    <a class="mdc-tab" href="/about">About</a>
-                    <span class="mdc-tab-bar__indicator"></span>
-                </nav>
-            </section>
+    <header class="header">
+        <div class="title">
+            <h1>暗号資産</h1>
+            <i class="fas fa-angle-left"></i>
+            <a href="https://danmaid.com/">男メイド</a>
         </div>
+        <nav class="menu">
+            <button class="button" onclick="classList.toggle('active')">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a class="menuitem" href="/products.html">PRODUCTS</a>
+            <a class="menuitem" href="/labo/">LABO</a>
+            <a class="menuitem" href="/about.html">ABOUT</a>
+        </nav>
     </header>
-    <main>
-        <div>お使いのブラウザはサポートされていないようです。ごめんなさい。本サイトのメンテナンスは chrome で行っています。</div>
-    </main>
-    <footer class="footer">
-        <a href="https://danmaid.com/">
-            <i class="far fa-copyright mark"></i>2018 男メイド</a>
-    </footer>
 
-    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-    <script>window.mdc.autoInit();</script>
+    <main>
+        <p>提供ツールの実装サンプルを掲載しています。</p>
+        <h2>最終取引価格</h2>
+        <div class="container-outer">
+            <div>
+                <h3>BTC/JPY</h3>
+                <div class="container">
+                    <a href="https://bitflyer.jp?bf=shwrhqqs" target="_blank">
+                        <div class="ltp-item">
+                            <div class="market">bitFlyer</div>
+                            <dm-lastprice id="bitflyer_BTC_JPY" class="price"></dm-lastprice>
+                        </div>
+                    </a>
+                    <div class="ltp-item">
+                        <div class="market">bitbank.cc</div>
+                        <dm-lastprice id="bitbankcc_BTC_JPY" class="price"></dm-lastprice>
+                    </div>
+                    <a href="https://zaif.jp?ac=v1qklgobx2" target="_blank">
+                        <div class="ltp-item">
+                            <div class="market">Zaif</div>
+                            <dm-lastprice id="zaif_BTC_JPY" class="price"></dm-lastprice>
+                        </div>
+                    </a>
+                    <a href="https://coincheck.com/ja/?c=_Keu1VgjTDg" target="_blank">
+                        <div class="ltp-item">
+                            <div class="market">coincheck</div>
+                            <dm-lastprice id="coincheck_BTC_JPY" class="price"></dm-lastprice>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h3>BTC/JPY FX</h3>
+                <div class="container">
+                    <a href="https://bitflyer.jp/Lightning?bf=shwrhqqs" target="_blank">
+                        <div class="ltp-item">
+                            <div class="market">bitFlyer</div>
+                            <dm-lastprice id="bitflyer_FX_BTC_JPY" class="price"></dm-lastprice>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h3>BTC/USD</h3>
+                <div class="container">
+                    <div class="ltp-item">
+                        <div class="market">bitfinex</div>
+                        <dm-lastprice id="bitfinex_BTC_USD" class="price"></dm-lastprice>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3>BTC/USD FX</h3>
+                <div class="container">
+                    <a href="https://www.bitmex.com/register/XprwfJ" target="_blank">
+                        <div class="ltp-item">
+                            <div class="market">bitmex</div>
+                            <dm-lastprice id="bitmex_XBT_USD" class="price"></dm-lastprice>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h3>BTC/USDT</h3>
+                <div class="container">
+                    <a href="https://www.binance.com/?ref=20863976" target="_blank">
+                        <div class="ltp-item">
+                            <div class="market">binance</div>
+                            <dm-lastprice id="binance_BTC_USDT" class="price"></dm-lastprice>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <h2>取引履歴</h2>
+        <div class="container-outer">
+            <div>
+                <h3>BTC/JPY</h3>
+                <div class="container">
+                    <a href="https://bitflyer.jp?bf=shwrhqqs" target="_blank">
+                        <div class="trade-item">
+                            <div class="market">bitFlyer</div>
+                            <dm-realtime id="bitflyer_BTC_JPY"></dm-realtime>
+                        </div>
+                    </a>
+                    <div class="trade-item">
+                        <div class="market">bitbank.cc</div>
+                        <dm-realtime id="bitbankcc_BTC_JPY"></dm-realtime>
+                    </div>
+                    <a href="https://zaif.jp?ac=v1qklgobx2" target="_blank">
+                        <div class="trade-item">
+                            <div class="market">Zaif</div>
+                            <dm-realtime id="zaif_BTC_JPY"></dm-realtime>
+                        </div>
+                    </a>
+                    <a href="https://coincheck.com/ja/?c=_Keu1VgjTDg" target="_blank">
+                        <div class="trade-item">
+                            <div class="market">coincheck</div>
+                            <dm-realtime id="coincheck_BTC_JPY"></dm-realtime>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h3>BTC/JPY FX</h3>
+                <div class="container">
+                    <a href="https://bitflyer.jp/Lightning?bf=shwrhqqs" target="_blank">
+                        <div class="trade-item">
+                            <div class="market">bitFlyer</div>
+                            <dm-realtime id="bitflyer_FX_BTC_JPY"></dm-realtime>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h3>BTC/USD</h3>
+                <div class="container">
+                    <div class="trade-item">
+                        <div class="market">bitfinex</div>
+                        <dm-realtime id="bitfinex_BTC_USD"></dm-realtime>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3>BTC/USD FX</h3>
+                <div class="container">
+                    <a href="https://www.bitmex.com/register/XprwfJ" target="_blank">
+                        <div class="trade-item">
+                            <div class="market">bitmex(XBT)</div>
+                            <dm-realtime id="bitmex_XBT_USD"></dm-realtime>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h3>BTC/USDT</h3>
+                <div class="container">
+                    <a href="https://www.binance.com/?ref=20863976" target="_blank">
+                        <div class="trade-item">
+                            <div class="market">binance</div>
+                            <dm-realtime id="binance_BTC_USDT"></dm-realtime>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <dm-footer></dm-footer>
 
     <script src="https://unpkg.com/@reactivex/rxjs/dist/global/Rx.min.js"></script>
     <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.20.2.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/riot/riot+compiler.min.js"></script>
     <script type="riot/tag" src="tags/src/dm-realtime.tag"></script>
     <script type="riot/tag" src="tags/src/dm-lastprice.tag"></script>
-
-    <!-- for labo -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
-
-    <!-- サイトコンテンツ -->
-    <script type="riot/tag" src="home.tag"></script>
-    <script type="riot/tag" src="product.tag"></script>
-    <script type="riot/tag" src="labo.tag"></script>
-    <script type="riot/tag" src="about.tag"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/riot-route@3.1/dist/route.min.js"></script>
     <script type="module">
-        import * as exec from './modules/src/executions.js';
+        import * as exec from './modules/src/executions.js'
         riot.compile(() => {
-            route.base('/');
-            route('/about', () => {
-                riot.mount('main', 'about');
-            });
-            route('/product', () => {
-                riot.mount('main', 'product', { exec });
-            });
-            route('/labo', () => {
-                riot.mount('main', 'labo', { exec });
-            });
-            route('/', () => {
-                riot.mount('main', 'home', { exec });
-            });
-            route.start(true);
-        });
+            riot.mount('dm-lastprice#bitflyer_BTC_JPY', { stream: exec.bitflyer_BTC_JPY })
+            riot.mount('dm-lastprice#bitbankcc_BTC_JPY', { stream: exec.bitbankcc_BTC_JPY })
+            riot.mount('dm-lastprice#zaif_BTC_JPY', { stream: exec.zaif_BTC_JPY })
+            riot.mount('dm-lastprice#fisco_BTC_JPY', { stream: exec.fisco_BTC_JPY })
+            riot.mount('dm-lastprice#coincheck_BTC_JPY', { stream: exec.coincheck_BTC_JPY })
+            riot.mount('dm-lastprice#bitflyer_FX_BTC_JPY', { stream: exec.bitflyer_FX_BTC_JPY })
+            riot.mount('dm-lastprice#bitfinex_BTC_USD', { stream: exec.bitfinex_BTC_USD })
+            riot.mount('dm-lastprice#bitmex_XBT_USD', { stream: exec.bitmex_XBT_USD })
+            riot.mount('dm-lastprice#binance_BTC_USDT', { stream: exec.binance_BTC_USDT })
+
+            riot.mount('dm-realtime#bitflyer_BTC_JPY', { stream: exec.bitflyer_BTC_JPY })
+            riot.mount('dm-realtime#bitbankcc_BTC_JPY', { stream: exec.bitbankcc_BTC_JPY })
+            riot.mount('dm-realtime#zaif_BTC_JPY', { stream: exec.zaif_BTC_JPY })
+            riot.mount('dm-realtime#fisco_BTC_JPY', { stream: exec.fisco_BTC_JPY })
+            riot.mount('dm-realtime#coincheck_BTC_JPY', { stream: exec.coincheck_BTC_JPY })
+            riot.mount('dm-realtime#bitflyer_FX_BTC_JPY', { stream: exec.bitflyer_FX_BTC_JPY })
+            riot.mount('dm-realtime#bitfinex_BTC_USD', { stream: exec.bitfinex_BTC_USD })
+            riot.mount('dm-realtime#bitmex_XBT_USD', { stream: exec.bitmex_XBT_USD })
+            riot.mount('dm-realtime#binance_BTC_USDT', { stream: exec.binance_BTC_USDT })
+        })
     </script>
 </body>
 
