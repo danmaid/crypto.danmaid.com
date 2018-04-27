@@ -15,9 +15,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>ワールド暗号資産サテライト（仮） | 男メイドラボ</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c"
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/regular.js" integrity="sha384-t7yHmUlwFrLxHXNLstawVRBMeSLcXTbQ5hsd0ifzwGtN7ZF7RZ8ppM7Ldinuoiif"
         crossorigin="anonymous"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/regular.js" integrity="sha384-t7yHmUlwFrLxHXNLstawVRBMeSLcXTbQ5hsd0ifzwGtN7ZF7RZ8ppM7Ldinuoiif"
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/solid.js" integrity="sha384-Q7KAHqDd5trmfsv85beYZBsUmw0lsreFBQZfsEhzUtUn5HhpjVzwY0Aq4z8DY9sA"
+        crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/fontawesome.js" integrity="sha384-M2FSA4xMm1G9m4CNXM49UcDHeWcDZNucAlz1WVHxohug0Uw1K+IpUhp/Wjg0y6qG"
         crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="/common.css" />
     <script async src="https://danmaid.com/tags/dm-tags.js"></script>
@@ -42,6 +44,26 @@
 </head>
 
 <body>
+    <header class="header">
+        <div class="title">
+            <h1>ワールド暗号資産サテライト ver 0.3</h1>
+            <i class="fas fa-angle-left"></i>
+            <a href="/labo/">LABO</a>
+            <i class="fas fa-angle-left"></i>
+            <a href="/">暗号資産</a>
+            <i class="fas fa-angle-left"></i>
+            <a href="https://danmaid.com/">男メイド</a>
+        </div>
+        <nav class="menu">
+            <button class="button" onclick="classList.toggle('active')">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a class="menuitem" href="/products.html">PRODUCTS</a>
+            <a class="menuitem active" href="/labo/">LABO</a>
+            <a class="menuitem" href="/about.html">ABOUT</a>
+        </nav>
+    </header>
+
     <main>
         <div class="viewbox">
             <div style="position: absolute; left: 10px; top: 10px;">
@@ -366,10 +388,27 @@
                 <dm-exec-mixed id="INR_ETH" name="ETH" scale="1000000" round="100"></dm-exec-mixed>
                 <!-- <dm-exec-list id="INR_ETH_list" scale="1000000" round="100"></dm-exec-list> -->
             </div>
+            <div style="position: absolute; right:0; bottom:0;">
+                data source:
+                <a href="https://www.cryptocompare.com/">
+                    <img src="https://www.cryptocompare.com/media/19990/logo-bold.svg" width="150px" />
+                </a>
+            </div>
+            <div style="position: absolute; left: 600px; top: 10px">
+                <span>サイト運営のため募金をお願いします。</span>
+                <img src="/images/donate-btc.png" width="100px" />
+                <div>bitcoin:
+                    <span>1G7E7ATSuwWNRye22g9dwR8CscLvcPU2mN</span>
+                </div>
+                <span>
+                    <a href="/about.html">その他通貨はこちら</a>
+                </span>
+            </div>
         </div>
     </main>
 
     <dm-footer></dm-footer>
+
 
     <script src="https://cdn.jsdelivr.net/npm/riot/riot+compiler.min.js"></script>
     <script type="riot/tag" src="/tags/src/dm-exec.tag"></script>

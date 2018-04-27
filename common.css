@@ -11,7 +11,6 @@ a:before {
     left: 0;
     content: '';
     display: inline-block;
-    width: 0;
     height: 0.3em;
     background: #34BBF3;
     opacity: 0.6;

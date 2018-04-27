@@ -16,8 +16,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>暗号通貨 | 男メイド</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="/common.css" />
     <script async src="https://danmaid.com/tags/dm-tags.js"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="https://danmaid.com/common.css" />
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/solid.js" integrity="sha384-Q7KAHqDd5trmfsv85beYZBsUmw0lsreFBQZfsEhzUtUn5HhpjVzwY0Aq4z8DY9sA"
+        crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/fontawesome.js" integrity="sha384-M2FSA4xMm1G9m4CNXM49UcDHeWcDZNucAlz1WVHxohug0Uw1K+IpUhp/Wjg0y6qG"
+        crossorigin="anonymous"></script>
     <style>
         :scope {
             display: block;
@@ -44,6 +49,26 @@
 </head>
 
 <body>
+    <header class="header">
+        <div class="title">
+            <h1>マルチボリューム ver 0.1</h1>
+            <i class="fas fa-angle-left"></i>
+            <a href="/labo/">LABO</a>
+            <i class="fas fa-angle-left"></i>
+            <a href="/">暗号資産</a>
+            <i class="fas fa-angle-left"></i>
+            <a href="https://danmaid.com/">男メイド</a>
+        </div>
+        <nav class="menu">
+            <button class="button" onclick="classList.toggle('active')">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a class="menuitem" href="/products.html">PRODUCTS</a>
+            <a class="menuitem active" href="/labo/">LABO</a>
+            <a class="menuitem" href="/about.html">ABOUT</a>
+        </nav>
+    </header>
+
     <main>
         <canvas id="myChart"></canvas>
     </main>
@@ -51,7 +76,7 @@
     <dm-footer></dm-footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
-    <script src="https://unpkg.com/@reactivex/rxjs/dist/global/Rx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.5.10/Rx.min.js"></script>
     <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.20.2.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/riot/riot+compiler.min.js"></script>
     <script type="riot/tag" src="tags/src/dm-lastprice.tag"></script>
