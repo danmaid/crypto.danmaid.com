@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78911133-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-78911133-2');
+    </script>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>ワールド暗号資産サテライト（仮） | 暗号通貨 | 男メイド</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script defer src="https://danmaid.com/tags/dm-tags.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="https://danmaid.com/common.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/common.css" />
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/solid.js" integrity="sha384-Q7KAHqDd5trmfsv85beYZBsUmw0lsreFBQZfsEhzUtUn5HhpjVzwY0Aq4z8DY9sA"
+        crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/fontawesome.js" integrity="sha384-M2FSA4xMm1G9m4CNXM49UcDHeWcDZNucAlz1WVHxohug0Uw1K+IpUhp/Wjg0y6qG"
+        crossorigin="anonymous"></script>
+    <style>
+        main {
+            font-size: 12px;
+        }
+
+        .pair {
+            display: flex;
+            flex-flow: column wrap;
+            max-height: 90vh;
+        }
+
+        .fsym {
+            border: 1px solid;
+            display: flex;
+            flex-flow: column;
+        }
+
+        .fsym[symbol='BTC'] {
+            order: -100;
+        }
+
+        .fsym[symbol='ETH'] {
+            order: -99;
+        }
+
+        .fsym[symbol='EOS'] {
+            order: -98;
+        }
+
+        .fsym[symbol='XRP'] {
+            order: -97;
+        }
+
+        .fsym[symbol='BCH'] {
+            order: -96;
+        }
+
+        .fsym[symbol='TRX'] {
+            order: -95;
+        }
+
+        .fsym[symbol='ADA'] {
+            order: -94;
+        }
+
+        .fsym[symbol='LTC'] {
+            order: -93;
+        }
+
+        .fsym[symbol='ETC'] {
+            order: -92;
+        }
+
+        .fsym[symbol='ICX'] {
+            order: -91;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="title">
+            <h1>ワールド暗号資産サテライト ver 0.4</h1>
+            <i class="fas fa-angle-left"></i>
+            <a href="/labo/">LABO</a>
+            <i class="fas fa-angle-left"></i>
+            <a href="/">暗号資産</a>
+            <i class="fas fa-angle-left"></i>
+            <a href="https://danmaid.com/">男メイド</a>
+        </div>
+        <nav class="menu">
+            <button class="button" onclick="classList.toggle('active')">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a class="menuitem" href="/products.html">PRODUCTS</a>
+            <a class="menuitem active" href="/labo/">LABO</a>
+            <a class="menuitem" href="/about.html">ABOUT</a>
+        </nav>
+    </header>
+
+    <main>
+        <div>BUY SELL</div>
+        <div id="target" class="pair">
+            <template id="fsym">
+                <div id="root" class="fsym">
+                    <div style="order: -999;">
+                        <span id="symbol"></span>
+                        <span id="buy"></span>
+                        <span id="sell"></span>
+                    </div>
+                </div>
+            </template>
+            <template id="template">
+                <div id="row">
+                    <span id="buy"></span>
+                    <span id="sell"></span>
+                    <span id="message"></span>
+                    <span id="price"></span>
+                </div>
+            </template>
+        </div>
+    </main>
+
+    <dm-footer></dm-footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.2/socket.io.js"></script>
+    <script src="https://cryptoqween.github.io/streamer/ccc-streamer-utilities.js"></script>
+    <script>
+        // 1IP からの socket 接続数は max 50 らしい
+        // let worker = new Worker('aggregator.js')
+        // worker.postMessage({ fsym: 'BTC', tsym: 'USD' })
+        // worker.addEventListener('message', (message) => {
+        //     console.log(message.data)
+        // })
+
+        // ワーカー
+        const MAX_WORKERS = 15
+        let workers = []
+        for (i = 0; i < MAX_WORKERS; i++) {
+            let worker = new Worker('socket.js')
+            worker.addEventListener('message', (message) => {
+                let data = message.data
+                // ペア容器にデータ投入
+                exec[data.fsym][data.tsym].raw.push(data)
+                exec[data.tsym][data.fsym].raw.push({
+                    ExchangeName: data.ExchangeName,
+                    Price: data.Price,
+                    Quantity: data.Total,
+                    Side: data.Side,
+                    TimeStamp: data.TimeStamp,
+                    Total: data.Quantity,
+                    TradeId: data.TradeId,
+                    fsym: data.fsym,
+                    tsym: data.tsym
+                })
+            })
+            workers.push(worker)
+        }
+        let workerIndex = 0
+        let getWorker = () => {
+            workerIndex++
+            if (workerIndex >= MAX_WORKERS) { workerIndex = 0 }
+            return workers[workerIndex]
+        }
+
+
+        // 自動パージペア容器
+        let exec = {}
+        setInterval(() => {
+            // パージ
+            let now = Math.floor((new Date()).getTime() / 1000)
+            for (f of Object.keys(exec)) {
+                for (t of Object.keys(exec[f])) {
+                    exec[f][t].raw = exec[f][t].raw.filter(e => e.TimeStamp > (now - 60))
+                    exec[f][t].aggregate.Sell = exec[f][t].raw.filter(e => e.Side == 'Sell').map(e => parseFloat(e.Quantity)).reduce((x, y) => x + y, 0)
+                    exec[f][t].aggregate.Buy = exec[f][t].raw.filter(e => e.Side == 'Buy').map(e => parseFloat(e.Quantity)).reduce((x, y) => x + y, 0)
+                    exec[f][t].tag.querySelector('#sell').textContent = Math.round(exec[f][t].aggregate.Sell * 100) / 100
+                    exec[f][t].tag.querySelector('#buy').textContent = Math.round(exec[f][t].aggregate.Buy * 100) / 100
+                    exec[f][t].tag.querySelector('#message').textContent = t
+                    exec[f][t].tag.style.order = - Math.ceil(exec[f][t].aggregate.Sell + exec[f][t].aggregate.Buy)
+
+                    if (exec[f][t].raw.length > 0) {
+                        exec[f][t].aggregate.Price = exec[f][t].raw.map(e => parseFloat(e.Price)).reduce((x, y) => (x + y) / 2)
+                        exec[f][t].tag.querySelector('#price').textContent = Math.round(exec[f][t].aggregate.Price * 100) / 100
+                    }
+                }
+            }
+            // console.log(exec)
+        }, 1000)
+
+        let startFsym = (fsym) => fetch('https://min-api.cryptocompare.com/data/subs?fsym=' + fsym)
+            .then(r => r.json())
+            .then(data => {
+                console.log(data)
+                // ペア容器初期化
+                if (exec[fsym] == null) { exec[fsym] = {} }
+                let trades = []
+                for (tsym of Object.keys(data)) {
+                    trades = trades.concat(data[tsym].TRADES)
+                    // ペア容器初期化
+                    if (exec[tsym] == null) { exec[tsym] = {} }
+                    if (exec[fsym][tsym] == null) {
+                        let fragment = document.getElementById('template').content.cloneNode(true)
+                        exec[fsym][tsym] = {
+                            raw: [],
+                            aggregate: {},
+                            fragment: fragment,
+                            tag: fragment.getElementById('row')
+                        }
+                    }
+                    if (exec[tsym][fsym] == null) {
+                        let fragment = document.getElementById('template').content.cloneNode(true)
+                        exec[tsym][fsym] = {
+                            raw: [],
+                            aggregate: {},
+                            fragment: fragment,
+                            tag: fragment.getElementById('row')
+                        }
+                    }
+                }
+                console.log(trades)
+                // let worker
+                trades.forEach((e, i) => {
+                    // if (i % MAX_SOURCES == 0) {
+                    //     console.log('new worker')
+                    //     worker = new Worker('socket.js')
+                    // let template = document.getElementById('template').content.cloneNode(true)
+                    // let t = template.querySelector('#message')
+                    // console.log(t)
+                    // worker.addEventListener('message', (message) => {
+                    //     let data = message.data
+                    //     console.log(data)
+                    //     // t.textContent = JSON.stringify(data)
+                    //     // ペア容器にデータ投入
+                    //     exec[data.fsym][data.tsym].raw.push(data)
+                    //     exec[data.tsym][data.fsym].raw.push(data)
+                    // })
+                    // let target = document.getElementById('target')
+                    // target.appendChild(template)
+                    // }
+                    getWorker().postMessage(e)
+                })
+                // for (tsym of Object.keys(data)) {
+                //     console.log(tsym)
+                //     let worker = new Worker('aggregator.js')
+                //     worker.postMessage({ fsym: fsym, tsym: tsym })
+                //     worker.addEventListener('message', (message) => {
+                //         console.log(message.data)
+                //     })
+                // }
+            })
+
+        // fetch('https://min-api.cryptocompare.com/data/all/coinlist')
+        //     .then(r => r.json())
+        //     .then(data => {
+        //         console.log(data.Data)
+        //         let list = []
+        //         for (sym of Object.keys(data.Data)) {
+        //             list.push(startFsym(data.Data[sym].Symbol))
+        //         }
+        //         return list
+        //     })
+        // Promise.all([startFsym('BTC'), startFsym('ETH'), startFsym('BCH')])
+        Promise.resolve(['BTC', 'ETH', 'EOS', 'XRP', 'BCH', 'TRX', 'ADA', 'LTC', 'ETC', 'ICX'])
+        // Promise.resolve(['BTC', 'ETH', 'EOS', 'XRP', 'BCH', 'TRX'])
+            .then((list) => {
+                let l = []
+                list.forEach(e => {
+                    l.push(startFsym(e))
+                })
+                return l
+            })
+            .then((list) => {
+                Promise.all(list)
+                    .then(() => {
+                        // タグ配置
+                        for (fsym of Object.keys(exec)) {
+                            let tag = document.getElementById('fsym').content.cloneNode(true)
+                            let root = tag.querySelector('#root')
+                            root.setAttribute('symbol', fsym)
+                            root.querySelector('#symbol').textContent = fsym
+                            for (tsym of Object.keys(exec[fsym])) {
+                                root.appendChild(exec[fsym][tsym].fragment)
+                            }
+                            document.getElementById('target').appendChild(tag)
+                        }
+                    })
+            })
+        // let worker2 = new Worker('aggregator.js')
+        // worker2.postMessage({ fsym: 'BTC', tsym: 'JPY' })
+        // worker2.addEventListener('message', (message) => {
+        //     console.log(message.data)
+        // })
+
+        // let worker3 = new Worker('aggregator.js')
+        // worker3.postMessage({ fsym: 'BTC', tsym: 'EUR' })
+        // worker3.addEventListener('message', (message) => {
+        //     console.log(message.data)
+        // })
+
+        // let worker4 = new Worker('aggregator.js')
+        // worker4.postMessage({ fsym: 'BTC', tsym: 'KRW' })
+        // worker4.addEventListener('message', (message) => {
+        //     console.log(message.data)
+        // })
+
+        // let worker5 = new Worker('aggregator.js')
+        // worker5.postMessage({ fsym: 'BTC', tsym: 'USDT' })
+        // worker5.addEventListener('message', (message) => {
+        //     console.log(message.data)
+        // })
+
+        // var socket = io("https://streamer.cryptocompare.com/", { forceNew: true, transports: ['websocket'] })
+        // socket.on('connect', () => {
+        //     console.log('socket1 connected.')
+        //     // socket.emit('SubAdd', { subs: ['0~Poloniex~BTC~USD'] })
+        //     // fetch('https://min-api.cryptocompare.com/data/all/coinlist')
+        //     //     .then(r => r.json())
+        //     //     .then(data => {
+        //     //         console.log(data)
+        //     //         for (fsym of Object.keys(data.Data)) {
+        //     //             console.log(fsym)
+        //     //             fetch('https://min-api.cryptocompare.com/data/subs?fsym=' + fsym)
+        //     //                 .then(r => r.json())
+        //     //                 .then(data => {
+        //     //                     for (tsym of Object.keys(data)) {
+        //     //                         console.log(tsym)
+        //     //                         if (data[tsym].TRADES) {
+        //     //                             console.log(data[tsym].TRADES)
+        //     //                             socket.emit('SubAdd', { subs: data[tsym].TRADES })
+        //     //                         }
+        //     //                     }
+        //     //                 })
+        //     //         }
+        //     //     })
+        //     // let fsym = 'BTC'
+        //     // fetch('https://min-api.cryptocompare.com/data/subs?fsym=' + fsym)
+        //     // .then(r => r.json())
+        //     // .then(data => {
+        //     //     for (tsym of Object.keys(data)) {
+        //     //         console.log(tsym)
+        //     //         if (data[tsym].TRADES) {
+        //     //             console.log(data[tsym].TRADES)
+        //     //             socket.emit('SubAdd', { subs: data[tsym].TRADES })
+        //     //         }
+        //     //     }
+        //     // })
+
+        //     // socket.emit('SubAdd', { subs: ['5~CCCAGG~BTC~USD'] })
+        //     // socket.emit('SubAdd', { subs: ['11~BTC'] })
+        // })
+        // socket.on('disconnect', () => { console.log('socket disconnect.', socket); socket.open() })
+        // socket.on('m', (data) => {
+        //     // console.log(data)
+        //     // let unpacked = CCC.CURRENT.unpack(data)
+        //     // if (unpacked.LASTVOLUME) {
+        //     //     console.log(unpacked)
+        //     //     let a = unpacked.FLAGS & 1 ? 'UP' : unpacked.FLAGS & 2 ? 'DOWN' : 'UNCHANGE'
+        //     //     console.log(unpacked.PRICE, unpacked.LASTVOLUME, unpacked.LASTMARKET, a)
+        //     // }
+        // })
+    </script>
+
+</body>
+
+</html>
