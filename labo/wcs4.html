@@ -105,6 +105,24 @@
 
     <main>
         <div>BUY SELL</div>
+
+        <div style="position: absolute; right: 0; bottom: 0; background-color: rgba(200, 200, 200, 0.3);">
+            <div>
+                data source:
+                <a href="https://www.cryptocompare.com/">
+                    <img src="https://www.cryptocompare.com/media/19990/logo-bold.svg" width="100px" />
+                </a>
+            </div>
+            <span>サイト運営のため募金をお願いします。</span>
+            <img src="/images/donate-btc.png" width="100px" />
+            <div>bitcoin:
+                <span>1G7E7ATSuwWNRye22g9dwR8CscLvcPU2mN</span>
+            </div>
+            <span>
+                <a href="/about.html">その他通貨はこちら</a>
+            </span>
+        </div>
+
         <div id="target" class="pair">
             <template id="fsym">
                 <div id="root" class="fsym">
@@ -151,7 +169,7 @@
                     ExchangeName: data.ExchangeName,
                     Price: data.Price,
                     Quantity: data.Total,
-                    Side: data.Side,
+                    Side: data.Side == 'Sell' ? 'Buy' : data.Side == 'Buy' ? 'Sell' : data.Side,
                     TimeStamp: data.TimeStamp,
                     Total: data.Quantity,
                     TradeId: data.TradeId,
@@ -267,7 +285,7 @@
         //     })
         // Promise.all([startFsym('BTC'), startFsym('ETH'), startFsym('BCH')])
         Promise.resolve(['BTC', 'ETH', 'EOS', 'XRP', 'BCH', 'TRX', 'ADA', 'LTC', 'ETC', 'ICX'])
-        // Promise.resolve(['BTC', 'ETH', 'EOS', 'XRP', 'BCH', 'TRX'])
+            // Promise.resolve(['BTC', 'ETH', 'EOS', 'XRP', 'BCH', 'TRX'])
             .then((list) => {
                 let l = []
                 list.forEach(e => {
