@@ -2,93 +2,96 @@
 // {
 //     price: Number, -- 約定価格
 //     size: Number, -- 取引量
-//     side: 'BUY' or 'SELL'
+//     side: 'BUY' or 'SELL',
+//     date: date
 // }
 
 ///// bitflyer
-// require pubnub.js
-// <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.20.2.js"></script>
 // BTC_JPY
 export const bitflyer_BTC_JPY = function () {
     let target = new EventTarget()
-    let pubnub = new PubNub({
-        subscribeKey: 'sub-c-52a9ab50-291b-11e5-baaa-0619f8945a4f'
-    });
-    pubnub.addListener({
-        message: (msg) => {
-            msg.message.forEach(elem => {
-                elem.date = new Date(elem.exec_date);
-                elem.volume = elem.size;
-                target.dispatchEvent(new CustomEvent('message', { detail: elem }));
-            })
-        }
-    });
-    pubnub.subscribe({
-        channels: ['lightning_executions_BTC_JPY']
-    });
+    let wss = new WebSocket('wss://ws.lightstream.bitflyer.com/json-rpc')
+    wss.onopen = function () {
+        wss.send(JSON.stringify({
+            method: "subscribe",
+            params: {
+                channel: 'lightning_executions_BTC_JPY'
+            }
+        }));
+    };
+    wss.onmessage = function (msg) {
+        let data = JSON.parse(msg.data)
+        data.params.message.forEach(trade => {
+            trade.date = new Date(trade.exec_date)
+            target.dispatchEvent(new CustomEvent('message', { detail: trade }))
+        })
+    };
     return target
 }
 
 // FX_BTC_JPY
 export const bitflyer_FX_BTC_JPY = function () {
     let target = new EventTarget()
-    let pubnub = new PubNub({
-        subscribeKey: 'sub-c-52a9ab50-291b-11e5-baaa-0619f8945a4f'
-    });
-    pubnub.addListener({
-        message: (msg) => {
-            msg.message.forEach(elem => {
-                elem.date = new Date(elem.exec_date);
-                elem.volume = elem.size;
-                target.dispatchEvent(new CustomEvent('message', { detail: elem }));
-            })
-        }
-    });
-    pubnub.subscribe({
-        channels: ['lightning_executions_FX_BTC_JPY']
-    });
+    let wss = new WebSocket('wss://ws.lightstream.bitflyer.com/json-rpc')
+    wss.onopen = function () {
+        wss.send(JSON.stringify({
+            method: "subscribe",
+            params: {
+                channel: 'lightning_executions_FX_BTC_JPY'
+            }
+        }));
+    };
+    wss.onmessage = function (msg) {
+        let data = JSON.parse(msg.data)
+        data.params.message.forEach(trade => {
+            trade.date = new Date(trade.exec_date)
+            target.dispatchEvent(new CustomEvent('message', { detail: trade }))
+        })
+    };
     return target
 }
 
 // ETH_BTC
 export const bitflyer_ETH_BTC = function () {
     let target = new EventTarget()
-    let pubnub = new PubNub({
-        subscribeKey: 'sub-c-52a9ab50-291b-11e5-baaa-0619f8945a4f'
-    });
-    pubnub.addListener({
-        message: (msg) => {
-            msg.message.forEach(elem => {
-                elem.date = new Date(elem.exec_date);
-                elem.volume = elem.size;
-                target.dispatchEvent(new CustomEvent('message', { detail: elem }));
-            })
-        }
-    });
-    pubnub.subscribe({
-        channels: ['lightning_executions_ETH_BTC']
-    });
+    let wss = new WebSocket('wss://ws.lightstream.bitflyer.com/json-rpc')
+    wss.onopen = function () {
+        wss.send(JSON.stringify({
+            method: "subscribe",
+            params: {
+                channel: 'lightning_executions_ETH_BTC'
+            }
+        }));
+    };
+    wss.onmessage = function (msg) {
+        let data = JSON.parse(msg.data)
+        data.params.message.forEach(trade => {
+            trade.date = new Date(trade.exec_date)
+            target.dispatchEvent(new CustomEvent('message', { detail: trade }))
+        })
+    };
     return target
 }
 
 // BCH_BTC
 export const bitflyer_BCH_BTC = function () {
     let target = new EventTarget()
-    let pubnub = new PubNub({
-        subscribeKey: 'sub-c-52a9ab50-291b-11e5-baaa-0619f8945a4f'
-    });
-    pubnub.addListener({
-        message: (msg) => {
-            msg.message.forEach(elem => {
-                elem.date = new Date(elem.exec_date);
-                elem.volume = elem.size;
-                target.dispatchEvent(new CustomEvent('message', { detail: elem }));
-            })
-        }
-    });
-    pubnub.subscribe({
-        channels: ['lightning_executions_BCH_BTC']
-    });
+    let wss = new WebSocket('wss://ws.lightstream.bitflyer.com/json-rpc')
+    wss.onopen = function () {
+        wss.send(JSON.stringify({
+            method: "subscribe",
+            params: {
+                channel: 'lightning_executions_BCH_BTC'
+            }
+        }));
+    };
+    wss.onmessage = function (msg) {
+        let data = JSON.parse(msg.data)
+        data.params.message.forEach(trade => {
+            trade.date = new Date(trade.exec_date)
+            target.dispatchEvent(new CustomEvent('message', { detail: trade }))
+        })
+    };
     return target
 }
 
