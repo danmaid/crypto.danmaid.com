@@ -31,7 +31,7 @@
         .pair {
             display: flex;
             flex-flow: column wrap;
-            max-height: 90vh;
+            max-height: 86vh;
         }
 
         .fsym {
@@ -146,7 +146,7 @@
     <main>
         <div>BUY SELL</div>
 
-        <div style="position: absolute; right: 0; bottom: 0; background-color: rgba(200, 200, 200, 0.3);">
+        <div style="position:absolute;right:0;bottom:16px;z-index:10000;background-color:rgba(20, 20, 20, 0.7);padding:8px;">
             <div>
                 data source:
                 <a href="https://www.cryptocompare.com/">
@@ -333,7 +333,7 @@
         // Promise.all([startFsym('BTC'), startFsym('ETH'), startFsym('BCH')])
         // 通貨スケール
         let scales = {
-            USD: 10000, USDT: 10000, EUR: 10000, JPY: 100000, KRW: 1000000, CAD: 10,
+            USD: 10000, USDT: 10000, EUR: 10000, JPY: 1000000, KRW: 1000000, CAD: 10,
             ETH: 10, EOS: 100, XRP: 1000, BCH: 10, TRX: 10000, ADA: 1000, LTC: 10, ETC: 10
         }
         Promise.resolve(['BTC', 'ETH', 'EOS', 'XRP', 'BCH', 'TRX', 'ADA', 'LTC', 'ETC', 'ICX'])
