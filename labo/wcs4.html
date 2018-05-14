@@ -40,6 +40,26 @@
             flex-flow: column;
         }
 
+        .fsym[symbol='USD'] {
+            order: -200;
+        }
+
+        .fsym[symbol='USDT'] {
+            order: -199;
+        }
+
+        .fsym[symbol='EUR'] {
+            order: -198;
+        }
+
+        .fsym[symbol='JPY'] {
+            order: -197;
+        }
+
+        .fsym[symbol='KRW'] {
+            order: -196;
+        }
+
         .fsym[symbol='BTC'] {
             order: -100;
         }
@@ -78,6 +98,26 @@
 
         .fsym[symbol='ICX'] {
             order: -91;
+        }
+
+        .gauge {
+            display: inline-block;
+            width: 60px;
+            height: 100%;
+            overflow: hidden;
+            background-color: rgba(100, 100, 100, 0.3)
+        }
+
+        .gauge #buy {
+            display: inline-block;
+            height: 100%;
+            background-color: green;
+        }
+
+        .gauge #sell {
+            display: inline-block;
+            height: 100%;
+            background-color: red;
         }
     </style>
 </head>
@@ -126,8 +166,9 @@
         <div id="target" class="pair">
             <template id="fsym">
                 <div id="root" class="fsym">
-                    <div style="order: -999;">
-                        <span id="symbol"></span>
+                    <div style="order: -999999999;">
+                        <span id="symbol" title="基準通貨"></span>
+                        <span id="scale" title="グラフ倍率"></span>
                         <span id="buy"></span>
                         <span id="sell"></span>
                     </div>
@@ -135,8 +176,12 @@
             </template>
             <template id="template">
                 <div id="row">
-                    <span id="buy"></span>
-                    <span id="sell"></span>
+                    <div class="gauge">
+                        <span id="buy"></span>
+                    </div>
+                    <div class="gauge">
+                        <span id="sell"></span>
+                    </div>
                     <span id="message"></span>
                     <span id="price"></span>
                 </div>
@@ -198,14 +243,16 @@
                     exec[f][t].aggregate.Sell = exec[f][t].raw.filter(e => e.Side == 'Sell').map(e => parseFloat(e.Quantity)).reduce((x, y) => x + y, 0)
                     exec[f][t].aggregate.Buy = exec[f][t].raw.filter(e => e.Side == 'Buy').map(e => parseFloat(e.Quantity)).reduce((x, y) => x + y, 0)
                     exec[f][t].tag.querySelector('#sell').textContent = Math.round(exec[f][t].aggregate.Sell * 100) / 100
+                    exec[f][t].tag.querySelector('#sell').style.width = Math.round(exec[f][t].aggregate.Sell * 100) / 100 / (scales[f] || 1) + '%'
                     exec[f][t].tag.querySelector('#buy').textContent = Math.round(exec[f][t].aggregate.Buy * 100) / 100
+                    exec[f][t].tag.querySelector('#buy').style.width = Math.round(exec[f][t].aggregate.Buy * 100) / 100 / (scales[f] || 1) + '%'
                     exec[f][t].tag.querySelector('#message').textContent = t
                     exec[f][t].tag.style.order = - Math.ceil(exec[f][t].aggregate.Sell + exec[f][t].aggregate.Buy)
 
-                    if (exec[f][t].raw.length > 0) {
-                        exec[f][t].aggregate.Price = exec[f][t].raw.map(e => parseFloat(e.Price)).reduce((x, y) => (x + y) / 2)
-                        exec[f][t].tag.querySelector('#price').textContent = Math.round(exec[f][t].aggregate.Price * 100) / 100
-                    }
+                    // if (exec[f][t].raw.length > 0) {
+                    //     exec[f][t].aggregate.Price = exec[f][t].raw.map(e => parseFloat(e.Price)).reduce((x, y) => (x + y) / 2)
+                    //     exec[f][t].tag.querySelector('#price').textContent = Math.round(exec[f][t].aggregate.Price * 100) / 100
+                    // }
                 }
             }
             // console.log(exec)
@@ -284,6 +331,11 @@
         //         return list
         //     })
         // Promise.all([startFsym('BTC'), startFsym('ETH'), startFsym('BCH')])
+        // 通貨スケール
+        let scales = {
+            USD: 10000, USDT: 10000, EUR: 10000, JPY: 100000, KRW: 1000000, CAD: 10,
+            ETH: 10, EOS: 100, XRP: 1000, BCH: 10, TRX: 10000, ADA: 1000, LTC: 10, ETC: 10
+        }
         Promise.resolve(['BTC', 'ETH', 'EOS', 'XRP', 'BCH', 'TRX', 'ADA', 'LTC', 'ETC', 'ICX'])
             // Promise.resolve(['BTC', 'ETH', 'EOS', 'XRP', 'BCH', 'TRX'])
             .then((list) => {
@@ -302,6 +354,7 @@
                             let root = tag.querySelector('#root')
                             root.setAttribute('symbol', fsym)
                             root.querySelector('#symbol').textContent = fsym
+                            root.querySelector('#scale').textContent = 'gs=' + (scales[fsym] || 1)
                             for (tsym of Object.keys(exec[fsym])) {
                                 root.appendChild(exec[fsym][tsym].fragment)
                             }
