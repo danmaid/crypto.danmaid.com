@@ -57,6 +57,11 @@
             overflow-y: auto;
             overflow-x: hidden;
         }
+
+        p {
+            margin: 0;
+            margin-left: 0.5em;
+        }
     </style>
 </head>
 
@@ -75,152 +80,72 @@
     </header>
 
     <main>
-        <p>提供ツールの実装サンプルを掲載しています。</p>
-        <h2>最終取引価格</h2>
-        <div class="container-outer">
-            <div>
-                <h3>BTC/JPY</h3>
-                <div class="container">
-                    <a href="https://bitflyer.jp?bf=shwrhqqs" target="_blank">
-                        <div class="ltp-item">
-                            <div class="market">bitFlyer</div>
-                            <dm-lastprice id="bitflyer_BTC_JPY" class="price"></dm-lastprice>
-                        </div>
-                    </a>
-                    <div class="ltp-item">
-                        <div class="market">bitbank.cc</div>
-                        <dm-lastprice id="bitbankcc_BTC_JPY" class="price"></dm-lastprice>
-                    </div>
-                    <a href="https://zaif.jp?ac=v1qklgobx2" target="_blank">
-                        <div class="ltp-item">
-                            <div class="market">Zaif</div>
-                            <dm-lastprice id="zaif_BTC_JPY" class="price"></dm-lastprice>
-                        </div>
-                    </a>
-                    <a href="https://coincheck.com/ja/?c=_Keu1VgjTDg" target="_blank">
-                        <div class="ltp-item">
-                            <div class="market">coincheck</div>
-                            <dm-lastprice id="coincheck_BTC_JPY" class="price"></dm-lastprice>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div>
-                <h3>BTC/JPY FX</h3>
-                <div class="container">
-                    <a href="https://bitflyer.jp/Lightning?bf=shwrhqqs" target="_blank">
-                        <div class="ltp-item">
-                            <div class="market">bitFlyer</div>
-                            <dm-lastprice id="bitflyer_FX_BTC_JPY" class="price"></dm-lastprice>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div>
-                <h3>BTC/USD</h3>
-                <div class="container">
-                    <div class="ltp-item">
-                        <div class="market">bitfinex</div>
-                        <dm-lastprice id="bitfinex_BTC_USD" class="price"></dm-lastprice>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <h3>BTC/USD FX</h3>
-                <div class="container">
-                    <a href="https://www.bitmex.com/register/XprwfJ" target="_blank">
-                        <div class="ltp-item">
-                            <div class="market">bitmex</div>
-                            <dm-lastprice id="bitmex_XBT_USD" class="price"></dm-lastprice>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div>
-                <h3>BTC/USDT</h3>
-                <div class="container">
-                    <a href="https://www.binance.com/?ref=20863976" target="_blank">
-                        <div class="ltp-item">
-                            <div class="market">binance</div>
-                            <dm-lastprice id="binance_BTC_USDT" class="price"></dm-lastprice>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <h2>取引履歴</h2>
-        <div class="container-outer">
-            <div>
-                <h3>BTC/JPY</h3>
-                <div class="container">
-                    <a href="https://bitflyer.jp?bf=shwrhqqs" target="_blank">
-                        <div class="trade-item">
-                            <div class="market">bitFlyer</div>
-                            <dm-realtime id="bitflyer_BTC_JPY"></dm-realtime>
-                        </div>
-                    </a>
-                    <div class="trade-item">
-                        <div class="market">bitbank.cc</div>
-                        <dm-realtime id="bitbankcc_BTC_JPY"></dm-realtime>
-                    </div>
-                    <a href="https://zaif.jp?ac=v1qklgobx2" target="_blank">
-                        <div class="trade-item">
-                            <div class="market">Zaif</div>
-                            <dm-realtime id="zaif_BTC_JPY"></dm-realtime>
-                        </div>
-                    </a>
-                    <a href="https://coincheck.com/ja/?c=_Keu1VgjTDg" target="_blank">
-                        <div class="trade-item">
-                            <div class="market">coincheck</div>
-                            <dm-realtime id="coincheck_BTC_JPY"></dm-realtime>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div>
-                <h3>BTC/JPY FX</h3>
-                <div class="container">
-                    <a href="https://bitflyer.jp/Lightning?bf=shwrhqqs" target="_blank">
-                        <div class="trade-item">
-                            <div class="market">bitFlyer</div>
-                            <dm-realtime id="bitflyer_FX_BTC_JPY"></dm-realtime>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div>
-                <h3>BTC/USD</h3>
-                <div class="container">
-                    <div class="trade-item">
-                        <div class="market">bitfinex</div>
-                        <dm-realtime id="bitfinex_BTC_USD"></dm-realtime>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <h3>BTC/USD FX</h3>
-                <div class="container">
-                    <a href="https://www.bitmex.com/register/XprwfJ" target="_blank">
-                        <div class="trade-item">
-                            <div class="market">bitmex(XBT)</div>
-                            <dm-realtime id="bitmex_XBT_USD"></dm-realtime>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div>
-                <h3>BTC/USDT</h3>
-                <div class="container">
-                    <a href="https://www.binance.com/?ref=20863976" target="_blank">
-                        <div class="trade-item">
-                            <div class="market">binance</div>
-                            <dm-realtime id="binance_BTC_USDT"></dm-realtime>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
+        <article>
+            <p>暗号資産（仮想通貨/暗号通貨）関連のラボです。何かの役に立つかもしれない？ツールを並べています。こんなの欲しいとか、もうちょっとこうしてほしいっていうご要望いただければ、そのうち作ります。</p>
+            <section>
+                <h2>ワールド暗号資産サテライト（仮）</h2>
+                <p>通貨ペアはペアなんだから、ペアで追いかければ世界的な動きが見えて面白そう。価格に着目したものって結構あるけど、移動見るには取引量だと思うので。直近60秒分の取引量を表示してる。</p>
+                <section>
+                    <h3>
+                        <a href="/labo/wcs1.html">ver 0.1</a>
+                    </h3>
+                    <p>v0.1は各取引所から直接取得するタイプ。</p>
+                </section>
+                <section>
+                    <h3>
+                        <a href="/labo/wcs2.html">ver 0.2</a>
+                    </h3>
+                    <p>v0.2は各取引所から直接取得するタイプを継承しつつ、下地の世界地図にマッピングして飾りを目指そうとしたもの。</p>
+                </section>
+                <section>
+                    <h3>
+                        <a href="/labo/wcs3.html">ver 0.3</a>
+                    </h3>
+                    <p>v0.3は
+                        <a href="https://cryptocompare.com/">CryptoCompare</a>から取得するタイプ。ペア単位で扱ってる全取引所の約定履歴を引っ張ってくるから、データ量が膨大。その分重いし通信量食います。</p>
+                </section>
+                <section>
+                    <h3>
+                        <a href="/labo/wcs4.html">ver 0.4</a>
+                    </h3>
+                    <p>v0.3をもっと汎用的にして、表示可能ペアを柔軟にかつ多数にできるようにしたもの。WebWorker使ってCryptoCompareとの接続多重度を引き上げてます。通信料はさらに増えてるはず。</p>
+                </section>
+            </section>
+            <section>
+                <h2>板（仮）</h2>
+                <p>板。</p>
+                <section>
+                    <h3>
+                        <a href="/labo/orderbooks.html">ver 0.1</a>
+                    </h3>
+                    <p>統合版</p>
+                </section>
+                <section>
+                    <h3>
+                        <a href="/labo/orderbooksFinex.html">ver 0.1</a>
+                    </h3>
+                    <p>bitfinex版</p>
+                </section>
+                <section>
+                    <h3>
+                        <a href="/labo/orderbooksMex.html">ver 0.2</a>
+                    </h3>
+                    <p>bitmex版</p>
+                </section>
+            </section>
+            <section>
+                <h2>
+                    <a href="/labo/multiprice1.html">マルチプライス ver 0.1</a>
+                </h2>
+                <p>複数取引所の価格推移を同時に重ねるとどうなるかって試してみた。取引がない時間帯だったりすると初期データが流れてくるまで時間がかかります。</p>
+            </section>
+            <section>
+                <h2>
+                    <a href="/labo/multivolume1.html">マルチボリューム ver 0.1</a>
+                </h2>
+                <p>いなごflyerさんの真似してみた。</p>
+            </section>
+        </article>
     </main>
 
     <dm-footer></dm-footer>
