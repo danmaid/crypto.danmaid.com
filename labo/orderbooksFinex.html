@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78911133-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-78911133-2');
+    </script>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Order Books</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="https://danmaid.com/common.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/common.css" />
+    <script defer src="https://danmaid.com/tags/dm-tags.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/solid.js" crossorigin="anonymous" integrity="sha384-Q7KAHqDd5trmfsv85beYZBsUmw0lsreFBQZfsEhzUtUn5HhpjVzwY0Aq4z8DY9sA"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/fontawesome.js" crossorigin="anonymous" integrity="sha384-M2FSA4xMm1G9m4CNXM49UcDHeWcDZNucAlz1WVHxohug0Uw1K+IpUhp/Wjg0y6qG"></script>
+    <style>
+        main {
+            font-size: 10px;
+        }
+
+        #target {
+            display: flex;
+            flex-flow: column-reverse;
+        }
+
+        .gauge {
+            width: 100px;
+            height: 15px;
+            overflow: hidden;
+            display: inline-flex;
+            position: relative;
+        }
+
+        .gauge.reverse {
+            flex-flow: row-reverse;
+        }
+
+        .gauge .bar {
+            background-color: green;
+            height: 100%;
+        }
+
+        .gauge.reverse .bar {
+            background-color: red;
+        }
+
+        .gauge.reverse .amount {
+            left: 0;
+            right: unset;
+        }
+
+        .gauge.reverse .count {
+            right: 0;
+            left: unset;
+        }
+
+        .gauge .amount {
+            position: absolute;
+            right: 0;
+        }
+
+        .gauge .count {
+            position: absolute;
+            left: 0;
+        }
+
+        .fix-top {
+            order: 999999;
+            font-size: 1rem;
+        }
+
+        .price {
+            width: 3em;
+            display: inline-block;
+            vertical-align: top;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="title">
+            <h1>板 ver 0.1</h1>
+            <i class="fas fa-angle-left"></i>
+            <a href="/labo/">LABO</a>
+            <i class="fas fa-angle-left"></i>
+            <a href="/">暗号資産</a>
+            <i class="fas fa-angle-left"></i>
+            <a href="https://danmaid.com/">男メイド</a>
+        </div>
+        <nav class="menu">
+            <button class="button" onclick="classList.toggle('active')">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a class="menuitem" href="/products.html">PRODUCTS</a>
+            <a class="menuitem active" href="/labo/">LABO</a>
+            <a class="menuitem" href="/about.html">ABOUT</a>
+        </nav>
+    </header>
+
+    <main>
+        <div id="target">
+            <div class="fix-top">bitfinex BTC/USD</div>
+        </div>
+    </main>
+    <dm-footer></dm-footer>
+
+    <template id="page">
+        <div id="index">
+            <span class="gauge reverse">
+                <div id="gauge-ask" class="bar"></div>
+                <span id="count-ask" class="count"></span>
+                <span id="amount-ask" class="amount"></span>
+            </span>
+            <span id="price" class="price"></span>
+            <span class="gauge">
+                <div id="gauge-bid" class="bar"></div>
+                <span id="amount-bid" class="amount"></span>
+                <span id="count-bid" class="count"></span>
+            </span>
+        </div>
+    </template>
+
+    <script src="https://unpkg.com/event-target@latest/min.js"></script>
+    <script>
+        let orderBookP2 = new EventTarget()
+        let wss = new WebSocket('wss://api.bitfinex.com/ws/2')
+        wss.addEventListener('open', () => {
+            wss.send(JSON.stringify({
+                event: 'subscribe',
+                channel: 'book',
+                symbol: 'BTCUSD',
+                prec: 'P2',
+                freq: 'F0',
+                len: 25
+            }))
+        })
+        let sendPage = (data) => {
+            let page = {
+                index: data[0],
+                count: data[1],
+                amount: data[2]
+            }
+            orderBookP2.dispatchEvent(new CustomEvent('message', { detail: page }))
+        }
+        wss.addEventListener('message', (message) => {
+            let data = JSON.parse(message.data)[1]
+            if (Array.isArray(data) && data.length == 3) {
+                sendPage(data)
+            } else if (Array.isArray(data)) {
+                data.forEach(element => {
+                    sendPage(element)
+                });
+            } else {
+                console.log('other:', message.data)
+            }
+        })
+
+        book = {}
+        tags = {}
+        let target = document.getElementById('target')
+        orderBookP2.addEventListener('message', (message) => {
+            let data = message.detail
+            if (data.count == 0) {
+                console.log('deleted', data.index)
+                delete book[data.index]
+                target.removeChild(tags[data.index])
+                delete tags[data.index]
+            } else {
+                if (!book[data.index]) {
+                    console.log('new', data.index)
+                    let fragment = document.querySelector('template#page').content.cloneNode(true)
+                    let tag = fragment.querySelector('#index')
+                    tag.id = data.index
+                    tag.querySelector('#price').textContent = data.index
+                    tag.style.order = data.index
+                    tags[data.index] = tag
+                    target.appendChild(fragment)
+                }
+                book[data.index] = data
+                if (data.amount > 0) {
+                    tags[data.index].querySelector('#amount-bid').textContent = Math.round(data.amount * 100) / 100
+                    tags[data.index].querySelector('#count-bid').textContent = data.count
+                    tags[data.index].querySelector('#gauge-bid').style.width = data.amount / 2 + '%'
+                    tags[data.index].querySelector('#amount-ask').textContent = null
+                    tags[data.index].querySelector('#count-ask').textContent = null
+                    tags[data.index].querySelector('#gauge-ask').style.width = 0
+                } else {
+                    tags[data.index].querySelector('#amount-ask').textContent = Math.round(data.amount * 100) / 100
+                    tags[data.index].querySelector('#count-ask').textContent = data.count
+                    tags[data.index].querySelector('#gauge-ask').style.width = - data.amount / 2 + '%'
+                    tags[data.index].querySelector('#amount-bid').textContent = null
+                    tags[data.index].querySelector('#count-bid').textContent = null
+                    tags[data.index].querySelector('#gauge-bid').style.width = 0
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

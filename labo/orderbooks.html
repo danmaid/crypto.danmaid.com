@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78911133-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-78911133-2');
+    </script>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Order Books</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="https://danmaid.com/common.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/common.css" />
+    <script defer src="https://danmaid.com/tags/dm-tags.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/solid.js" crossorigin="anonymous" integrity="sha384-Q7KAHqDd5trmfsv85beYZBsUmw0lsreFBQZfsEhzUtUn5HhpjVzwY0Aq4z8DY9sA"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/fontawesome.js" crossorigin="anonymous" integrity="sha384-M2FSA4xMm1G9m4CNXM49UcDHeWcDZNucAlz1WVHxohug0Uw1K+IpUhp/Wjg0y6qG"></script>
+    <style>
+        main {
+            font-size: 10px;
+            display: flex;
+        }
+
+        #aggr,
+        #raw,
+        #target {
+            display: flex;
+            flex-flow: column-reverse;
+            margin: 4px;
+        }
+
+        .gauge {
+            width: 80px;
+            height: 15px;
+            overflow: hidden;
+            display: inline-flex;
+            position: relative;
+        }
+
+        .gauge.reverse {
+            flex-flow: row-reverse;
+        }
+
+        .gauge .bar {
+            background-color: green;
+            height: 100%;
+        }
+
+        .gauge.reverse .bar {
+            background-color: red;
+        }
+
+        .gauge.reverse .amount {
+            left: 0;
+            right: unset;
+        }
+
+        .gauge.reverse .count {
+            right: 0;
+            left: unset;
+        }
+
+        .gauge .amount {
+            position: absolute;
+            right: 0;
+        }
+
+        .gauge .count {
+            position: absolute;
+            left: 0;
+        }
+
+        .fix-top {
+            order: 999999;
+            font-size: 1rem;
+        }
+
+        .price {
+            width: 3em;
+            display: inline-block;
+            vertical-align: top;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="title">
+            <h1>板 ver 0.1</h1>
+            <i class="fas fa-angle-left"></i>
+            <a href="/labo/">LABO</a>
+            <i class="fas fa-angle-left"></i>
+            <a href="/">暗号資産</a>
+            <i class="fas fa-angle-left"></i>
+            <a href="https://danmaid.com/">男メイド</a>
+        </div>
+        <nav class="menu">
+            <button class="button" onclick="classList.toggle('active')">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a class="menuitem" href="/products.html">PRODUCTS</a>
+            <a class="menuitem active" href="/labo/">LABO</a>
+            <a class="menuitem" href="/about.html">ABOUT</a>
+        </nav>
+    </header>
+
+    <main>
+        <div id="target">
+            <div class="fix-top">bitfinex BTC/USD</div>
+        </div>
+        <div id="aggr">
+            <div class="fix-top">bitmex XBT/USD aggr10</div>
+        </div>
+        <div id="raw">
+            <div class="fix-top">bitmex XBT/USD raw</div>
+        </div>
+    </main>
+    <dm-footer></dm-footer>
+
+    <template id="page">
+        <div id="index">
+            <span class="gauge reverse">
+                <div id="gauge-ask" class="bar"></div>
+                <span id="count-ask" class="count"></span>
+                <span id="amount-ask" class="amount"></span>
+            </span>
+            <span id="price" class="price"></span>
+            <span class="gauge">
+                <div id="gauge-bid" class="bar"></div>
+                <span id="amount-bid" class="amount"></span>
+                <span id="count-bid" class="count"></span>
+            </span>
+        </div>
+    </template>
+
+    <script src="https://unpkg.com/event-target@latest/min.js"></script>
+    <script>
+        let orderBookP2 = new EventTarget()
+        let wss = new WebSocket('wss://api.bitfinex.com/ws/2')
+        wss.addEventListener('open', () => {
+            wss.send(JSON.stringify({
+                event: 'subscribe',
+                channel: 'book',
+                symbol: 'BTCUSD',
+                prec: 'P2',
+                freq: 'F0',
+                len: 25
+            }))
+        })
+        let sendPage = (data) => {
+            let page = {
+                index: data[0],
+                count: data[1],
+                amount: data[2]
+            }
+            orderBookP2.dispatchEvent(new CustomEvent('message', { detail: page }))
+        }
+        wss.addEventListener('message', (message) => {
+            let data = JSON.parse(message.data)[1]
+            if (Array.isArray(data) && data.length == 3) {
+                sendPage(data)
+            } else if (Array.isArray(data)) {
+                data.forEach(element => {
+                    sendPage(element)
+                });
+            } else {
+                console.log('other:', message.data)
+            }
+        })
+
+        book = {}
+        tags = {}
+        let target = document.getElementById('target')
+        orderBookP2.addEventListener('message', (message) => {
+            let data = message.detail
+            if (data.count == 0) {
+                console.log('deleted', data.index)
+                delete book[data.index]
+                target.removeChild(tags[data.index])
+                delete tags[data.index]
+            } else {
+                if (!book[data.index]) {
+                    console.log('new', data.index)
+                    let fragment = document.querySelector('template#page').content.cloneNode(true)
+                    let tag = fragment.querySelector('#index')
+                    tag.id = data.index
+                    tag.querySelector('#price').textContent = data.index
+                    tag.style.order = data.index
+                    tags[data.index] = tag
+                    target.appendChild(fragment)
+                }
+                book[data.index] = data
+                if (data.amount > 0) {
+                    tags[data.index].querySelector('#amount-bid').textContent = Math.round(data.amount * 100) / 100
+                    tags[data.index].querySelector('#count-bid').textContent = data.count
+                    tags[data.index].querySelector('#gauge-bid').style.width = data.amount / 2 + '%'
+                    tags[data.index].querySelector('#amount-ask').textContent = null
+                    tags[data.index].querySelector('#count-ask').textContent = null
+                    tags[data.index].querySelector('#gauge-ask').style.width = 0
+                } else {
+                    tags[data.index].querySelector('#amount-ask').textContent = Math.round(data.amount * 100) / 100
+                    tags[data.index].querySelector('#count-ask').textContent = data.count
+                    tags[data.index].querySelector('#gauge-ask').style.width = - data.amount / 2 + '%'
+                    tags[data.index].querySelector('#amount-bid').textContent = null
+                    tags[data.index].querySelector('#count-bid').textContent = null
+                    tags[data.index].querySelector('#gauge-bid').style.width = 0
+                }
+            }
+        })
+    </script>
+    <script>
+        let mexorderBook = new EventTarget()
+        let mexwss = new WebSocket('wss://www.bitmex.com/realtime')
+        mexwss.addEventListener('open', () => {
+            mexwss.send(JSON.stringify({
+                op: 'subscribe',
+                args: ['orderBookL2:XBTUSD']
+            }))
+        })
+        let mexsendPage = (data) => {
+            let page = {
+                index: data[0],
+                count: data[1],
+                amount: data[2]
+            }
+            mexorderBook.dispatchEvent(new CustomEvent('message', { detail: page }))
+        }
+        mexwss.addEventListener('message', (message) => {
+            let data = JSON.parse(message.data)
+            switch (data.action) {
+                case 'partial':
+                    mexorderBook.dispatchEvent(new CustomEvent('partial', { detail: data }))
+                    break;
+                case 'update':
+                    mexorderBook.dispatchEvent(new CustomEvent('update', { detail: data }))
+                    break;
+                case 'delete':
+                    mexorderBook.dispatchEvent(new CustomEvent('delete', { detail: data }))
+                    break;
+                case 'insert':
+                    mexorderBook.dispatchEvent(new CustomEvent('insert', { detail: data }))
+                    break;
+                default:
+                    console.log('unknown action:', data)
+                    break;
+            }
+        })
+
+        mexfullBook = {}
+        mexaggrBook = {}
+        mexviewBook = {}
+        mexviewBook2 = {}
+        mextags = {}
+        mextags2 = {}
+        let mexaggr = document.getElementById('aggr')
+        let mexraw = document.getElementById('raw')
+        let mexinitialize = new Promise(resolve => {
+            mexorderBook.addEventListener('partial', (msg) => {
+                console.log('partial:', msg.detail)
+                msg.detail.data.forEach(e => {
+                    e.index = Math.floor(e.price / 10) * 10
+                    mexfullBook[e.id] = e
+                    // make aggregated book
+                    if (!mexaggrBook[e.index]) {
+                        mexaggrBook[e.index] = { price: e.index, size: 0 }
+                    }
+                    if (e.side == 'Sell') {
+                        mexaggrBook[e.index].size -= e.size
+                    } else if (e.side == 'Buy') {
+                        mexaggrBook[e.index].size += e.size
+                    }
+                })
+                console.log(mexaggrBook)
+
+                // make view book & dom
+                let sorted = Object.keys(mexaggrBook).map(e => mexaggrBook[e]).sort((x, y) => x.price - y.price)
+                console.log('ask:', sorted.filter(e => e.size < 0).slice(0, 25))
+                console.log('bid:', sorted.filter(e => e.size > 0).slice(-25))
+
+                sorted.filter(e => e.size < 0).slice(0, 25).forEach(e => {
+                    mexviewBook[e.price] = e
+                    let fragment = document.querySelector('template#page').content.cloneNode(true)
+                    let tag = fragment.querySelector('#index')
+                    tag.id = e.price
+                    tag.style.order = e.price * 2
+                    tag.querySelector('#price').textContent = e.price
+                    tag.querySelector('#amount-ask').textContent = e.size
+                    tag.querySelector('#gauge-ask').style.width = (- e.size) / 100000 + '%'
+                    tag.querySelector('#amount-bid').textContent = null
+                    tag.querySelector('#gauge-bid').style.width = 0
+                    mextags[e.price] = tag
+                    mexaggr.appendChild(fragment)
+                })
+                sorted.filter(e => e.size > 0).slice(-25).forEach(e => {
+                    mexviewBook[e.price] = e
+                    let fragment = document.querySelector('template#page').content.cloneNode(true)
+                    let tag = fragment.querySelector('#index')
+                    tag.id = e.price
+                    tag.style.order = e.price * 2
+                    tag.querySelector('#price').textContent = e.price
+                    tag.querySelector('#amount-bid').textContent = e.size
+                    tag.querySelector('#gauge-bid').style.width = e.size / 100000 + '%'
+                    tag.querySelector('#amount-ask').textContent = null
+                    tag.querySelector('#gauge-ask').style.width = 0
+                    mextags[e.price] = tag
+                    mexaggr.appendChild(fragment)
+                })
+                console.log('viewBook:', mexviewBook)
+
+                // make view book 2 & dom
+                let sorted2 = Object.keys(mexfullBook).map(e => mexfullBook[e]).sort((x, y) => y.price - x.price)
+                console.log('full ask:', sorted2.filter(e => e.side == 'Sell').slice(-25))
+                console.log('full bid:', sorted2.filter(e => e.side == 'Buy').slice(0, 25))
+
+                sorted2.filter(e => e.side == 'Sell').slice(-25).forEach(e => {
+                    mexviewBook2[e.price] = mexfullBook[e.id]
+                    let fragment = document.querySelector('template#page').content.cloneNode(true)
+                    let tag = fragment.querySelector('#index')
+                    tag.id = e.price
+                    tag.style.order = e.price * 2
+                    tag.querySelector('#price').textContent = e.price
+                    tag.querySelector('#amount-ask').textContent = e.size
+                    tag.querySelector('#gauge-ask').style.width = e.size / 10000 + '%'
+                    tag.querySelector('#amount-bid').textContent = null
+                    tag.querySelector('#gauge-bid').style.width = 0
+                    mextags2[e.price] = tag
+                    mexraw.appendChild(fragment)
+                })
+                sorted2.filter(e => e.side == 'Buy').slice(0, 25).forEach(e => {
+                    mexviewBook2[e.price] = mexfullBook[e.id]
+                    let fragment = document.querySelector('template#page').content.cloneNode(true)
+                    let tag = fragment.querySelector('#index')
+                    tag.id = e.price
+                    tag.style.order = e.price * 2
+                    tag.querySelector('#price').textContent = e.price
+                    tag.querySelector('#amount-bid').textContent = e.size
+                    tag.querySelector('#gauge-bid').style.width = e.size / 10000 + '%'
+                    tag.querySelector('#amount-ask').textContent = null
+                    tag.querySelector('#gauge-ask').style.width = 0
+                    mextags2[e.price] = tag
+                    mexraw.appendChild(fragment)
+                })
+                console.log('viewBook2:', mexviewBook2)
+                resolve()
+            })
+        })
+
+        mexorderBook.addEventListener('update', (msg) => {
+            mexinitialize.then(() => {
+                msg.detail.data.forEach(e => {
+                    if (mexfullBook[e.id]) {
+                        let old = mexfullBook[e.id]
+                        // console.log('update:', 'old:', old, 'new:', e)
+                        let index = old.index
+                        // console.log('update:', viewBook[index] || index)
+                        if (mexaggrBook[index]) {
+                            let diff = e.size - old.size
+                            if (e.side == 'Sell') {
+                                mexaggrBook[index].size -= diff
+                            } else if (e.side == 'Buy') {
+                                mexaggrBook[index].size += diff
+                            }
+                            if (mexviewBook[index]) {
+                                if (mexviewBook[index].size > 0) {
+                                    mextags[index].querySelector('#amount-bid').textContent = mexviewBook[index].size
+                                    mextags[index].querySelector('#gauge-bid').style.width = mexviewBook[index].size / 100000 + '%'
+                                    mextags[index].querySelector('#amount-ask').textContent = null
+                                    mextags[index].querySelector('#gauge-ask').style.width = 0
+                                } else if (mexviewBook[index].size < 0) {
+                                    mextags[index].querySelector('#amount-ask').textContent = mexviewBook[index].size
+                                    mextags[index].querySelector('#gauge-ask').style.width = (- mexviewBook[index].size) / 100000 + '%'
+                                    mextags[index].querySelector('#amount-bid').textContent = null
+                                    mextags[index].querySelector('#gauge-bid').style.width = 0
+                                }
+                            }
+                        } else {
+                            console.log('update. but aggr book page not found.', e)
+                        }
+
+                        mexfullBook[e.id].size = e.size
+
+                        let price = mexfullBook[e.id].price
+                        if (mexviewBook2[price]) {
+                            if (e.side == 'Buy') {
+                                mextags2[price].querySelector('#amount-bid').textContent = mexviewBook2[price].size
+                                mextags2[price].querySelector('#gauge-bid').style.width = mexviewBook2[price].size / 10000 + '%'
+                                mextags2[price].querySelector('#amount-ask').textContent = null
+                                mextags2[price].querySelector('#gauge-ask').style.width = 0
+                            } else if (e.side == 'Sell') {
+                                mextags2[price].querySelector('#amount-ask').textContent = mexviewBook2[price].size
+                                mextags2[price].querySelector('#gauge-ask').style.width = mexviewBook2[price].size / 10000 + '%'
+                                mextags2[price].querySelector('#amount-bid').textContent = null
+                                mextags2[price].querySelector('#gauge-bid').style.width = 0
+                            }
+                        }
+                    } else {
+                        console.log('update. but full book page not found.', e)
+                    }
+                })
+            })
+        })
+
+        mexorderBook.addEventListener('delete', (msg) => {
+            mexinitialize.then(() => {
+                msg.detail.data.forEach(e => {
+                    let old = mexfullBook[e.id]
+                    // console.log('delete:', e, 'old:', old)
+                    let index = old.index
+                    if (mexaggrBook[index]) {
+                        if (e.side == 'Sell') {
+                            mexaggrBook[index].size += old.size
+                        } else if (e.side == 'Buy') {
+                            mexaggrBook[index].size -= old.size
+                        }
+                        if (mexaggrBook[index].size == 0) {
+                            console.log('aggr book delete:', mexaggrBook[index])
+                            delete mexaggrBook[index]
+                        }
+                    } else {
+                        console.log('aggr book not found.', index)
+                    }
+                    // console.log(aggrBook)
+                    if (mexviewBook[index]) {
+                        // rebuild view book & dom
+                        mexviewBook = {}
+                        let sorted = Object.keys(mexaggrBook).map(e => mexaggrBook[e]).sort((x, y) => x.price - y.price)
+
+                        sorted.filter(e => e.size < 0).slice(0, 25).forEach(e => {
+                            if (!mextags[e.price]) {
+                                let fragment = document.querySelector('template#page').content.cloneNode(true)
+                                let tag = fragment.querySelector('#index')
+                                tag.id = e.price
+                                tag.style.order = e.price * 2
+                                tag.querySelector('#price').textContent = e.price
+                                tag.querySelector('#amount-ask').textContent = e.size
+                                tag.querySelector('#gauge-ask').style.width = (- e.size) / 100000 + '%'
+                                tag.querySelector('#amount-bid').textContent = null
+                                tag.querySelector('#gauge-bid').style.width = 0
+                                mextags[e.price] = tag
+                                mexaggr.appendChild(fragment)
+                            }
+                            mexviewBook[e.price] = e
+                        })
+                        sorted.filter(e => e.size > 0).slice(-25).forEach(e => {
+                            if (!mextags[e.price]) {
+                                let fragment = document.querySelector('template#page').content.cloneNode(true)
+                                let tag = fragment.querySelector('#index')
+                                tag.id = e.price
+                                tag.style.order = e.price * 2
+                                tag.querySelector('#price').textContent = e.price
+                                tag.querySelector('#amount-bid').textContent = e.size
+                                tag.querySelector('#gauge-bid').style.width = e.size / 100000 + '%'
+                                tag.querySelector('#amount-ask').textContent = null
+                                tag.querySelector('#gauge-ask').style.width = 0
+                                mextags[e.price] = tag
+                                mexaggr.appendChild(fragment)
+                            }
+                            mexviewBook[e.price] = e
+                        })
+                        // console.log('viewBook:', viewBook)
+                        // はみ出たものを削除
+                        Object.keys(mextags)
+                            .filter(e => !mexviewBook.hasOwnProperty(e))
+                            .forEach(e => {
+                                mexaggr.removeChild(mextags[e])
+                                delete mextags[e]
+                            })
+                    }
+
+                    if (mexviewBook2[old.price]) {
+                        // rebuild view book 2 & dom
+                        mexviewBook2 = {}
+                        let sorted2 = Object.keys(mexfullBook).map(e => mexfullBook[e]).sort((x, y) => y.price - x.price)
+                        // console.log('update view book 2 ask:', sorted2.filter(e => e.side == 'Sell').slice(-25))
+                        // console.log('update view book 2 bid:', sorted2.filter(e => e.side == 'Buy').slice(0, 25))
+
+                        sorted2.filter(e => e.side == 'Sell').slice(-25).forEach(e => {
+                            if (!mextags2[e.price]) {
+                                let fragment = document.querySelector('template#page').content.cloneNode(true)
+                                let tag = fragment.querySelector('#index')
+                                tag.id = e.price
+                                tag.style.order = e.price * 2
+                                tag.querySelector('#price').textContent = e.price
+                                tag.querySelector('#amount-ask').textContent = e.size
+                                tag.querySelector('#gauge-ask').style.width = e.size / 10000 + '%'
+                                tag.querySelector('#amount-bid').textContent = null
+                                tag.querySelector('#gauge-bid').style.width = 0
+                                mextags2[e.price] = tag
+                                mexraw.appendChild(fragment)
+                            }
+                            mexviewBook2[e.price] = mexfullBook[e.id]
+                        })
+                        sorted2.filter(e => e.side == 'Buy').slice(0, 25).forEach(e => {
+                            if (!mextags2[e.price]) {
+                                let fragment = document.querySelector('template#page').content.cloneNode(true)
+                                let tag = fragment.querySelector('#index')
+                                tag.id = e.price
+                                tag.style.order = e.price * 2
+                                tag.querySelector('#price').textContent = e.price
+                                tag.querySelector('#amount-bid').textContent = e.size
+                                tag.querySelector('#gauge-bid').style.width = e.size / 10000 + '%'
+                                tag.querySelector('#amount-ask').textContent = null
+                                tag.querySelector('#gauge-ask').style.width = 0
+                                mextags2[e.price] = tag
+                                mexraw.appendChild(fragment)
+                            }
+                            mexviewBook2[e.price] = mexfullBook[e.id]
+                        })
+
+                        // はみ出たものを削除
+                        Object.keys(mextags2)
+                            .filter(e => !mexviewBook2.hasOwnProperty(e))
+                            .forEach(e => {
+                                mexraw.removeChild(mextags2[e])
+                                delete mextags2[e]
+                            })
+                    }
+                    delete mexfullBook[e.id]
+                })
+            })
+        })
+
+        mexorderBook.addEventListener('insert', (msg) => {
+            mexinitialize.then(() => {
+                msg.detail.data.forEach(e => {
+                    // console.log('insert:', e)
+                    e.index = Math.floor(e.price / 10) * 10
+                    mexfullBook[e.id] = e
+                    // make aggregated book
+                    if (!mexaggrBook[e.index]) {
+                        mexaggrBook[e.index] = { price: e.index, size: 0 }
+                    }
+                    if (e.side == 'Sell') {
+                        mexaggrBook[e.index].size -= e.size
+                    } else if (e.side == 'Buy') {
+                        mexaggrBook[e.index].size += e.size
+                    }
+
+                    // rebuild view book & dom
+                    mexviewBook = {}
+                    let sorted = Object.keys(mexaggrBook).map(e => mexaggrBook[e]).sort((x, y) => x.price - y.price)
+
+                    sorted.filter(e => e.size < 0).slice(0, 25).forEach(e => {
+                        if (!mextags[e.price]) {
+                            let fragment = document.querySelector('template#page').content.cloneNode(true)
+                            let tag = fragment.querySelector('#index')
+                            tag.id = e.price
+                            tag.style.order = e.price * 2
+                            tag.querySelector('#price').textContent = e.price
+                            tag.querySelector('#amount-ask').textContent = e.size
+                            tag.querySelector('#gauge-ask').style.width = (- e.size) / 100000 + '%'
+                            tag.querySelector('#amount-bid').textContent = null
+                            tag.querySelector('#gauge-bid').style.width = 0
+                            mextags[e.price] = tag
+                            mexaggr.appendChild(fragment)
+                        }
+                        mexviewBook[e.price] = e
+                    })
+                    sorted.filter(e => e.size > 0).slice(-25).forEach(e => {
+                        if (!mextags[e.price]) {
+                            let fragment = document.querySelector('template#page').content.cloneNode(true)
+                            let tag = fragment.querySelector('#index')
+                            tag.id = e.price
+                            tag.style.order = e.price * 2
+                            tag.querySelector('#price').textContent = e.price
+                            tag.querySelector('#amount-bid').textContent = e.size
+                            tag.querySelector('#gauge-bid').style.width = e.size / 100000 + '%'
+                            tag.querySelector('#amount-ask').textContent = null
+                            tag.querySelector('#gauge-ask').style.width = 0
+                            mextags[e.price] = tag
+                            mexaggr.appendChild(fragment)
+                        }
+                        mexviewBook[e.price] = e
+                    })
+                    // console.log('viewBook:', viewBook)
+                    // はみ出たものを削除
+                    Object.keys(mextags)
+                        .filter(e => !mexviewBook.hasOwnProperty(e))
+                        .forEach(e => {
+                            mexaggr.removeChild(mextags[e])
+                            delete mextags[e]
+                        })
+
+                    // rebuild view book 2 & dom
+                    mexviewBook2 = {}
+                    let sorted2 = Object.keys(mexfullBook).map(e => mexfullBook[e]).sort((x, y) => y.price - x.price)
+
+                    sorted2.filter(e => e.side == 'Sell').slice(-25).forEach(e => {
+                        if (!mextags2[e.price]) {
+                            let fragment = document.querySelector('template#page').content.cloneNode(true)
+                            let tag = fragment.querySelector('#index')
+                            tag.id = e.price
+                            tag.style.order = e.price * 2
+                            tag.querySelector('#price').textContent = e.price
+                            tag.querySelector('#amount-ask').textContent = e.size
+                            tag.querySelector('#gauge-ask').style.width = e.size / 10000 + '%'
+                            tag.querySelector('#amount-bid').textContent = null
+                            tag.querySelector('#gauge-bid').style.width = 0
+                            mextags2[e.price] = tag
+                            mexraw.appendChild(fragment)
+                        }
+                        mexviewBook2[e.price] = mexfullBook[e.id]
+                    })
+                    sorted2.filter(e => e.side == 'Buy').slice(0, 25).forEach(e => {
+                        if (!mextags2[e.price]) {
+                            let fragment = document.querySelector('template#page').content.cloneNode(true)
+                            let tag = fragment.querySelector('#index')
+                            tag.id = e.price
+                            tag.style.order = e.price * 2
+                            tag.querySelector('#price').textContent = e.price
+                            tag.querySelector('#amount-bid').textContent = e.size
+                            tag.querySelector('#gauge-bid').style.width = e.size / 10000 + '%'
+                            tag.querySelector('#amount-ask').textContent = null
+                            tag.querySelector('#gauge-ask').style.width = 0
+                            mextags2[e.price] = tag
+                            mexraw.appendChild(fragment)
+                        }
+                        mexviewBook2[e.price] = mexfullBook[e.id]
+                    })
+                    // はみ出たものを削除
+                    Object.keys(mextags2)
+                        .filter(e => !mexviewBook2.hasOwnProperty(e))
+                        .forEach(e => {
+                            mexraw.removeChild(mextags2[e])
+                            delete mextags2[e]
+                        })
+                })
+            })
+        })
+    </script>
+</body>
+
+</html>

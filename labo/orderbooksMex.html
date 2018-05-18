@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78911133-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-78911133-2');
+    </script>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Order Books</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="https://danmaid.com/common.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/common.css" />
+    <script defer src="https://danmaid.com/tags/dm-tags.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/solid.js" crossorigin="anonymous" integrity="sha384-Q7KAHqDd5trmfsv85beYZBsUmw0lsreFBQZfsEhzUtUn5HhpjVzwY0Aq4z8DY9sA"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/fontawesome.js" crossorigin="anonymous" integrity="sha384-M2FSA4xMm1G9m4CNXM49UcDHeWcDZNucAlz1WVHxohug0Uw1K+IpUhp/Wjg0y6qG"></script>
+    <style>
+        main {
+            font-size: 10px;
+            display: flex;
+        }
+
+        #aggr,
+        #raw {
+            display: flex;
+            flex-flow: column-reverse;
+            margin: 4px;
+        }
+
+        .gauge {
+            width: 100px;
+            height: 15px;
+            overflow: hidden;
+            display: inline-flex;
+            position: relative;
+            background-color: rgba(100, 100, 100, 0.3);
+        }
+
+        .gauge.reverse {
+            flex-flow: row-reverse;
+        }
+
+        .gauge .bar {
+            background-color: green;
+            height: 100%;
+        }
+
+        .gauge.reverse .bar {
+            background-color: red;
+        }
+
+        .gauge.reverse .amount {
+            right: 0;
+            left: unset;
+        }
+
+        .gauge.reverse .count {
+            left: 0;
+            right: unset;
+        }
+
+        .gauge .amount {
+            position: absolute;
+            left: 0;
+        }
+
+        .gauge .count {
+            position: absolute;
+            right: 0;
+        }
+
+        .fix-top {
+            order: 999999;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .price {
+            width: 4em;
+            display: inline-block;
+            vertical-align: top;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="title">
+            <h1>板 ver 0.1</h1>
+            <i class="fas fa-angle-left"></i>
+            <a href="/labo/">LABO</a>
+            <i class="fas fa-angle-left"></i>
+            <a href="/">暗号資産</a>
+            <i class="fas fa-angle-left"></i>
+            <a href="https://danmaid.com/">男メイド</a>
+        </div>
+        <nav class="menu">
+            <button class="button" onclick="classList.toggle('active')">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a class="menuitem" href="/products.html">PRODUCTS</a>
+            <a class="menuitem active" href="/labo/">LABO</a>
+            <a class="menuitem" href="/about.html">ABOUT</a>
+        </nav>
+    </header>
+
+    <main>
+        <div id="aggr">
+            <div class="fix-top">bitmex XBT/USD aggr10</div>
+        </div>
+        <div id="raw">
+            <div class="fix-top">bitmex XBT/USD raw</div>
+        </div>
+    </main>
+    <dm-footer></dm-footer>
+
+    <template id="page">
+        <div id="index">
+            <span class="gauge reverse">
+                <div id="gauge-ask" class="bar"></div>
+                <span id="amount-ask" class="amount"></span>
+            </span>
+            <span id="price" class="price"></span>
+            <span class="gauge">
+                <div id="gauge-bid" class="bar"></div>
+                <span id="amount-bid" class="amount"></span>
+            </span>
+        </div>
+    </template>
+
+    <script src="https://unpkg.com/event-target@latest/min.js"></script>
+    <script>
+        let orderBook = new EventTarget()
+        let wss = new WebSocket('wss://www.bitmex.com/realtime')
+        wss.addEventListener('open', () => {
+            wss.send(JSON.stringify({
+                op: 'subscribe',
+                args: ['orderBookL2:XBTUSD']
+            }))
+        })
+        let sendPage = (data) => {
+            let page = {
+                index: data[0],
+                count: data[1],
+                amount: data[2]
+            }
+            orderBook.dispatchEvent(new CustomEvent('message', { detail: page }))
+        }
+        wss.addEventListener('message', (message) => {
+            let data = JSON.parse(message.data)
+            switch (data.action) {
+                case 'partial':
+                    orderBook.dispatchEvent(new CustomEvent('partial', { detail: data }))
+                    break;
+                case 'update':
+                    orderBook.dispatchEvent(new CustomEvent('update', { detail: data }))
+                    break;
+                case 'delete':
+                    orderBook.dispatchEvent(new CustomEvent('delete', { detail: data }))
+                    break;
+                case 'insert':
+                    orderBook.dispatchEvent(new CustomEvent('insert', { detail: data }))
+                    break;
+                default:
+                    console.log('unknown action:', data)
+                    break;
+            }
+        })
+
+        fullBook = {}
+        aggrBook = {}
+        viewBook = {}
+        viewBook2 = {}
+        tags = {}
+        tags2 = {}
+        let aggr = document.getElementById('aggr')
+        let raw = document.getElementById('raw')
+        let initialize = new Promise(resolve => {
+            orderBook.addEventListener('partial', (msg) => {
+                console.log('partial:', msg.detail)
+                msg.detail.data.forEach(e => {
+                    e.index = Math.floor(e.price / 10) * 10
+                    fullBook[e.id] = e
+                    // make aggregated book
+                    if (!aggrBook[e.index]) {
+                        aggrBook[e.index] = { price: e.index, size: 0 }
+                    }
+                    if (e.side == 'Sell') {
+                        aggrBook[e.index].size -= e.size
+                    } else if (e.side == 'Buy') {
+                        aggrBook[e.index].size += e.size
+                    }
+                })
+                console.log(aggrBook)
+
+                // make view book & dom
+                let sorted = Object.keys(aggrBook).map(e => aggrBook[e]).sort((x, y) => x.price - y.price)
+                console.log('ask:', sorted.filter(e => e.size < 0).slice(0, 25))
+                console.log('bid:', sorted.filter(e => e.size > 0).slice(-25))
+
+                sorted.filter(e => e.size < 0).slice(0, 25).forEach(e => {
+                    viewBook[e.price] = e
+                    let fragment = document.querySelector('template#page').content.cloneNode(true)
+                    let tag = fragment.querySelector('#index')
+                    tag.id = e.price
+                    tag.style.order = e.price * 2
+                    tag.querySelector('#price').textContent = e.price
+                    tag.querySelector('#amount-ask').textContent = e.size
+                    tag.querySelector('#gauge-ask').style.width = (- e.size) / 100000 + '%'
+                    tag.querySelector('#amount-bid').textContent = null
+                    tag.querySelector('#gauge-bid').style.width = 0
+                    tags[e.price] = tag
+                    aggr.appendChild(fragment)
+                })
+                sorted.filter(e => e.size > 0).slice(-25).forEach(e => {
+                    viewBook[e.price] = e
+                    let fragment = document.querySelector('template#page').content.cloneNode(true)
+                    let tag = fragment.querySelector('#index')
+                    tag.id = e.price
+                    tag.style.order = e.price * 2
+                    tag.querySelector('#price').textContent = e.price
+                    tag.querySelector('#amount-bid').textContent = e.size
+                    tag.querySelector('#gauge-bid').style.width = e.size / 100000 + '%'
+                    tag.querySelector('#amount-ask').textContent = null
+                    tag.querySelector('#gauge-ask').style.width = 0
+                    tags[e.price] = tag
+                    aggr.appendChild(fragment)
+                })
+                console.log('viewBook:', viewBook)
+
+                // make view book 2 & dom
+                let sorted2 = Object.keys(fullBook).map(e => fullBook[e]).sort((x, y) => y.price - x.price)
+                console.log('full ask:', sorted2.filter(e => e.side == 'Sell').slice(-25))
+                console.log('full bid:', sorted2.filter(e => e.side == 'Buy').slice(0, 25))
+
+                sorted2.filter(e => e.side == 'Sell').slice(-25).forEach(e => {
+                    viewBook2[e.price] = fullBook[e.id]
+                    let fragment = document.querySelector('template#page').content.cloneNode(true)
+                    let tag = fragment.querySelector('#index')
+                    tag.id = e.price
+                    tag.style.order = e.price * 2
+                    tag.querySelector('#price').textContent = e.price
+                    tag.querySelector('#amount-ask').textContent = e.size
+                    tag.querySelector('#gauge-ask').style.width = e.size / 10000 + '%'
+                    tag.querySelector('#amount-bid').textContent = null
+                    tag.querySelector('#gauge-bid').style.width = 0
+                    tags2[e.price] = tag
+                    raw.appendChild(fragment)
+                })
+                sorted2.filter(e => e.side == 'Buy').slice(0, 25).forEach(e => {
+                    viewBook2[e.price] = fullBook[e.id]
+                    let fragment = document.querySelector('template#page').content.cloneNode(true)
+                    let tag = fragment.querySelector('#index')
+                    tag.id = e.price
+                    tag.style.order = e.price * 2
+                    tag.querySelector('#price').textContent = e.price
+                    tag.querySelector('#amount-bid').textContent = e.size
+                    tag.querySelector('#gauge-bid').style.width = e.size / 10000 + '%'
+                    tag.querySelector('#amount-ask').textContent = null
+                    tag.querySelector('#gauge-ask').style.width = 0
+                    tags2[e.price] = tag
+                    raw.appendChild(fragment)
+                })
+                console.log('viewBook2:', viewBook2)
+                resolve()
+            })
+        })
+
+        orderBook.addEventListener('update', (msg) => {
+            initialize.then(() => {
+                msg.detail.data.forEach(e => {
+                    if (fullBook[e.id]) {
+                        let old = fullBook[e.id]
+                        // console.log('update:', 'old:', old, 'new:', e)
+                        let index = old.index
+                        // console.log('update:', viewBook[index] || index)
+                        if (aggrBook[index]) {
+                            let diff = e.size - old.size
+                            if (e.side == 'Sell') {
+                                aggrBook[index].size -= diff
+                            } else if (e.side == 'Buy') {
+                                aggrBook[index].size += diff
+                            }
+                            if (viewBook[index]) {
+                                if (viewBook[index].size > 0) {
+                                    tags[index].querySelector('#amount-bid').textContent = viewBook[index].size
+                                    tags[index].querySelector('#gauge-bid').style.width = viewBook[index].size / 100000 + '%'
+                                    tags[index].querySelector('#amount-ask').textContent = null
+                                    tags[index].querySelector('#gauge-ask').style.width = 0
+                                } else if (viewBook[index].size < 0) {
+                                    tags[index].querySelector('#amount-ask').textContent = viewBook[index].size
+                                    tags[index].querySelector('#gauge-ask').style.width = (- viewBook[index].size) / 100000 + '%'
+                                    tags[index].querySelector('#amount-bid').textContent = null
+                                    tags[index].querySelector('#gauge-bid').style.width = 0
+                                }
+                            }
+                        } else {
+                            console.log('update. but aggr book page not found.', e)
+                        }
+
+                        fullBook[e.id].size = e.size
+
+                        let price = fullBook[e.id].price
+                        if (viewBook2[price]) {
+                            if (e.side == 'Buy') {
+                                tags2[price].querySelector('#amount-bid').textContent = viewBook2[price].size
+                                tags2[price].querySelector('#gauge-bid').style.width = viewBook2[price].size / 10000 + '%'
+                                tags2[price].querySelector('#amount-ask').textContent = null
+                                tags2[price].querySelector('#gauge-ask').style.width = 0
+                            } else if (e.side == 'Sell') {
+                                tags2[price].querySelector('#amount-ask').textContent = viewBook2[price].size
+                                tags2[price].querySelector('#gauge-ask').style.width = viewBook2[price].size / 10000 + '%'
+                                tags2[price].querySelector('#amount-bid').textContent = null
+                                tags2[price].querySelector('#gauge-bid').style.width = 0
+                            }
+                        }
+                    } else {
+                        console.log('update. but full book page not found.', e)
+                    }
+                })
+            })
+        })
+
+        orderBook.addEventListener('delete', (msg) => {
+            initialize.then(() => {
+                msg.detail.data.forEach(e => {
+                    let old = fullBook[e.id]
+                    // console.log('delete:', e, 'old:', old)
+                    let index = old.index
+                    if (aggrBook[index]) {
+                        if (e.side == 'Sell') {
+                            aggrBook[index].size += old.size
+                        } else if (e.side == 'Buy') {
+                            aggrBook[index].size -= old.size
+                        }
+                        if (aggrBook[index].size == 0) {
+                            console.log('aggr book delete:', aggrBook[index])
+                            delete aggrBook[index]
+                        }
+                    } else {
+                        console.log('aggr book not found.', index)
+                    }
+                    // console.log(aggrBook)
+                    if (viewBook[index]) {
+                        // rebuild view book & dom
+                        viewBook = {}
+                        let sorted = Object.keys(aggrBook).map(e => aggrBook[e]).sort((x, y) => x.price - y.price)
+
+                        sorted.filter(e => e.size < 0).slice(0, 25).forEach(e => {
+                            if (!tags[e.price]) {
+                                let fragment = document.querySelector('template#page').content.cloneNode(true)
+                                let tag = fragment.querySelector('#index')
+                                tag.id = e.price
+                                tag.style.order = e.price * 2
+                                tag.querySelector('#price').textContent = e.price
+                                tag.querySelector('#amount-ask').textContent = e.size
+                                tag.querySelector('#gauge-ask').style.width = (- e.size) / 100000 + '%'
+                                tag.querySelector('#amount-bid').textContent = null
+                                tag.querySelector('#gauge-bid').style.width = 0
+                                tags[e.price] = tag
+                                aggr.appendChild(fragment)
+                            }
+                            viewBook[e.price] = e
+                        })
+                        sorted.filter(e => e.size > 0).slice(-25).forEach(e => {
+                            if (!tags[e.price]) {
+                                let fragment = document.querySelector('template#page').content.cloneNode(true)
+                                let tag = fragment.querySelector('#index')
+                                tag.id = e.price
+                                tag.style.order = e.price * 2
+                                tag.querySelector('#price').textContent = e.price
+                                tag.querySelector('#amount-bid').textContent = e.size
+                                tag.querySelector('#gauge-bid').style.width = e.size / 100000 + '%'
+                                tag.querySelector('#amount-ask').textContent = null
+                                tag.querySelector('#gauge-ask').style.width = 0
+                                tags[e.price] = tag
+                                aggr.appendChild(fragment)
+                            }
+                            viewBook[e.price] = e
+                        })
+                        // console.log('viewBook:', viewBook)
+                        // はみ出たものを削除
+                        Object.keys(tags)
+                            .filter(e => !viewBook.hasOwnProperty(e))
+                            .forEach(e => {
+                                aggr.removeChild(tags[e])
+                                delete tags[e]
+                            })
+                    }
+
+                    if (viewBook2[old.price]) {
+                        // rebuild view book 2 & dom
+                        viewBook2 = {}
+                        let sorted2 = Object.keys(fullBook).map(e => fullBook[e]).sort((x, y) => y.price - x.price)
+                        // console.log('update view book 2 ask:', sorted2.filter(e => e.side == 'Sell').slice(-25))
+                        // console.log('update view book 2 bid:', sorted2.filter(e => e.side == 'Buy').slice(0, 25))
+
+                        sorted2.filter(e => e.side == 'Sell').slice(-25).forEach(e => {
+                            if (!tags2[e.price]) {
+                                let fragment = document.querySelector('template#page').content.cloneNode(true)
+                                let tag = fragment.querySelector('#index')
+                                tag.id = e.price
+                                tag.style.order = e.price * 2
+                                tag.querySelector('#price').textContent = e.price
+                                tag.querySelector('#amount-ask').textContent = e.size
+                                tag.querySelector('#gauge-ask').style.width = e.size / 10000 + '%'
+                                tag.querySelector('#amount-bid').textContent = null
+                                tag.querySelector('#gauge-bid').style.width = 0
+                                tags2[e.price] = tag
+                                raw.appendChild(fragment)
+                            }
+                            viewBook2[e.price] = fullBook[e.id]
+                        })
+                        sorted2.filter(e => e.side == 'Buy').slice(0, 25).forEach(e => {
+                            if (!tags2[e.price]) {
+                                let fragment = document.querySelector('template#page').content.cloneNode(true)
+                                let tag = fragment.querySelector('#index')
+                                tag.id = e.price
+                                tag.style.order = e.price * 2
+                                tag.querySelector('#price').textContent = e.price
+                                tag.querySelector('#amount-bid').textContent = e.size
+                                tag.querySelector('#gauge-bid').style.width = e.size / 10000 + '%'
+                                tag.querySelector('#amount-ask').textContent = null
+                                tag.querySelector('#gauge-ask').style.width = 0
+                                tags2[e.price] = tag
+                                raw.appendChild(fragment)
+                            }
+                            viewBook2[e.price] = fullBook[e.id]
+                        })
+
+                        // はみ出たものを削除
+                        Object.keys(tags2)
+                            .filter(e => !viewBook2.hasOwnProperty(e))
+                            .forEach(e => {
+                                raw.removeChild(tags2[e])
+                                delete tags2[e]
+                            })
+                    }
+                    delete fullBook[e.id]
+                })
+            })
+        })
+
+        orderBook.addEventListener('insert', (msg) => {
+            initialize.then(() => {
+                msg.detail.data.forEach(e => {
+                    // console.log('insert:', e)
+                    e.index = Math.floor(e.price / 10) * 10
+                    fullBook[e.id] = e
+                    // make aggregated book
+                    if (!aggrBook[e.index]) {
+                        aggrBook[e.index] = { price: e.index, size: 0 }
+                    }
+                    if (e.side == 'Sell') {
+                        aggrBook[e.index].size -= e.size
+                    } else if (e.side == 'Buy') {
+                        aggrBook[e.index].size += e.size
+                    }
+
+                    // rebuild view book & dom
+                    viewBook = {}
+                    let sorted = Object.keys(aggrBook).map(e => aggrBook[e]).sort((x, y) => x.price - y.price)
+
+                    sorted.filter(e => e.size < 0).slice(0, 25).forEach(e => {
+                        if (!tags[e.price]) {
+                            let fragment = document.querySelector('template#page').content.cloneNode(true)
+                            let tag = fragment.querySelector('#index')
+                            tag.id = e.price
+                            tag.style.order = e.price * 2
+                            tag.querySelector('#price').textContent = e.price
+                            tag.querySelector('#amount-ask').textContent = e.size
+                            tag.querySelector('#gauge-ask').style.width = (- e.size) / 100000 + '%'
+                            tag.querySelector('#amount-bid').textContent = null
+                            tag.querySelector('#gauge-bid').style.width = 0
+                            tags[e.price] = tag
+                            aggr.appendChild(fragment)
+                        }
+                        viewBook[e.price] = e
+                    })
+                    sorted.filter(e => e.size > 0).slice(-25).forEach(e => {
+                        if (!tags[e.price]) {
+                            let fragment = document.querySelector('template#page').content.cloneNode(true)
+                            let tag = fragment.querySelector('#index')
+                            tag.id = e.price
+                            tag.style.order = e.price * 2
+                            tag.querySelector('#price').textContent = e.price
+                            tag.querySelector('#amount-bid').textContent = e.size
+                            tag.querySelector('#gauge-bid').style.width = e.size / 100000 + '%'
+                            tag.querySelector('#amount-ask').textContent = null
+                            tag.querySelector('#gauge-ask').style.width = 0
+                            tags[e.price] = tag
+                            aggr.appendChild(fragment)
+                        }
+                        viewBook[e.price] = e
+                    })
+                    // console.log('viewBook:', viewBook)
+                    // はみ出たものを削除
+                    Object.keys(tags)
+                        .filter(e => !viewBook.hasOwnProperty(e))
+                        .forEach(e => {
+                            aggr.removeChild(tags[e])
+                            delete tags[e]
+                        })
+
+                    // rebuild view book 2 & dom
+                    viewBook2 = {}
+                    let sorted2 = Object.keys(fullBook).map(e => fullBook[e]).sort((x, y) => y.price - x.price)
+
+                    sorted2.filter(e => e.side == 'Sell').slice(-25).forEach(e => {
+                        if (!tags2[e.price]) {
+                            let fragment = document.querySelector('template#page').content.cloneNode(true)
+                            let tag = fragment.querySelector('#index')
+                            tag.id = e.price
+                            tag.style.order = e.price * 2
+                            tag.querySelector('#price').textContent = e.price
+                            tag.querySelector('#amount-ask').textContent = e.size
+                            tag.querySelector('#gauge-ask').style.width = e.size / 10000 + '%'
+                            tag.querySelector('#amount-bid').textContent = null
+                            tag.querySelector('#gauge-bid').style.width = 0
+                            tags2[e.price] = tag
+                            raw.appendChild(fragment)
+                        }
+                        viewBook2[e.price] = fullBook[e.id]
+                    })
+                    sorted2.filter(e => e.side == 'Buy').slice(0, 25).forEach(e => {
+                        if (!tags2[e.price]) {
+                            let fragment = document.querySelector('template#page').content.cloneNode(true)
+                            let tag = fragment.querySelector('#index')
+                            tag.id = e.price
+                            tag.style.order = e.price * 2
+                            tag.querySelector('#price').textContent = e.price
+                            tag.querySelector('#amount-bid').textContent = e.size
+                            tag.querySelector('#gauge-bid').style.width = e.size / 10000 + '%'
+                            tag.querySelector('#amount-ask').textContent = null
+                            tag.querySelector('#gauge-ask').style.width = 0
+                            tags2[e.price] = tag
+                            raw.appendChild(fragment)
+                        }
+                        viewBook2[e.price] = fullBook[e.id]
+                    })
+                    // はみ出たものを削除
+                    Object.keys(tags2)
+                        .filter(e => !viewBook2.hasOwnProperty(e))
+                        .forEach(e => {
+                            raw.removeChild(tags2[e])
+                            delete tags2[e]
+                        })
+                })
+            })
+        })
+    </script>
+</body>
+
+</html>
