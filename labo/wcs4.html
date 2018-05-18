@@ -72,19 +72,19 @@
             order: -98;
         }
 
-        .fsym[symbol='XRP'] {
+        .fsym[symbol='TRX'] {
             order: -97;
         }
 
-        .fsym[symbol='BCH'] {
+        .fsym[symbol='XRP'] {
             order: -96;
         }
 
-        .fsym[symbol='TRX'] {
+        .fsym[symbol='ADA'] {
             order: -95;
         }
 
-        .fsym[symbol='ADA'] {
+        .fsym[symbol='BCH'] {
             order: -94;
         }
 
@@ -144,7 +144,14 @@
     </header>
 
     <main>
-        <div>BUY SELL</div>
+        <div style="margin:4px;">last 60s volume
+            <div class="gauge" style="vertical-align: bottom;">
+                <span id="buy">BUY</span>
+            </div>
+            <div class="gauge" style="vertical-align: bottom;">
+                <span id="sell">SELL</span>
+            </div>
+        </div>
 
         <div style="position:absolute;right:0;bottom:16px;z-index:10000;background-color:rgba(20, 20, 20, 0.7);padding:8px;">
             <div>
@@ -333,8 +340,8 @@
         // Promise.all([startFsym('BTC'), startFsym('ETH'), startFsym('BCH')])
         // 通貨スケール
         let scales = {
-            USD: 10000, USDT: 10000, EUR: 10000, JPY: 1000000, KRW: 1000000, CAD: 10,
-            ETH: 10, EOS: 100, XRP: 1000, BCH: 10, TRX: 10000, ADA: 1000, LTC: 10, ETC: 10
+            USD: 10000, USDT: 10000, EUR: 10000, JPY: 1000000, KRW: 10000000, CAD: 10,
+            ETH: 10, EOS: 100, XRP: 10000, BCH: 10, TRX: 100000, ADA: 1000, LTC: 10, ETC: 10
         }
         Promise.resolve(['BTC', 'ETH', 'EOS', 'XRP', 'BCH', 'TRX', 'ADA', 'LTC', 'ETC', 'ICX'])
             // Promise.resolve(['BTC', 'ETH', 'EOS', 'XRP', 'BCH', 'TRX'])
