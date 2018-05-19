@@ -24,11 +24,13 @@
     <style>
         main {
             font-size: 10px;
+            display: flex;
         }
 
-        #target {
+        .book {
             display: flex;
             flex-flow: column-reverse;
+            margin: 4px;
         }
 
         .gauge {
@@ -37,6 +39,7 @@
             overflow: hidden;
             display: inline-flex;
             position: relative;
+            background-color: rgba(100, 100, 100, 0.3);
         }
 
         .gauge.reverse {
@@ -52,24 +55,17 @@
             background-color: red;
         }
 
-        .gauge.reverse .amount {
-            left: 0;
-            right: unset;
+        .gauge .amount,
+        .gauge .count {
+            position: absolute;
         }
 
         .gauge.reverse .count {
-            right: 0;
-            left: unset;
-        }
-
-        .gauge .amount {
-            position: absolute;
-            right: 0;
-        }
-
-        .gauge .count {
-            position: absolute;
             left: 0;
+        }
+
+        .gauge:not(.reverse) .amount {
+            right: 0;
         }
 
         .fix-top {
@@ -88,7 +84,7 @@
 <body>
     <header class="header">
         <div class="title">
-            <h1>板 ver 0.1</h1>
+            <h1>板 bitfinex ver 0.2</h1>
             <i class="fas fa-angle-left"></i>
             <a href="/labo/">LABO</a>
             <i class="fas fa-angle-left"></i>
@@ -104,8 +100,11 @@
     </header>
 
     <main>
-        <div id="target">
-            <div class="fix-top">bitfinex BTC/USD</div>
+        <div id="target" class="book">
+            <div class="fix-top">bitfinex BTC/USD P2</div>
+        </div>
+        <div id="targetP1" class="book">
+            <div class="fix-top">bitfinex BTC/USD P1</div>
         </div>
     </main>
     <dm-footer></dm-footer>
@@ -129,6 +128,15 @@
     <script src="https://unpkg.com/event-target@latest/min.js"></script>
     <script>
         let orderBookP2 = new EventTarget()
+        let sendPage = (data, book) => {
+            let page = {
+                index: data[0],
+                count: data[1],
+                amount: data[2]
+            }
+            book.dispatchEvent(new CustomEvent('message', { detail: page }))
+        }
+
         let wss = new WebSocket('wss://api.bitfinex.com/ws/2')
         wss.addEventListener('open', () => {
             wss.send(JSON.stringify({
@@ -140,21 +148,13 @@
                 len: 25
             }))
         })
-        let sendPage = (data) => {
-            let page = {
-                index: data[0],
-                count: data[1],
-                amount: data[2]
-            }
-            orderBookP2.dispatchEvent(new CustomEvent('message', { detail: page }))
-        }
         wss.addEventListener('message', (message) => {
             let data = JSON.parse(message.data)[1]
             if (Array.isArray(data) && data.length == 3) {
-                sendPage(data)
+                sendPage(data, orderBookP2)
             } else if (Array.isArray(data)) {
                 data.forEach(element => {
-                    sendPage(element)
+                    sendPage(element, orderBookP2)
                 });
             } else {
                 console.log('other:', message.data)
@@ -184,14 +184,14 @@
                 }
                 book[data.index] = data
                 if (data.amount > 0) {
-                    tags[data.index].querySelector('#amount-bid').textContent = Math.round(data.amount * 100) / 100
+                    tags[data.index].querySelector('#amount-bid').textContent = data.amount.toFixed(2)
                     tags[data.index].querySelector('#count-bid').textContent = data.count
                     tags[data.index].querySelector('#gauge-bid').style.width = data.amount / 2 + '%'
                     tags[data.index].querySelector('#amount-ask').textContent = null
                     tags[data.index].querySelector('#count-ask').textContent = null
                     tags[data.index].querySelector('#gauge-ask').style.width = 0
                 } else {
-                    tags[data.index].querySelector('#amount-ask').textContent = Math.round(data.amount * 100) / 100
+                    tags[data.index].querySelector('#amount-ask').textContent = (- data.amount).toFixed(2)
                     tags[data.index].querySelector('#count-ask').textContent = data.count
                     tags[data.index].querySelector('#gauge-ask').style.width = - data.amount / 2 + '%'
                     tags[data.index].querySelector('#amount-bid').textContent = null
@@ -200,6 +200,73 @@
                 }
             }
         })
+
+        // raw book
+        let orderBookP1 = new EventTarget()
+        let wssP1 = new WebSocket('wss://api.bitfinex.com/ws/2')
+        wssP1.addEventListener('open', () => {
+            wssP1.send(JSON.stringify({
+                event: 'subscribe',
+                channel: 'book',
+                symbol: 'BTCUSD',
+                prec: 'P1',
+                freq: 'F0',
+                len: 25
+            }))
+        })
+        wssP1.addEventListener('message', (message) => {
+            let data = JSON.parse(message.data)[1]
+            if (Array.isArray(data) && data.length == 3) {
+                sendPage(data, orderBookP1)
+            } else if (Array.isArray(data)) {
+                data.forEach(element => {
+                    sendPage(element, orderBookP1)
+                });
+            } else {
+                console.log('other:', message.data)
+            }
+        })
+
+        bookP1 = {}
+        tagsP1 = {}
+        let targetP1 = document.getElementById('targetP1')
+        orderBookP1.addEventListener('message', (message) => {
+            let data = message.detail
+            if (data.count == 0) {
+                console.log('deleted', data.index)
+                delete bookP1[data.index]
+                targetP1.removeChild(tagsP1[data.index])
+                delete tagsP1[data.index]
+            } else {
+                if (!bookP1[data.index]) {
+                    console.log('new', data.index)
+                    let fragment = document.querySelector('template#page').content.cloneNode(true)
+                    let tag = fragment.querySelector('#index')
+                    tag.id = data.index
+                    tag.querySelector('#price').textContent = data.index
+                    tag.style.order = data.index
+                    tagsP1[data.index] = tag
+                    targetP1.appendChild(fragment)
+                }
+                bookP1[data.index] = data
+                if (data.amount > 0) {
+                    tagsP1[data.index].querySelector('#amount-bid').textContent = data.amount.toFixed(2)
+                    tagsP1[data.index].querySelector('#count-bid').textContent = data.count
+                    tagsP1[data.index].querySelector('#gauge-bid').style.width = data.amount / 2 + '%'
+                    tagsP1[data.index].querySelector('#amount-ask').textContent = null
+                    tagsP1[data.index].querySelector('#count-ask').textContent = null
+                    tagsP1[data.index].querySelector('#gauge-ask').style.width = 0
+                } else {
+                    tagsP1[data.index].querySelector('#amount-ask').textContent = (- data.amount).toFixed(2)
+                    tagsP1[data.index].querySelector('#count-ask').textContent = data.count
+                    tagsP1[data.index].querySelector('#gauge-ask').style.width = - data.amount / 2 + '%'
+                    tagsP1[data.index].querySelector('#amount-bid').textContent = null
+                    tagsP1[data.index].querySelector('#count-bid').textContent = null
+                    tagsP1[data.index].querySelector('#gauge-bid').style.width = 0
+                }
+            }
+        })
+
     </script>
 </body>
 
