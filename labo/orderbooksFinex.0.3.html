@@ -81,7 +81,7 @@
 
         .trade {
             display: grid;
-            grid-template-columns: 100px 4em 100px;
+            grid-template-columns: 100px 35px 100px;
             justify-content: space-between;
             height: 19px;
             font-weight: 700;
@@ -114,12 +114,45 @@
             background-color: green;
         }
 
+        .trade .price {
+            text-align: center;
+            overflow: hidden;
+            width: 100%;
+            display: inline;
+        }
+
+        .trade .price.sell {
+            animation: fadeout-sell 1s forwards;
+        }
+
+        .trade .price.buy {
+            animation: fadeout-buy 1s forwards;
+        }
+
         @keyframes fadeout {
             0% {
                 opacity: 1;
             }
             100% {
                 opacity: 0;
+            }
+        }
+
+        @keyframes fadeout-sell {
+            0% {
+                background-color: rgba(255, 0, 0, 1);
+            }
+            100% {
+                background-color: rgba(255, 0, 0, 0.2);
+            }
+        }
+
+        @keyframes fadeout-buy {
+            0% {
+                background-color: rgba(0, 128, 0, 1);
+            }
+            100% {
+                background-color: rgba(0, 128, 0, 0.2);
             }
         }
     </style>
@@ -153,7 +186,7 @@
                 <div id="raw-trade-sell" class="sell">
                     <div id="raw-trade-sell-amount" class="amount"></div>
                 </div>
-                <div id="raw-trade-price"></div>
+                <div id="raw-trade-price" class="price"></div>
                 <div id="raw-trade-buy" class="buy">
                     <div id="raw-trade-buy-amount" class="amount"></div>
                 </div>
@@ -176,6 +209,9 @@
                 <span id="count-bid" class="count"></span>
             </span>
         </div>
+    </template>
+    <template id="trade-tmpl">
+        <div id="bar" class="bar"></div>
     </template>
 
     <script src="https://unpkg.com/event-target@latest/min.js"></script>
@@ -348,29 +384,35 @@
                 amount: msg[2][2]
             }
             tradePrice.textContent = e.price
-            tradeRow.style.order = e.price
+            tradeRow.style.order = Math.round(e.price)
 
             let tmpl = document.getElementById('trade-tmpl').content.cloneNode(true)
             let bar = tmpl.querySelector('#bar')
-            bar.style.width = e.homeNotional + '%'
-            if (e.price < 0) {
-                tradeSellAmountValue += e.homeNotional
+            bar.style.width = e.amount + '%'
+            if (e.amount < 0) {
+                tradeSellAmountValue -= e.amount
                 tradeSellAmount.textContent = tradeSellAmountValue.toFixed(2)
                 tradeSell.insertBefore(bar, tradeSell.firstChild)
                 setTimeout(tag => {
-                    tradeSellAmountValue -= e.homeNotional
+                    tradeSellAmountValue += e.amount
                     tradeSellAmount.textContent = tradeSellAmountValue.toFixed(2)
                     tradeSell.removeChild(tag)
                 }, 3000, bar)
-            } else if (e.price > 0) {
-                tradeBuyAmountValue += e.homeNotional
+                tradePrice.classList.remove('sell')
+                tradePrice.classList.remove('buy')
+                tradePrice.classList.add('sell')
+            } else if (e.amount > 0) {
+                tradeBuyAmountValue += e.amount
                 tradeBuyAmount.textContent = tradeBuyAmountValue.toFixed(2)
                 tradeBuy.insertBefore(bar, tradeBuy.firstChild)
                 setTimeout(tag => {
-                    tradeBuyAmountValue -= e.homeNotional
+                    tradeBuyAmountValue -= e.amount
                     tradeBuyAmount.textContent = tradeBuyAmountValue.toFixed(2)
                     tradeBuy.removeChild(tag)
                 }, 3000, bar)
+                tradePrice.classList.remove('sell')
+                tradePrice.classList.remove('buy')
+                tradePrice.classList.add('buy')
             }
         })
 
