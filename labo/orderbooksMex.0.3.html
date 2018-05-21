@@ -626,7 +626,6 @@
         tradesource.addEventListener('message', (message) => {
             let msg = JSON.parse(message.data)
             msg.data.forEach(e => {
-                console.log(e)
                 tradePrice.textContent = e.price
                 tradeRow.style.order = e.price * 2
 

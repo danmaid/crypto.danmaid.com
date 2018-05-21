@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78911133-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-78911133-2');
+    </script>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Order Books</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="https://danmaid.com/common.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/common.css" />
+    <script defer src="https://danmaid.com/tags/dm-tags.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/solid.js" crossorigin="anonymous" integrity="sha384-Q7KAHqDd5trmfsv85beYZBsUmw0lsreFBQZfsEhzUtUn5HhpjVzwY0Aq4z8DY9sA"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/fontawesome.js" crossorigin="anonymous" integrity="sha384-M2FSA4xMm1G9m4CNXM49UcDHeWcDZNucAlz1WVHxohug0Uw1K+IpUhp/Wjg0y6qG"></script>
+    <style>
+        main {
+            font-size: 10px;
+            display: flex;
+        }
+
+        .book {
+            display: flex;
+            flex-flow: column-reverse;
+            margin: 4px;
+        }
+
+        .gauge {
+            width: 100px;
+            height: 15px;
+            overflow: hidden;
+            display: inline-flex;
+            position: relative;
+            background-color: rgba(100, 100, 100, 0.3);
+        }
+
+        .gauge.reverse {
+            flex-flow: row-reverse;
+        }
+
+        .gauge .bar {
+            background-color: green;
+            height: 100%;
+        }
+
+        .gauge.reverse .bar {
+            background-color: red;
+        }
+
+        .gauge .amount,
+        .gauge .count {
+            position: absolute;
+        }
+
+        .gauge.reverse .count {
+            left: 0;
+        }
+
+        .gauge:not(.reverse) .count {
+            right: 0;
+        }
+
+        .fix-top {
+            order: 999999;
+            font-size: 1rem;
+        }
+
+        .price {
+            width: 3em;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .trade {
+            display: grid;
+            grid-template-columns: 100px 4em 100px;
+            justify-content: space-between;
+            height: 19px;
+            font-weight: 700;
+        }
+
+        .trade .sell,
+        .trade .buy {
+            display: flex;
+            position: relative;
+        }
+
+        .trade .amount {
+            position: absolute;
+        }
+
+        .trade .sell {
+            flex-flow: row-reverse;
+        }
+
+        .trade .bar {
+            height: 15px;
+            animation: fadeout 1s 2s forwards;
+        }
+
+        .trade .sell .bar {
+            background-color: red;
+        }
+
+        .trade .buy .bar {
+            background-color: green;
+        }
+
+        @keyframes fadeout {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="title">
+            <h1>板 bitfinex ver 0.3</h1>
+            <i class="fas fa-angle-left"></i>
+            <a href="/labo/">LABO</a>
+            <i class="fas fa-angle-left"></i>
+            <a href="/">暗号資産</a>
+            <i class="fas fa-angle-left"></i>
+            <a href="https://danmaid.com/">男メイド</a>
+        </div>
+        <nav class="menu">
+            <a class="menuitem" href="/">HOME</a>
+            <a class="menuitem active" href="/labo/">LABO</a>
+            <a class="menuitem" href="https://danmaid.com/">ABOUT</a>
+        </nav>
+    </header>
+
+    <main>
+        <div id="target" class="book">
+            <div class="fix-top">bitfinex BTC/USD P2</div>
+        </div>
+        <div id="targetP1" class="book">
+            <div class="fix-top">bitfinex BTC/USD P1</div>
+            <div id="raw-trade" class="trade">
+                <div id="raw-trade-sell" class="sell">
+                    <div id="raw-trade-sell-amount" class="amount"></div>
+                </div>
+                <div id="raw-trade-price"></div>
+                <div id="raw-trade-buy" class="buy">
+                    <div id="raw-trade-buy-amount" class="amount"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <dm-footer></dm-footer>
+
+    <template id="page">
+        <div id="index">
+            <span class="gauge reverse">
+                <div id="gauge-ask" class="bar"></div>
+                <span id="count-ask" class="count"></span>
+                <span id="amount-ask" class="amount"></span>
+            </span>
+            <span id="price" class="price"></span>
+            <span class="gauge">
+                <div id="gauge-bid" class="bar"></div>
+                <span id="amount-bid" class="amount"></span>
+                <span id="count-bid" class="count"></span>
+            </span>
+        </div>
+    </template>
+
+    <script src="https://unpkg.com/event-target@latest/min.js"></script>
+    <script>
+        let orderBookP2 = new EventTarget()
+        let sendPage = (data, book) => {
+            let page = {
+                index: data[0],
+                count: data[1],
+                amount: data[2]
+            }
+            book.dispatchEvent(new CustomEvent('message', { detail: page }))
+        }
+
+        let wss = new WebSocket('wss://api.bitfinex.com/ws/2')
+        wss.addEventListener('open', () => {
+            wss.send(JSON.stringify({
+                event: 'subscribe',
+                channel: 'book',
+                symbol: 'BTCUSD',
+                prec: 'P2',
+                freq: 'F0',
+                len: 25
+            }))
+        })
+        wss.addEventListener('message', (message) => {
+            let data = JSON.parse(message.data)[1]
+            if (Array.isArray(data) && data.length == 3) {
+                sendPage(data, orderBookP2)
+            } else if (Array.isArray(data)) {
+                data.forEach(element => {
+                    sendPage(element, orderBookP2)
+                });
+            } else {
+                console.log('other:', message.data)
+            }
+        })
+
+        book = {}
+        tags = {}
+        let target = document.getElementById('target')
+        orderBookP2.addEventListener('message', (message) => {
+            let data = message.detail
+            if (data.count == 0) {
+                console.log('deleted', data.index)
+                delete book[data.index]
+                target.removeChild(tags[data.index])
+                delete tags[data.index]
+            } else {
+                if (!book[data.index]) {
+                    console.log('new', data.index)
+                    let fragment = document.querySelector('template#page').content.cloneNode(true)
+                    let tag = fragment.querySelector('#index')
+                    tag.id = data.index
+                    tag.querySelector('#price').textContent = data.index
+                    tag.style.order = data.index
+                    tags[data.index] = tag
+                    target.appendChild(fragment)
+                }
+                book[data.index] = data
+                if (data.amount > 0) {
+                    tags[data.index].querySelector('#amount-bid').textContent = data.amount.toFixed(2)
+                    tags[data.index].querySelector('#count-bid').textContent = data.count
+                    tags[data.index].querySelector('#gauge-bid').style.width = data.amount / 2 + '%'
+                    tags[data.index].querySelector('#amount-ask').textContent = null
+                    tags[data.index].querySelector('#count-ask').textContent = null
+                    tags[data.index].querySelector('#gauge-ask').style.width = 0
+                } else {
+                    tags[data.index].querySelector('#amount-ask').textContent = (- data.amount).toFixed(2)
+                    tags[data.index].querySelector('#count-ask').textContent = data.count
+                    tags[data.index].querySelector('#gauge-ask').style.width = - data.amount / 2 + '%'
+                    tags[data.index].querySelector('#amount-bid').textContent = null
+                    tags[data.index].querySelector('#count-bid').textContent = null
+                    tags[data.index].querySelector('#gauge-bid').style.width = 0
+                }
+            }
+        })
+
+        // raw book
+        let orderBookP1 = new EventTarget()
+        let wssP1 = new WebSocket('wss://api.bitfinex.com/ws/2')
+        wssP1.addEventListener('open', () => {
+            wssP1.send(JSON.stringify({
+                event: 'subscribe',
+                channel: 'book',
+                symbol: 'BTCUSD',
+                prec: 'P1',
+                freq: 'F0',
+                len: 25
+            }))
+        })
+        wssP1.addEventListener('message', (message) => {
+            let data = JSON.parse(message.data)[1]
+            if (Array.isArray(data) && data.length == 3) {
+                sendPage(data, orderBookP1)
+            } else if (Array.isArray(data)) {
+                data.forEach(element => {
+                    sendPage(element, orderBookP1)
+                });
+            } else {
+                console.log('other:', message.data)
+            }
+        })
+
+        bookP1 = {}
+        tagsP1 = {}
+        let targetP1 = document.getElementById('targetP1')
+        orderBookP1.addEventListener('message', (message) => {
+            let data = message.detail
+            if (data.count == 0) {
+                console.log('deleted', data.index)
+                delete bookP1[data.index]
+                targetP1.removeChild(tagsP1[data.index])
+                delete tagsP1[data.index]
+            } else {
+                if (!bookP1[data.index]) {
+                    console.log('new', data.index)
+                    let fragment = document.querySelector('template#page').content.cloneNode(true)
+                    let tag = fragment.querySelector('#index')
+                    tag.id = data.index
+                    tag.querySelector('#price').textContent = data.index
+                    tag.style.order = data.index
+                    tagsP1[data.index] = tag
+                    targetP1.appendChild(fragment)
+                }
+                bookP1[data.index] = data
+                if (data.amount > 0) {
+                    tagsP1[data.index].querySelector('#amount-bid').textContent = data.amount.toFixed(2)
+                    tagsP1[data.index].querySelector('#count-bid').textContent = data.count
+                    tagsP1[data.index].querySelector('#gauge-bid').style.width = data.amount / 2 + '%'
+                    tagsP1[data.index].querySelector('#amount-ask').textContent = null
+                    tagsP1[data.index].querySelector('#count-ask').textContent = null
+                    tagsP1[data.index].querySelector('#gauge-ask').style.width = 0
+                } else {
+                    tagsP1[data.index].querySelector('#amount-ask').textContent = (- data.amount).toFixed(2)
+                    tagsP1[data.index].querySelector('#count-ask').textContent = data.count
+                    tagsP1[data.index].querySelector('#gauge-ask').style.width = - data.amount / 2 + '%'
+                    tagsP1[data.index].querySelector('#amount-bid').textContent = null
+                    tagsP1[data.index].querySelector('#count-bid').textContent = null
+                    tagsP1[data.index].querySelector('#gauge-bid').style.width = 0
+                }
+            }
+        })
+
+        // トレード情報
+        // https://codepen.io/danmaid/pen/yjZoQa
+        let tradesource = new WebSocket('wss://api.bitfinex.com/ws/2')
+        tradesource.addEventListener('open', () => {
+            tradesource.send(JSON.stringify({
+                event: 'subscribe',
+                channel: 'trades',
+                symbol: 'BTCUSD'
+            }))
+        })
+
+        let tradeRow = document.getElementById('raw-trade')
+        let tradeSell = document.getElementById('raw-trade-sell')
+        let tradeBuy = document.getElementById('raw-trade-buy')
+        let tradePrice = document.getElementById('raw-trade-price')
+        let tradeSellAmount = document.getElementById('raw-trade-sell-amount')
+        let tradeSellAmountValue = 0
+        let tradeBuyAmount = document.getElementById('raw-trade-buy-amount')
+        let tradeBuyAmountValue = 0
+        tradesource.addEventListener('message', (message) => {
+            let msg = JSON.parse(message.data)
+            if (msg[1] != "tu") return
+
+            let e = {
+                price: msg[2][3],
+                amount: msg[2][2]
+            }
+            tradePrice.textContent = e.price
+            tradeRow.style.order = e.price
+
+            let tmpl = document.getElementById('trade-tmpl').content.cloneNode(true)
+            let bar = tmpl.querySelector('#bar')
+            bar.style.width = e.homeNotional + '%'
+            if (e.price < 0) {
+                tradeSellAmountValue += e.homeNotional
+                tradeSellAmount.textContent = tradeSellAmountValue.toFixed(2)
+                tradeSell.insertBefore(bar, tradeSell.firstChild)
+                setTimeout(tag => {
+                    tradeSellAmountValue -= e.homeNotional
+                    tradeSellAmount.textContent = tradeSellAmountValue.toFixed(2)
+                    tradeSell.removeChild(tag)
+                }, 3000, bar)
+            } else if (e.price > 0) {
+                tradeBuyAmountValue += e.homeNotional
+                tradeBuyAmount.textContent = tradeBuyAmountValue.toFixed(2)
+                tradeBuy.insertBefore(bar, tradeBuy.firstChild)
+                setTimeout(tag => {
+                    tradeBuyAmountValue -= e.homeNotional
+                    tradeBuyAmount.textContent = tradeBuyAmountValue.toFixed(2)
+                    tradeBuy.removeChild(tag)
+                }, 3000, bar)
+            }
+        })
+
+    </script>
+</body>
+
+</html>
