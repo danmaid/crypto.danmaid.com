@@ -1,17 +1,5 @@
 const io = require('socket.io-client');
 
-// const channelName = "lightning_executions_FX_BTC_JPY";
-
-// const socket = io("https://io.lightstream.bitflyer.com", { transports: ["websocket"], forceNew: true });
-
-// socket.on("connect", () => {
-//     socket.emit("subscribe", channelName);
-// });
-
-// socket.on(channelName, message => {
-//     console.log(channelName, message);
-// });
-
 // CryptoCompare の TRADE データを取得する
 const socket = io('wss://streamer.cryptocompare.com', { transports: ["websocket"], forceNew: true })
 

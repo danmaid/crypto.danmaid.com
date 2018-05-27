@@ -1,7 +1,9 @@
 module.exports = {
     mode: 'production',
     entry: {
-        "cryptocompare": './cryptocompare.js'
+        "cryptocompare": './cryptocompare.js',
+        "bitmex": './bitmex.js',
+        "bitflyer": './bitflyer.js'
     },
     // 出力の設定
     output: {
