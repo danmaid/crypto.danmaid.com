@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78911133-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-78911133-2');
+    </script>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>ワールド暗号資産サテライト BTC ver 0.1 | 暗号通貨 | 男メイド</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="manifest_wcsBTC.0.1.json">
+    <script defer src="https://danmaid.com/tags/dm-tags.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="https://danmaid.com/common.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/common.css" />
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/solid.js" crossorigin="anonymous" integrity="sha384-Q7KAHqDd5trmfsv85beYZBsUmw0lsreFBQZfsEhzUtUn5HhpjVzwY0Aq4z8DY9sA"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/fontawesome.js" crossorigin="anonymous" integrity="sha384-M2FSA4xMm1G9m4CNXM49UcDHeWcDZNucAlz1WVHxohug0Uw1K+IpUhp/Wjg0y6qG"></script>
+    <style>
+        main {
+            font-size: 12px;
+        }
+
+        .pair {
+            display: flex;
+            flex-flow: column wrap;
+        }
+
+        @media screen and (orientation: landscape) {
+            .pair {
+                max-height: 86vh;
+            }
+        }
+
+        .fsym {
+            border: 1px solid;
+            display: flex;
+            flex-flow: column wrap;
+        }
+
+
+        .gauge {
+            display: inline-block;
+            width: 60px;
+            height: 100%;
+            overflow: hidden;
+            background-color: rgba(100, 100, 100, 0.3)
+        }
+
+        .gauge #buy {
+            display: inline-block;
+            height: 100%;
+            background-color: green;
+        }
+
+        .gauge #sell {
+            display: inline-block;
+            height: 100%;
+            background-color: red;
+        }
+
+        .worker {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 50px)
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="title">
+            <h1>ワールド暗号資産サテライト BTC ver 0.1</h1>
+            <i class="fas fa-angle-left"></i>
+            <a href="/labo/">LABO</a>
+            <i class="fas fa-angle-left"></i>
+            <a href="/">暗号資産</a>
+            <i class="fas fa-angle-left"></i>
+            <a href="https://danmaid.com/">男メイド</a>
+        </div>
+        <nav class="menu">
+            <a class="menuitem" href="/">HOME</a>
+            <a class="menuitem active" href="/labo/">LABO</a>
+            <a class="menuitem" href="https://danmaid.com/">ABOUT</a>
+        </nav>
+    </header>
+
+    <main>
+        <div id="worker" class="worker">
+            <div>Updates</div>
+            <template id="workerTmpl">
+                <div>
+                    <span id="message"></span>
+                </div>
+            </template>
+        </div>
+        <div style="margin:4px;">last 60s volume
+            <div class="gauge" style="vertical-align: bottom;">
+                <span id="buy">BUY</span>
+            </div>
+            <div class="gauge" style="vertical-align: bottom;">
+                <span id="sell">SELL</span>
+            </div>
+        </div>
+
+        <div style="position:absolute;right:0;bottom:16px;z-index:10000;background-color:rgba(20, 20, 20, 0.7);padding:8px;">
+            <div>
+                data source:
+                <a href="https://www.cryptocompare.com/">
+                    <img src="https://www.cryptocompare.com/media/19990/logo-bold.svg" width="100px" />
+                </a>
+            </div>
+            <span>サイト運営のため募金をお願いします。</span>
+            <img src="/images/donate-btc.png" width="100px" />
+            <div>bitcoin:
+                <span>1G7E7ATSuwWNRye22g9dwR8CscLvcPU2mN</span>
+            </div>
+            <span>
+                <a href="/about.html">その他通貨はこちら</a>
+            </span>
+        </div>
+
+        <div id="target" class="pair">
+            <div id="fsym" class="fsym">
+                <div style="order: -999999999;">
+                    <span id="symbol" title="基準通貨"></span>
+                    <span id="scale" title="グラフ倍率"></span>
+                    <span id="buy"></span>
+                    <span id="sell"></span>
+                </div>
+            </div>
+            <template id="template">
+                <div id="row">
+                    <div class="gauge">
+                        <span id="buy"></span>
+                    </div>
+                    <div class="gauge">
+                        <span id="sell"></span>
+                    </div>
+                    <span id="message"></span>
+                    <span id="price"></span>
+                </div>
+            </template>
+        </div>
+    </main>
+
+    <script>
+        // ターゲット通貨
+        const fsym = 'BTC'
+
+        // 自動パージ容器
+        let exec = {}
+
+        // ワーカー
+        const MAX_WORKERS = 10
+        let workers = []
+        // パフォーマンスモニタDOM
+        let workerDom = document.getElementById('worker')
+        for (i = 0; i < MAX_WORKERS; i++) {
+            let worker = new Worker('cryptocompare.js')
+            worker.addEventListener('message', (message) => {
+                let data = message.data
+                // データ投入
+                if (data.fsym == fsym) {
+                    exec[data.tsym].raw.push(data)
+                } else if (data.tsym == fsym) {
+                    exec[data.fsym].raw.push({
+                        ExchangeName: data.ExchangeName,
+                        Price: data.Price,
+                        Quantity: data.Total,
+                        Side: data.Side == 'Sell' ? 'Buy' : data.Side == 'Buy' ? 'Sell' : data.Side,
+                        TimeStamp: data.TimeStamp,
+                        Total: data.Quantity,
+                        TradeId: data.TradeId,
+                        fsym: data.fsym,
+                        tsym: data.tsym
+                    })
+                }
+            })
+            // パフォーマンスモニタ
+            worker.perfmon = []
+            let tmpl = document.getElementById('workerTmpl').content.cloneNode(true)
+            let view = tmpl.querySelector('#message')
+            worker.addEventListener('message', (message) => {
+                worker.perfmon.push(Date.now())
+            })
+            setInterval((worker, dom) => {
+                worker.perfmon = worker.perfmon.filter(e => e > Date.now() - 1000)
+                dom.textContent = worker.perfmon.length
+                // console.log(worker.perfmon)
+            }, 1000, worker, view)
+            workerDom.appendChild(tmpl)
+
+            workers.push(worker)
+        }
+        let workerIndex = 0
+        let getWorker = () => {
+            workerIndex++
+            if (workerIndex >= MAX_WORKERS) { workerIndex = 0 }
+            return workers[workerIndex]
+        }
+
+        let fDom = document.getElementById('fsym')
+
+        // パージ処理
+        let purge = (obj) => {
+            // let now = Math.floor((new Date()).getTime() / 1000)
+            let now = (Date.now() / 1000).toFixed()
+            for (t of Object.keys(obj)) {
+                obj[t].raw = obj[t].raw.filter(e => e.TimeStamp > (now - 60))
+                obj[t].aggregate.Sell = obj[t].raw.filter(e => e.Side == 'Sell').map(e => parseFloat(e.Quantity)).reduce((x, y) => x + y, 0)
+                obj[t].aggregate.Buy = obj[t].raw.filter(e => e.Side == 'Buy').map(e => parseFloat(e.Quantity)).reduce((x, y) => x + y, 0)
+                if (obj[t].aggregate.Sell == 0 && obj[t].aggregate.Buy == 0) {
+                    if (obj[t].tag.parentElement == fDom) {
+                        obj[t].tag = fDom.removeChild(obj[t].tag)
+                    }
+                } else {
+                    // console.log(t, obj[t])
+                    obj[t].tag.querySelector('#sell').textContent = Math.round(obj[t].aggregate.Sell * 1000) / 1000
+                    obj[t].tag.querySelector('#sell').style.width = Math.round(obj[t].aggregate.Sell * 1000) / 1000 + '%'
+                    obj[t].tag.querySelector('#buy').textContent = Math.round(obj[t].aggregate.Buy * 1000) / 1000
+                    obj[t].tag.querySelector('#buy').style.width = Math.round(obj[t].aggregate.Buy * 1000) / 1000 + '%'
+                    obj[t].tag.querySelector('#message').textContent = t
+                    obj[t].tag.style.order = - Math.ceil((obj[t].aggregate.Sell + obj[t].aggregate.Buy) * 1000)
+                    if (obj[t].tag.parentElement != fDom) {
+                        fDom.appendChild(obj[t].tag)
+                    }
+                }
+            }
+        }
+        setInterval(purge, 1000, exec)
+
+
+
+        // 対象通貨のペアを取得
+        fetch('https://min-api.cryptocompare.com/data/subs?fsym=' + fsym)
+            .then(r => r.json())
+            .then(subs => {
+                // 容器初期化
+                for (tsym of Object.keys(subs)) {
+                    if (exec[tsym] == null) {
+                        exec[tsym] = {}
+                        let fragment = document.getElementById('template').content.cloneNode(true)
+                        exec[tsym] = {
+                            raw: [],
+                            aggregate: {},
+                            fragment: fragment,
+                            tag: fragment.getElementById('row')
+                        }
+                        // fDom.appendChild(exec[tsym].fragment)
+                    }
+                }
+                // データ取得開始
+                let trades = Object.keys(subs).map(e => subs[e].TRADES).reduce((x, y) => x.concat(y))
+                trades.forEach(e => {
+                    getWorker().postMessage([e])
+                })
+            })
+
+        // 全コインリストから対象通貨のペアを取得（逆向きのため）
+        fetch('https://min-api.cryptocompare.com/data/all/coinlist')
+            .then(r => r.json())
+            .then(coinlist => {
+                // 取引中のシンボルリストを返す
+                return Object.keys(coinlist.Data)
+                    // .slice(0, 100)
+                    .filter(e => coinlist.Data[e].IsTrading)
+                    .map(e => coinlist.Data[e].Symbol)
+            })
+            .then(list => {
+                // テスト用
+                // let tradeList = []
+                // let subs = []
+                list.forEach(symbol => {
+                    // subs.push(fetch('https://min-api.cryptocompare.com/data/subs?fsym=' + symbol + '&tsyms=' + targetSymbol)
+                    fetch('https://min-api.cryptocompare.com/data/subs?fsym=' + symbol + '&tsyms=' + fsym)
+                        .then(r => r.json())
+                        .then(pair => {
+                            // console.log(symbol, pair.BTC.TRADES)
+                            if (pair.BTC && pair.BTC.TRADES) {
+                                // 容器初期化
+                                if (exec[symbol] == null) {
+                                    exec[symbol] = {}
+                                    let fragment = document.getElementById('template').content.cloneNode(true)
+                                    exec[symbol] = {
+                                        raw: [],
+                                        aggregate: {},
+                                        fragment: fragment,
+                                        tag: fragment.getElementById('row')
+                                    }
+                                    // fDom.appendChild(exec[symbol].fragment)
+                                }
+                                // データ取得開始
+                                let trades = pair.BTC.TRADES
+                                trades.forEach(e => {
+                                    getWorker().postMessage([e])
+                                })
+                            }
+                        })
+                    // )
+                });
+                // Promise.all(subs)
+                //     .then(r => {
+                //         console.log(tradeList)
+                //     })
+            })
+
+    </script>
+
+</body>
+
+</html>
