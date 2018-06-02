@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78911133-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-78911133-2');
+    </script>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Order Books</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="https://danmaid.com/common.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/common.css" />
+    <script defer src="https://danmaid.com/tags/dm-tags.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/solid.js" crossorigin="anonymous" integrity="sha384-Q7KAHqDd5trmfsv85beYZBsUmw0lsreFBQZfsEhzUtUn5HhpjVzwY0Aq4z8DY9sA"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/fontawesome.js" crossorigin="anonymous" integrity="sha384-M2FSA4xMm1G9m4CNXM49UcDHeWcDZNucAlz1WVHxohug0Uw1K+IpUhp/Wjg0y6qG"></script>
+    <style>
+        main {
+            font-size: 10px;
+            display: flex;
+        }
+
+        .book {
+            display: flex;
+            flex-flow: column-reverse;
+            margin: 4px;
+        }
+
+        .gauge {
+            width: 80px;
+            height: 15px;
+            overflow: hidden;
+            display: inline-flex;
+            position: relative;
+            background-color: rgba(100, 100, 100, 0.3);
+        }
+
+        .gauge.reverse {
+            flex-flow: row-reverse;
+        }
+
+        .gauge .bar {
+            background-color: green;
+            height: 100%;
+        }
+
+        .gauge.reverse .bar {
+            background-color: red;
+        }
+
+        .gauge.reverse .amount {
+            left: 0;
+            right: unset;
+        }
+
+        .gauge.reverse .count {
+            right: 0;
+            left: unset;
+        }
+
+        .gauge .amount {
+            position: absolute;
+            right: 0;
+        }
+
+        .gauge .count {
+            position: absolute;
+            left: 0;
+        }
+
+        .fix-top {
+            order: 999999;
+            font-size: 1rem;
+        }
+
+        .price {
+            width: 3em;
+            display: inline-block;
+            vertical-align: top;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="title">
+            <h1>板 ver 0.2</h1>
+            <i class="fas fa-angle-left"></i>
+            <a href="/labo/">LABO</a>
+            <i class="fas fa-angle-left"></i>
+            <a href="/">暗号資産</a>
+            <i class="fas fa-angle-left"></i>
+            <a href="https://danmaid.com/">男メイド</a>
+        </div>
+        <nav class="menu">
+            <a class="menuitem" href="/">HOME</a>
+            <a class="menuitem active" href="/labo/">LABO</a>
+            <a class="menuitem" href="https://danmaid.com/">ABOUT</a>
+        </nav>
+    </header>
+
+    <main>
+        <div id="bitfinex" class="book">
+            <div class="fix-top">bitfinex BTC/USD</div>
+        </div>
+        <div id="bitmex" class="book">
+            <div class="fix-top">bitmex XBT/USD</div>
+        </div>
+        <div id="bitflyer" class="book">
+            <div class="fix-top">bitflyer BTC/JPY</div>
+        </div>
+        <div id="bitflyerfx" class="book">
+            <div class="fix-top">bitflyer FX BTC/JPY</div>
+        </div>
+    </main>
+    <dm-footer></dm-footer>
+
+    <template id="page">
+        <div id="index">
+            <span class="gauge reverse">
+                <div id="gauge-ask" class="bar"></div>
+                <span id="count-ask" class="count"></span>
+                <span id="amount-ask" class="amount"></span>
+            </span>
+            <span id="price" class="price"></span>
+            <span class="gauge">
+                <div id="gauge-bid" class="bar"></div>
+                <span id="amount-bid" class="amount"></span>
+                <span id="count-bid" class="count"></span>
+            </span>
+        </div>
+    </template>
+
+    <script>
+        class BookView {
+            constructor(worker, dom, template, scale) {
+                this.book = {}
+                this.tags = {}
+                this.dom = dom
+                this.worker = worker
+                this.tmpl = template
+                this.scale = scale || 1
+                worker.addEventListener('message', (msg) => {
+                    let data = msg.data
+                    if (data.count == 0) {
+                        this.delete(data.index)
+                    } else {
+                        if (!this.book[data.index]) {
+                            this.insert(data.index)
+                        }
+                        this.update(data)
+                    }
+                })
+            }
+
+            delete(index) {
+                // console.log('delete', index)
+                delete this.book[index]
+                this.dom.removeChild(this.tags[index])
+                delete this.tags[index]
+            }
+
+            insert(index) {
+                // console.log('insert', index)
+                let fragment = this.tmpl.content.cloneNode(true)
+                let tag = fragment.querySelector('#index')
+                tag.id = index
+                tag.querySelector('#price').textContent = index.toString().replace(/000$/, 'k')
+                tag.style.order = index
+                this.tags[index] = tag
+                this.dom.appendChild(fragment)
+            }
+
+            update(data) {
+                this.book[data.index] = data
+                if (data.amount > 0) {
+                    this.tags[data.index].querySelector('#amount-bid').textContent = Math.round(data.amount * 100) / 100
+                    this.tags[data.index].querySelector('#count-bid').textContent = data.count
+                    this.tags[data.index].querySelector('#gauge-bid').style.width = data.amount / this.scale + '%'
+                    this.tags[data.index].querySelector('#amount-ask').textContent = null
+                    this.tags[data.index].querySelector('#count-ask').textContent = null
+                    this.tags[data.index].querySelector('#gauge-ask').style.width = 0
+                } else {
+                    this.tags[data.index].querySelector('#amount-ask').textContent = Math.round((- data.amount) * 100) / 100
+                    this.tags[data.index].querySelector('#count-ask').textContent = data.count
+                    this.tags[data.index].querySelector('#gauge-ask').style.width = - data.amount / this.scale + '%'
+                    this.tags[data.index].querySelector('#amount-bid').textContent = null
+                    this.tags[data.index].querySelector('#count-bid').textContent = null
+                    this.tags[data.index].querySelector('#gauge-bid').style.width = 0
+                }
+            }
+        }
+
+        new BookView(new Worker('bookworker/bitfinex.js'), document.getElementById('bitfinex'), document.querySelector('template#page'), 2)
+        new BookView(new Worker('bookworker/bitmex.js'), document.getElementById('bitmex'), document.querySelector('template#page'), 100000)
+        new BookView(new Worker('bookworker/bitflyer.js'), document.getElementById('bitflyer'), document.querySelector('template#page'), 2)
+        new BookView(new Worker('bookworker/bitflyerfx.js'), document.getElementById('bitflyerfx'), document.querySelector('template#page'), 2)
+    </script>
+</body>
+
+</html>
